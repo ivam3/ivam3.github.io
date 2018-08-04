@@ -1,12 +1,20 @@
-#!$PREFIX/bin/bash
-
-pkg install util-linux
+#!/data/data/com.termux/files/usr/bin/bash
+#CODED BY IVAM3
+#This script should fixed gem issues to run all MSF versions
+#VAR
+	red='\033[1;31m'
+        green='\033[1;32m'
+        yellow='\033[1;33m'
+        blue='\033[1;34m'
+        magenta='\033[1;35m'
+        cyan='\033[1;36m'
+        reset='\033[0m'
 clear
-setterm -foreground cyan
+printf "$cyan"
 	  echo "              -{ (Ru)by  (G)em  (i)ssue (R)esolved RuGiR } "
           echo "                  -{ SO > Android - Only for Termux } "
           echo "                            -{ Coded by } "
-setterm -foreground green
+printf "$green"
           echo "                   ==============================";
           echo "                   .___                  _______";
           echo "                   |   |__ ______   ___  \_____ \ ";
@@ -16,36 +24,19 @@ setterm -foreground green
           echo "                                 \/    \/      \/ ";
           echo "                   ====== By ___ Cinderella ======";
           echo
-setterm -foreground cyan
+printf "$cyan"
           echo "                         [---] Join me on [---]"
           echo "             [-] www.youtube.com/c/ivam3bycinderella [-]"
 	  echo "                           [-] t.me/ivam3 [-]"
           sleep 3
-
-#Required v.4.16.16
-	echo "
-	"
-	echo "             =================================================="
-	echo "CINDERELLA : What is the version of your Metasploit-Framework ?"
-	echo "             =================================================="
-	echo
-	echo "			     1) 4.16.16"
-	echo "			     2) 4.16.4 or earlier "
-	echo
-	read -p "IbyC = " IbyC
-	case $IbyC in
-		1)
-
-#Drop to trash
-	clear
-setterm -foreground magenta
+printf "$magenta"
 	echo "
 	"
 	echo "		   ========================================="
 	echo "		   CINDERELLA : I will eliminate the garbage"
 	echo "		   ========================================="
 	echo
-setterm -foreground white
+printf "$reset"
 	sleep 3
 apt remove -y git ruby ruby-dev make clang autoconf curl wget ncurses-utils libsqlite-dev postgresql-dev libpcap-dev libffi-dev libxslt-dev pkg-config
 
@@ -54,47 +45,41 @@ apt autoremove -y
 #Re-installing repositories
 	echo "
 	"
-setterm -foreground magenta
+printf "$magenta"
 	echo "============================================="
 	echo "CINDERELLA : Let me work in your repositories"
 	echo "============================================="
 	echo
 	sleep 3
-setterm -foreground white
+printf "$reset"
 apt -y install git ruby ruby-dev make clang autoconf curl wget ncurses-utils libsqlite-dev postgresql-dev libpcap-dev libffi-dev libxslt-dev pkg-config
 
 
 #Adding updated gems at Gemfile.local
 	echo "                                                                                                        "
-setterm -foreground magenta
+printf "$magenta"
 	echo "========================================="
 	echo "CINDERELLA : Let's go fo fix those issues"
 	echo "========================================="
 	echo
 	sleep 3
-	setterm -foreground white
+printf "$reset"
 gem install bundler
 gem install nokogiri -- --using-system-libraries
 bundle config build.nokogiri -- using-system-libraries
-echo "$PREFIX/lib/ruby/gems/2.4.0/extensions/arm-linux/2.4.0/nokogiri-1.8.0" >> Gemfile.local
+printf "$PREFIX/lib/ruby/gems/2.4.0/extensions/arm-linux/2.4.0/nokogiri-1.8.0" >> Gemfile.local
 bundle install --gemfile Gemfile.local
 rm Gemfile.local
 bundle install --full-index
 bundle update nokogiri
+echo "
+"
+printf "$magenta"                                                                                                     echo "========================================="
+        echo "CINDERELLA : Let's try to run metasploit "
+        echo "========================================="
+        echo "
+	"
+        sleep 3
+printf "$reset"
 ruby msfconsole -q
-	
-;;
-	2)
-		sleep 2
-		if [ -e ./$PREFIX/bin/termux-open ]; then
-		echo "Press enter para ser redireccionado al tutorial de instalacion o Ctrl+C para salir"
-		read enter
-		termux-open https://youtu.be/XcKHa-v4vH4
-		else
-		echo "CINDERELLA : Up's sorry but this script just work with msf-v.4.16.16"
-		echo
-		echo "Paste on your browser the link > https://youtu.be/XcKHa-v4vH4 and come to see my tutorial"
-			exit
-	fi
-		;;
-esac
+					#@IbyC
