@@ -1,69 +1,71 @@
 #!/data/data/com.termux/files/usr/bin/bash
 #CODED BY IVAM3
 #This script should fixed gem issues to run all MSF versions
+set -euo pipefail
+IFS=$'\n\t'
+trap ctrl_c 2
 #VAR
-	red='\033[1;31m'
-        green='\033[1;32m'
-        yellow='\033[1;33m'
-        blue='\033[1;34m'
-        magenta='\033[1;35m'
-        cyan='\033[1;36m'
-        reset='\033[0m'
-clear
-printf "$cyan"
-	  echo "              -{ (Ru)by  (G)em  (i)ssue (R)esolved RuGiR } "
-          echo "                  -{ SO > Android - Only for Termux } "
-          echo "                            -{ Coded by } "
-printf "$green"
-          echo "                   ==============================";
-          echo "                   .___                  _______";
-          echo "                   |   |__ ______   ___  \_____ \ ";
-          echo "                   |  \ \/ /\__ \ /   \    (__ <,";
-          echo "                   |   |\   / __ \| Y Y \ \      \ ";
-          echo "                   |___| \_/ (____|__|_| /______ /";
-          echo "                                 \/    \/      \/ ";
-          echo "                   ====== By ___ Cinderella ======";
-          echo
-printf "$cyan"
-          echo "                         [---] Join me on [---]"
-          echo "             [-] www.youtube.com/c/ivam3bycinderella [-]"
-	  echo "                           [-] t.me/ivam3 [-]"
-          sleep 3
-printf "$magenta"
-	echo "
+	R='\033[1;31m'
+        G='\033[1;32m'
+        Y='\033[1;33m'
+        B='\033[1;34m'
+        M='\033[1;35m'
+        C='\033[1;36m'
+        W='\033[0m'
+until [ $PWD = $HOME/metasploit-framework ]; do
+	printf "\n\n[W]-> Your are not in metasploit directory\n\n"
+	exit
+done
+function ctrl_c () {
+        echo
+        printf "$R [W]$Y Going me on https://t.me/Ivam3by_Cinderella$W
+        \n"
+}
+	echo $(clear)
+printf "$C"
+	echo "   -{(Ru)by (G)em (i)ssue (R)esolved } "
+	echo "                - RuGiR -"
+        echo "         -{ IbyC > fix-arg-x } "
+        echo "   -{ SO > Android - Only for Termux } "
+        echo "              -{ Coded by } "
+        printf "$G"
+        echo "      =============================="
+        echo "      .___.                 ______,"
+        echo "      |   |__ ______   ___  \_____ \ "
+        echo "      |   \ \/ /\__ \ /   \   _(__ <,"
+        echo "      |   |\   / __ \| Y Y \ /      \ "
+        echo "      |___| \_/ (____|__|_| /______ /"
+        echo "                     \/    \/      \/ "
+        echo "      ====== By ___ Cinderella ======"
+        echo
+printf "$C"
+        echo "          [---] Join me on [---]"
+        echo "[-] www.youtube.com/c/Ivam3byCinderella [-]"
+        echo "      [-] t.me/Ivam3byCinderella [-]"
+	echo "            [-] t.me/ivam3 [-]"
+printf "$R"
+        echo
+        echo "          [---] DISCLAIMER [---]"
+printf "$W"
+        echo " This file fix issues in Metasploit Framework"
+        echo "  reapairing the issues on some ruby gems
+        \n"
+        echo " If the law is violated with it's use,"
+        echo "  This would be the responsibility of "
+        echo "        the user who handled it"
+printf "$R       [-] Use At Your Own Risk [-]"
+        echo
+        echo
+        printf "        $C Press$G enter$C to continue$W"
+        read enter
+        echo "
 	"
-	echo "		   ========================================="
-	echo "		   CINDERELLA : I will eliminate the garbage"
-	echo "		   ========================================="
-	echo
-printf "$reset"
-	sleep 3
-apt remove -y git ruby ruby-dev make clang autoconf curl wget ncurses-utils libsqlite-dev postgresql-dev libpcap-dev libffi-dev libxslt-dev pkg-config
-
-apt autoremove -y
-
 #Re-installing repositories
-	echo "
-	"
-printf "$magenta"
-	echo "============================================="
-	echo "CINDERELLA : Let me work in your repositories"
-	echo "============================================="
-	echo
-	sleep 3
-printf "$reset"
-apt -y install git ruby ruby-dev make clang autoconf curl wget ncurses-utils libsqlite-dev postgresql-dev libpcap-dev libffi-dev libxslt-dev pkg-config
-
+apt remove -y ruby ruby-dev
+apt autoremove -y
+apt -y install git ruby ruby-dev
 
 #Adding updated gems at Gemfile.local
-	echo "                                                                                                        "
-printf "$magenta"
-	echo "========================================="
-	echo "CINDERELLA : Let's go fo fix those issues"
-	echo "========================================="
-	echo
-	sleep 3
-printf "$reset"
 gem install bundler
 gem install nokogiri -- --using-system-libraries
 bundle config build.nokogiri -- using-system-libraries
@@ -71,15 +73,6 @@ printf "$PREFIX/lib/ruby/gems/2.4.0/extensions/arm-linux/2.4.0/nokogiri-1.8.0" >
 bundle install --gemfile Gemfile.local
 rm Gemfile.local
 bundle install --full-index
-bundle update nokogiri
-echo "
-"
-printf "$magenta"                                                                                                     echo "========================================="
-        echo "CINDERELLA : Let's try to run metasploit "
-        echo "========================================="
-        echo "
-	"
-        sleep 3
-printf "$reset"
-ruby msfconsole -q
+bundle update nokogiri --full-index
+ruby msfconsole
 					#@IbyC
