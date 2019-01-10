@@ -1,7 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 #CODED BY IVAM3
 #This script should fixed gem issues to run all MSF versions
-set -euo pipefail
 IFS=$'\n\t'
 trap ctrl_c 2
 #VAR
