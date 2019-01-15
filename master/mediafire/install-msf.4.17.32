@@ -107,7 +107,7 @@ ln -sf $HOME/metasploit-framework/msfvenom /data/data/com.termux/files/usr/bin/
 termux-elf-cleaner /data/data/com.termux/files/usr/lib/ruby/gems/2.5.0/gems/pg-0.20.0/lib/pg_ext.so
 
 #Intalling Ruby Gems Issues Resolve (RuGiR)
-wget https://raw.githubusercontent.com/ivam3/ivam3.github.io/master/master/RuGiR -O $HOME/metasploit-framework/RuGiR
+wget https://raw.githubusercontent.com/ivam3/ivam3.github.io/master/master/mediafire/RuGiR -O $HOME/metasploit-framework/RuGiR
 chmod 777 $HOME/metasploit-framework/RuGiR
 
 #Creating data base
