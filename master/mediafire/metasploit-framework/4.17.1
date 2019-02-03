@@ -1,0 +1,236 @@
+#!/data/data/com.termux/files/usr/bin/bash
+#Created on 16/July/2017 by Ivam3
+#Last update Agust/2018
+#
+#       Var
+		red='\033[1;31m'
+                green='\033[1;32m'
+                yellow='\033[1;33m'
+		blue='\033[1;34m'
+		magenta='\033[1;35m'                              
+		cyan='\033[1;36m'               
+		reset='\033[0m'                     
+                Noko=$(gem list nokogiri -i)
+
+echo $(clear)
+for i in  / - \ - \ - / - \ - / - \ - / -; do
+        printf "$(clear) $cyan Upgrading Termux. . . .$i"
+        sleep 1
+done
+echo "
+"
+printf "$reset"
+apt update -y && apt upgrade -y
+apt autoremove
+echo "
+"
+printf "$green"
+echo " ============================="
+echo ".___                  _______"
+echo "|   |__ ______   ___  \_____ \ "
+echo "|   \ \/ /\__ \ /   \    (__ <,"
+echo "|   |\   / __ \| Y Y \ \      \ "
+echo "|___| \_/ (____|__|_| /______ /"
+echo "              \/    \/      \/"
+echo "====== By ___ Cinderella ======"
+printf "$cyan
+    -{ Termux - Metaslpoit }
+      -{ Coded by Ivam3 }
+$reset"
+sleep 5
+echo "
+"
+printf "Using And Installing This Tools That Mean You Ready For
+
+$red[1] $reset Use At Your Own Risk
+$red[2] $reset No Warranty
+$red[3] $reset If it violates the law with this tool the risk is borne by the user
+"
+printf "$green
+-------------------------------------------
+Are You Sure Want To Install Metasploit ?
+-------------------------------------------
+$reset
+Press $green Enter$reset if you Agree / Continue Install
+Press $red CTRL + C$reset if you Disagree / Cancel Install"
+read ENTER  
+echo "
+"
+printf "$cyan :::::::::: Removing old versions :::::::::: $reset
+\n"
+sleep 1  
+find $HOME -name "*17.1.tar.gz" -type f -delete
+find $HOME -name "metasploit*" -type d -exec rm -rf {} \;
+
+#Fixing libxm12 not found error
+$PREFIX/include/libxml2/libxml $PREFIX/include/
+echo "
+"
+printf "$cyan :::::::::: Installing Metasploit repositories :::::::::: $reset
+\n"
+apt install -y autoconf bison clang coreutils axel curl findutils git apr apr-util libffi-dev libgmp-dev libpcap-dev postgresql-dev readline-dev libsqlite-dev openssl-dev libtool libxml2-dev libxslt-dev ncurses-dev pkg-config wget make ruby-dev libgrpc-dev termux-tools ncurses-utils ncurses unzip zip tar postgresql termux-elf-cleaner
+sleep 1
+echo "
+"
+#Install metasploit-framework v.4.17.1
+echo "
+"
+printf "$cyan :::::::::: Downloading Metasploit Framework v.4.17.1 :::::::::: $reset
+\n"
+cd $HOME
+curl -LO https://github.com/rapid7/metasploit-framework/archive/4.17.1.tar.gz
+tar -xf $HOME/4.17.1.tar.gz
+mv $HOME/metasploit-framework-4.17.1 $HOME/metasploit-framework
+cd $HOME/metasploit-framework
+sed '/rbnacl/d' -i Gemfile.lock
+sed '/rbnacl/d' -i metasploit-framework.gemspec
+
+#Installing gems
+echo "
+"
+printf "$cyan :::::::::: Installing Ruby Gems :::::::::: $reset
+\n"
+echo
+gem install bundler
+sed 's|nokogiri (1.*)|nokogiri (1.8.0)|g' -i Gemfile.lock
+
+#Reviewing nokogiri gem
+        if [ $Noko == "false" ]; then
+                gem install nokogiri -v '1.8.0' -- --use-system-libraries
+        else
+                printf "$cyan Nokogiri ..... ok!!"
+        fi
+echo "
+"
+cd $HOME/metasploit-framework
+bundle install -j5
+$PREFIX/bin/find -type f -executable -exec termux-fix-shebang \{\} \;
+rm ./modules/auxiliary/gather/http_pdf_authors.rb
+        if [ -e $PREFIX/bin/msfconsole ]; then
+                rm $PREFIX/bin/msfconsole
+        fi
+
+        if [ -e $PREFIX/bin/msfvenom ]; then
+                rm $PREFIX/bin/msfvenom
+        fi
+ln -s $HOME/metasploit-framework/msfconsole /data/data/com.termux/files/usr/bin/
+ln -s $HOME/metasploit-framework/msfvenom /data/data/com.termux/files/usr/bin/
+
+termux-elf-cleaner /data/data/com.termux/files/usr/lib/ruby/gems/2.4.0/gems/pg-0.20.0/lib/pg_ext.so
+
+#Thanks to . . .
+
+	echo "
+	"
+	printf "$cyan"
+	echo "#-----THANKS TO MY MASTER CINDERELLA-----#"
+        echo "#                                        #"
+        echo "#             People don't die           #"
+        echo "#    If they still live in the hearts    #"
+        echo "#           of their loved ones          #"
+        echo "#       We love her ... We miss her      #"
+        echo "#                                        #"
+        echo "#-------------------RIP------------------#"
+        sleep 3
+	echo "
+	"
+
+#Creating data base
+echo "
+"
+printf "$cyan :::::::::: Creating Postgresql Data Bases :::::::::: $reset
+\n"
+echo
+cd $HOME/metasploit-framework/config
+curl -LO https://raw.githubusercontent.com/ivam3/ivam3.github.io/master/master/database.yml
+mkdir -p $PREFIX/var/lib/postgresql
+initdb $PREFIX/var/lib/postgresql
+
+pg_ctl -D $PREFIX/var/lib/postgresql start
+createuser msf
+createdb msf_database
+
+#Fixed data base error
+sed -i "4a pg_ctl -D $PREFIX/var/lib/postgresql start" $PREFIX/etc/bash.bashrc
+sed -i "5a clear" $PREFIX/etc/bash.bashrc
+
+#Intalling Ruby Gems Issues Resolve (RuGiR)
+cd $HOME/metasploit-framework/
+curl -LO https://raw.githubusercontent.com/ivam3/ivam3.github.io/master/master/RuGiR
+chmod 777 $HOME/metasploit-framework/RuGiR
+
+	if [ -e $HOME/MSF-mastering_the_framework ]; then
+		rm -rf $HOME/MSF-mastering_the_framework
+	else
+		find $HOME -name "Downloadinstall_metasploit.sh" -type d -delete
+	fi
+
+	if [ -e $HOME/4.17.1.tar.gz ]; then
+		rm $HOME/4.17.1.tar.gz
+	fi
+
+#Goodbye
+echo $(clear)
+printf "$cyan
+###################################################################
+$magenta
+IbyC : Your data base was created.
+                Now you can active it with . . .
+
+pg_ctl -D $PREFIX/var/lib/postgresql start
+$cyan
+###################################################################
+"
+sleep 5
+echo "
+"
+printf "$blue
+           . .IIIII             .II
+  IIIIIII. I  II  .    II..IIIIIIIIIIIIIIIIIIII
+ .  .IIIIII  II          III$cyan Ivam3$blue IIIIIIIIII.
+    .IIIII.III I      IIIIIIIII$cyan by$blue IIIIIIIII  I
+   .IIIIII$cyan Hackeando$blue II  .IIII$cyan Cinderella$blue III. III
+    IIIIIII$cyan  Desde$blue   ' IIIII I IIIIIIIIIIII III I
+    .II$cyan     Android$blue   IIIIIIIIIIII  IIIIIIIIII
+       I.           .IIIIIIIIIIII   I   II  I
+         .IIII        IIIIIIIIIIII     .       I
+          IIIII.          IIIIII           . I.
+         IIIIIIIII         IIIII             ..I  II .
+          IIIIIII          IIII..             IIQII
+            IIII           III. I            IIIEIII
+            III             I                I  IPI
+             II       $cyan [-]$magenta Join me on$cyan [-]$blue        D   .
+             I     $magenta t.me/Ivam3byCinderella$reset
+             \n"
+sleep 3
+printf "$cyan :::::::::: Running Metasploit :::::::::: $reset
+\n"
+
+        if [ -e $PREFIX/bin/msfconsole ] && [ -e $PREFIX/bin/msfvenom ]; then
+                echo
+                cd $HOME/metasploit-framework
+                printf "$green Let's try to run msfconsole
+		\n"
+                sleep 1
+		msfconsole
+        else
+                echo
+                cd $HOME/metasploit-framework
+                printf "$green Let's try to run msfconsole
+		\n"
+                sleel 1
+		ruby msfconsole
+        fi
+
+echo "
+"
+printf "$reset If msfconsole or msfvenom didn't run
+please execute the file RuGiR
+(Ruby Gem issues Resolved)
+to try to fix it with an other steps
+
+$green => sh RuGiR
+$reset
+\n"
+cd $HOME
+						#IbyC
