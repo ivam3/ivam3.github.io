@@ -10,7 +10,15 @@
                 M='\033[1;35m'
                 C='\033[1;36m'
                 W='\033[0m'
-		version="5.0.5"
+if [ ! -e ~/version ]; then
+	printf "$C[?]->$W Type the number of version do you want :\n$C[ej. 0.0.0]->$W "
+	while read ANSW && [ -z $ANSW ]; do
+		printf "$R[w]-> O-ops!! Join to https://t.me/Ivam3_Bot\n$W"
+	done
+	echo "export version=$ANSW" > ~/version
+fi
+source ~/version
+
 echo $(clear)
         printf "$C"
         echo "          -{ IbyC > Metasploit } "
@@ -151,6 +159,9 @@ printf "\n$C :::::::::: Running Metasploit ::::::::::$W"
 	fi
 echo "
 "
+if [ -e ~/version ]; then
+	rm ~/version
+fi
 printf "$W If msfconsole or msfvenom didn't run
 please execute the file RuGiR
 (Ruby Gem issues Resolved) 
