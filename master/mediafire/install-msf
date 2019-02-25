@@ -12,7 +12,7 @@
                 W='\033[0m'
 		APK=$HOME/metasploit-frameaork/lib/msf/core/payload/apk.rb
 		FILE=$HOME/install-msf
-		TMP_SHELL=(57 70 80 94 136)
+		TMP_SHELL=(78 57 69 91 132)
 function Banner {
 echo $(clear)
         printf "$C"
