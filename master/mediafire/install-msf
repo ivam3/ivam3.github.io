@@ -106,6 +106,12 @@ Gems() {
 RuGiR() {
 	printf "$C"
 	wget https://raw.githubusercontent.com/ivam3/ivam3.github.io/master/master/mediafire/RuGiR -O $HOME/metasploit-framework/RuGiR
+	echo "#!/bin/bash" > $PREFIX/bin/RuGiR
+	echo "#This file will help you to run RuGiR on the rigth way" >> $PREFIX/bin/RuGiR
+	echo "#(Ru)by (G)ems (i)ssues (R)esolved was created by @Ivam3" >> $PREFIX/bin/RuGiR
+	echo "cd $HOME/metasploit-framework" >> $PREFIX/bin/RuGiR
+	echo "./RuGiR" >> $PREFIX/bin/RuGiR
+	echo "#			@IVAM3" >> $PREFIX/bin/RuGiR
 	chmod 777 ~/metasploit-framework/RuGiR
 	mv $APK $APK.O
 	curl https://raw.githubusercontent.com/ivam3/java/master/.embed/apk.rb -o $APK
@@ -137,31 +143,18 @@ printf "$C
 #                                        #
 #-------------------RIP------------------#"
 sleep 3
-printf "\n$C :::::::::: Running Metasploit ::::::::::$W"
-
-	if [ -e $PREFIX/bin/msfconsole ] && [ -e $PREFIX/bin/msfvenom ]; then
-		echo
-		cd $HOME/metasploit-framework
-		printf "$G Let's try to run msfconsole$W"
+printf "\n$C :::::::::: Running Metasploit ::::::::::$W\n"
+	if [ -L $PREFIX/bin/msfconsole ] && [ -L $PREFIX/bin/msfvenom ]; then
 		msfconsole
 	else
-		echo
-		cd $HOME/metasploit-framework
-		printf "$G Let's try to run msfconsole$W"
-                ruby msfconsole
+		cd ~//metasploit-framework
+		ruby msfconsole
 	fi
-echo "
-"
 if [ -e ~/version ]; then
 	rm ~/version
 fi
-printf "$W If msfconsole or msfvenom didn't run
-please execute the file RuGiR
-(Ruby Gem issues Resolved) 
-to try to fix it with an other steps
-
-$G => sh RuGiR$W
-\n"
+printf "$R :::::::::::::: ADVERSMENT ::::::::::::::$W\n"
+printf "If msfconsole or msfvenom didn't run\nplease execute the file RuGiR\n(Ruby Gem issues Resolved)\nto try to fix it with an other steps\n\n\t$G => RuGiR$W\n\n"
 }
 MSFv1() {
 	for i in ${TMP_SHELL[*]}; do
