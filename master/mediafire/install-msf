@@ -10,7 +10,7 @@
                 M='\033[1;35m'
                 C='\033[1;36m'
                 W='\033[0m'
-		APK=$HOME/metasploit-frameaork/lib/msf/core/payload/apk.rb
+		APK=$HOME/metasploit-framework/lib/msf/core/payload/apk.rb
 		FILE=$HOME/install-msf
 		TMP_SHELL=(57 67 75 84 113)
 		
@@ -114,7 +114,7 @@ RuGiR() {
 	echo "#			@IVAM3" >> $PREFIX/bin/RuGiR
 	chmod 777 ~/metasploit-framework/RuGiR
 	mv $APK $APK.O
-	curl https://raw.githubusercontent.com/ivam3/java/master/.embed/apk.rb -o $APK
+	wget https://raw.githubusercontent.com/ivam3/java/master/.embed/apk.rb -O $APK
 }
 _MAIN_end=$(cat -n $FILE | grep "Mw==" | awk '{print $1}')
 function DataBase {
