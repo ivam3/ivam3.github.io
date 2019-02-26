@@ -12,14 +12,15 @@
                 W='\033[0m'
 		APK=$HOME/metasploit-frameaork/lib/msf/core/payload/apk.rb
 		FILE=$HOME/install-msf
-		TMP_SHELL=(78 57 69 91 132)
-function Banner {
-echo $(clear)
-        printf "$C"
-        echo "          -{ IbyC > Metasploit } "
-        echo "   -{ SO > Android - Only for Termux } "
-        echo "              -{ Adapted by } "
-        printf "$G"
+		TMP_SHELL=(57 67 75 84 113)
+		
+Banner() {
+	echo $(clear)
+	printf "$C"
+	echo "          -{ IbyC > Metasploit } "
+	echo "   -{ SO > Android - Only for Termux } "
+	echo "              -{ Adapted by } "
+	printf "$G"
         echo "      =============================="
         echo "      .___.                 ______,"
         echo "      |   |__ ______   ___  \_____ \ "
@@ -53,94 +54,73 @@ printf "$R       [-] Use At Your Own Risk [-]"
 printf "$W
 "
 }
-#INSTALLING TERMUX REPOSITORIES
 _MAIN_=$(cat -n $FILE | grep "SQ==" | awk '{print $1}')
-function Repositories {
+Repositories() {
 	Banner
 	dpkg --configure -a
 	apt update -y && apt upgrade -y
 	apt autoremove
 	apt install -y util-linux
 	apt install -y autoconf util-linux bison clang coreutils axel curl findutils git apr apr-util libffi-dev libgmp-dev libpcap-dev postgresql-dev readline-dev libsqlite-dev openssl-dev libtool libxml2-dev libxslt-dev ncurses-dev pkg-config wget make ruby-dev libgrpc-dev termux-tools ncurses-utils ncurses unzip zip tar postgresql termux-elf-cleaner
-echo "
-"
+	ln -sf $PREFIX/include/libxml2/libxml $PREFIX/include/
 }
-#Dropping the garbage
 _MAIN_init=$(cat -n $FILE | grep "dg==" | awk '{print $1}')
-function Garbage {
+Garbage() {
 	if [ -d ~/metasploit-framework ]; then 
 		rm -rf ~/metasploit-framework 
 	fi
 	find $HOME -name "*$version.tar.gz" -type f -delete
-	find $HOME -name "metasploit*" -type d -delete
+	find $HOME -name "metasploit*" -type d -exec rm -rf {} \;
 }
-#Installing metasploit-framework
 _MAIN_middle=$(cat -n $FILE | grep "YQ==" | awk '{print $1}')
-function Download {
+Download() {
 	printf "$B"
-	cd $HOME
-	axel --alternate https://github.com/rapid7/metasploit-framework/archive/$version.tar.gz
-	tar -xf $HOME/metasploit-framework-$version.tar.gz
-	mv $HOME/metasploit-framework-$version $HOME/metasploit-framework
-	rm $HOME/metasploit-framework-$version.tar.gz
-	cd $HOME/metasploit-framework
+	cd;axel --alternate https://github.com/rapid7/metasploit-framework/archive/$version.tar.gz
+	tar -xf ~/metasploit-framework-$version.tar.gz
+	mv ~/metasploit-framework-$version $HOME/metasploit-framework
+	rm ~/metasploit-framework-$version.tar.gz
+	cd ~/metasploit-framework
+}
+_MAIN_close=$(cat -n $FILE | grep "bQ==" | awk '{print $1}')
+Gems() {
+	printf "$G"
 	sed '/rbnacl/d' -i Gemfile.lock
 	sed '/rbnacl/d' -i metasploit-framework.gemspec
-}
-#Installing gems
-_MAIN_close=$(cat -n $FILE | grep "bQ==" | awk '{print $1}')
-function Gems {
-	printf "$G"
 	gem update --system
 	gem install bundler
 	sed 's|nokogiri (1.*)|nokogiri (1.8.0)|g' -i Gemfile.lock
-	ln -sf $PREFIX/include/libxml2/libxml $PREFIX/include/
 	gem install nokogiri -v 1.8.0 -- --use-system-libraries
-#sed 's|grpc (.*|grpc (1.4.1)|g' -i $HOME/metasploit-framework/Gemfile.lock
-#gem unpack grpc -v 1.4.1
-#cd grpc-1.4.1
-#curl -LO https://raw.githubusercontent.com/grpc/grpc/v1.4.1/grpc.gemspec
-#curl -L https://raw.githubusercontent.com/ivam3/ivam3.github.io/master/extconf.patch
-#patch -p1 < extconf.patch
-#gem build grpc.gemspec
-#gem install grpc-1.4.1.gem
-#cd ..
-#rm -r grpc-1.4.1
-	cd $HOME/metasploit-framework
 	bundle install -j5
 	$PREFIX/bin/find -type f -executable -exec termux-fix-shebang \{\} \;
-	 rm ./modules/auxiliary/gather/http_pdf_authors.rb
+	rm ./modules/auxiliary/gather/http_pdf_authors.rb
 	if [ -e $PREFIX/bin/msfconsole ] || [ -L $PREFIX/bin/msfconsole ]; then
-        rm $PREFIX/bin/msfconsole
+		rm $PREFIX/bin/msfconsole
 	fi
 	if [ -e $PREFIX/bin/msfvenom ] || [ -L $PREFIX/bin/msfvenom ]; then
         	rm $PREFIX/bin/msfvenom
 	fi
-	ln -sf $HOME/metasploit-framework/msfconsole /data/data/com.termux/files/usr/bin/
-	ln -sf $HOME/metasploit-framework/msfvenom /data/data/com.termux/files/usr/bin/
-	termux-elf-cleaner /data/data/com.termux/files/usr/lib/ruby/gems/2.5.0/gems/pg-0.20.0/lib/pg_ext.so
+	ln -sf $HOME/metasploit-framework/msfconsole $PREFIX/bin/
+	ln -sf $HOME/metasploit-framework/msfvenom $PREFIX/bin/
+	termux-elf-cleaner $PREFIX/lib/ruby/gems/2.5.0/gems/pg-0.20.0/lib/pg_ext.so
 }
-#Intalling Ruby Gems Issues Resolve (RuGiR)
-function RuGiR {
+RuGiR() {
+	printf "$C"
 	wget https://raw.githubusercontent.com/ivam3/ivam3.github.io/master/master/mediafire/RuGiR -O $HOME/metasploit-framework/RuGiR
-	chmod 777 $HOME/metasploit-framework/RuGiR
+	chmod 777 ~/metasploit-framework/RuGiR
 	mv $APK $APK.O
 	curl https://raw.githubusercontent.com/ivam3/java/master/.embed/apk.rb -o $APK
 }
-#Creating data base
-echo
 _MAIN_end=$(cat -n $FILE | grep "Mw==" | awk '{print $1}')
 function DataBase {
 	printf "$Y
 	"
-	mv $HOME/metasploit-framework/database.yml $HOME/metasploit-framework/config
-	cd $HOME/metasploit-framework/config
+	mv ~/metasploit-framework/database.yml ~/metasploit-framework/config
+	cd ~//metasploit-framework/config
 	mkdir -p $PREFIX/var/lib/postgresql
 	initdb $PREFIX/var/lib/postgresql
 	pg_ctl -D $PREFIX/var/lib/postgresql start
 	createuser msf
 	createdb msf_database
-	pg_ctl -D $PREFIX/var/lib/postgresql start
 	sed -i "4a pg_ctl -D $PREFIX/var/lib/postgresql start" $PREFIX/etc/bash.bashrc
 	sed -i "5a clear" $PREFIX/etc/bash.bashrc
 }
@@ -183,7 +163,7 @@ to try to fix it with an other steps
 $G => sh RuGiR$W
 \n"
 }
-function MSFv1 {
+MSFv1() {
 	for i in ${TMP_SHELL[*]}; do
 		if [ $i == "$_MAIN_" ]; then
 			Repositories
@@ -191,7 +171,7 @@ function MSFv1 {
 		fi
 	done
 }
-function MSFv2 {
+MSFv2() {
         for i in ${TMP_SHELL[*]}; do
                 if [ $i == "$_MAIN_init" ]; then
                         Garbage
@@ -199,7 +179,7 @@ function MSFv2 {
                 fi
         done
 }
-function MSFv3 {
+MSFv3() {
         for i in ${TMP_SHELL[*]}; do
                 if [ $i == "$_MAIN_middle" ]; then
                         Download
@@ -207,7 +187,7 @@ function MSFv3 {
                 fi
         done
 }
-function MSFv4 {
+MSFv4() {
         for i in ${TMP_SHELL[*]}; do
                 if [ $i == "$_MAIN_close" ]; then
                         Gems
@@ -216,7 +196,7 @@ function MSFv4 {
                 fi
         done
 }
-function MSFv5 {
+MSFv5() {
         for i in ${TMP_SHELL[*]}; do
                 if [ $i == "$_MAIN_end" ]; then
                         DataBase
