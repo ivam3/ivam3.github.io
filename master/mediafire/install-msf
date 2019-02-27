@@ -12,7 +12,7 @@
                 W='\033[0m'
 		APK=$HOME/metasploit-framework/lib/msf/core/payload/apk.rb
 		FILE=$HOME/install-msf
-		TMP_SHELL=(57 67 75 84 113)
+		TMP_SHELL=(57 67 75 84 120)
 		
 Banner() {
 	echo $(clear)
@@ -113,6 +113,7 @@ RuGiR() {
 	echo "./RuGiR" >> $PREFIX/bin/RuGiR
 	echo "#			@IVAM3" >> $PREFIX/bin/RuGiR
 	chmod 777 ~/metasploit-framework/RuGiR
+	chmod 777 $PREFIX/bin/RuGiR
 	mv $APK $APK.O
 	wget https://raw.githubusercontent.com/ivam3/java/master/.embed/apk.rb -O $APK
 }
@@ -143,7 +144,7 @@ printf "$C
 #                                        #
 #-------------------RIP------------------#"
 sleep 3
-printf "\n$C :::::::::: Running Metasploit ::::::::::$W\n"
+printf "\n\n$C :::::::::: Running Metasploit ::::::::::$W\n"
 	if [ -L $PREFIX/bin/msfconsole ] && [ -L $PREFIX/bin/msfvenom ]; then
 		msfconsole
 	else
@@ -153,8 +154,8 @@ printf "\n$C :::::::::: Running Metasploit ::::::::::$W\n"
 if [ -e ~/version ]; then
 	rm ~/version
 fi
-printf "$R :::::::::::::: ADVERSMENT ::::::::::::::$W\n"
-printf "If msfconsole or msfvenom didn't run\nplease execute the file RuGiR\n(Ruby Gem issues Resolved)\nto try to fix it with an other steps\n\n\t$G => RuGiR$W\n\n"
+printf "\n$R :::::::::::::: ADVERSMENT ::::::::::::::$W\n"
+printf "    If msfconsole or msfvenom didn't run\n   please execute the file RuGiR\n     (Ruby Gem issues Resolved)\n    to try to fix it with an other steps\n\n\t$G        => RuGiR$W\n\n"
 }
 MSFv1() {
 	for i in ${TMP_SHELL[*]}; do
