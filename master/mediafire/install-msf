@@ -101,7 +101,7 @@ Gems() {
 	fi
 	ln -sf $HOME/metasploit-framework/msfconsole $PREFIX/bin/
 	ln -sf $HOME/metasploit-framework/msfvenom $PREFIX/bin/
-	termux-elf-cleaner $PREFIX/lib/ruby/gems/2.5.0/gems/pg-0.20.0/lib/pg_ext.so
+	termux-elf-cleaner $PREFIX/lib/ruby/gems/2.6.0/gems/pg-0.20.0/lib/pg_ext.so
 }
 RuGiR() {
 	printf "$C"
@@ -122,7 +122,7 @@ function DataBase {
 	printf "$Y
 	"
 	mv ~/metasploit-framework/database.yml ~/metasploit-framework/config
-	cd ~//metasploit-framework/config
+	cd ~/metasploit-framework/config
 	mkdir -p $PREFIX/var/lib/postgresql
 	initdb $PREFIX/var/lib/postgresql
 	pg_ctl -D $PREFIX/var/lib/postgresql start
