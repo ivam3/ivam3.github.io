@@ -12,7 +12,7 @@
                 W='\033[0m'
 		APK=$HOME/metasploit-framework/lib/msf/core/payload/apk.rb
 		FILE=$HOME/install-msf
-		TMP_SHELL=(57 67 75 84 129)
+		TMP_SHELL=(57 67 75 84 120)
 		
 Banner() {
 	echo $(clear)
@@ -105,15 +105,6 @@ Gems() {
 }
 RuGiR() {
 	printf "$C"
-	apt install -yq patchelf
-	for i in aarch64-linux-android arm-linux-androideabi \ i686-linux-android x86_64-linux-android; do
-		if [ -e "$PREFIX/lib/ruby/2.6.0/${i}/bigdecimal.so" ]; then
-			if [ -n "$(patchelf --print-needed "$PREFIX/lib/ruby/2.6.0/${i}/bigdecimal/util.so" | grep bigdecimal.so)" ]; then
-				exit 0
-			fi
-			patchelf --add-needed \ "$PREFIX/lib/ruby/2.6.0/${i}/bigdecimal.so" \ "$PREFIX/lib/ruby/2.6.0/${i}/bigdecimal/util.so"
-		fi
-	done
 	wget https://raw.githubusercontent.com/ivam3/ivam3.github.io/master/master/mediafire/RuGiR -O $HOME/metasploit-framework/RuGiR
 	echo "#!/bin/bash" > $PREFIX/bin/RuGiR
 	echo "#This file will help you to run RuGiR on the rigth way" >> $PREFIX/bin/RuGiR
