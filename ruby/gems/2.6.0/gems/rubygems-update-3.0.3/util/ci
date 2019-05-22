@@ -1,0 +1,77 @@
+#!/usr/bin/env ruby
+
+class Tool
+  def initialize(name)
+    @name = name
+  end
+
+  def bundler?
+    @name == 'bundler'
+  end
+
+  def rubygems?
+    @name == 'rubygems'
+  end
+
+  def dir
+    if rubygems?
+      File.expand_path('../..', __FILE__)
+    else
+      File.expand_path('../../bundler', __FILE__)
+    end
+  end
+end
+
+TOOL = Tool.new(ENV.fetch("TEST_TOOL") { abort "must specify a TEST_TOOL" })
+
+def run(command, args = [])
+  Dir.chdir(TOOL.dir) do
+    unless system(command, *args)
+      abort "running `#{command} #{args.join(" ")}` failed"
+    end
+  end
+end
+
+def with_retries(attempts = 3)
+  yield
+rescue StandardError, SystemExit => e
+  attempts -= 1
+  if attempts > 0
+    warn "Command failed (#{e}). Retrying #{attempts -= 1} more times."
+    retry
+  else
+    raise
+  end
+end
+
+case ARGV
+when %w(before_script)
+  if TOOL.rubygems?
+    run('gem', %W(uninstall executable-hooks gem-wrappers bundler-unload -x --force -i #{`gem env home`.strip}@global))
+
+    if RUBY_VERSION >= "2.6.0"
+      run('gem', %w(install minitest -v 5.4.3))
+    end
+
+    # 2.5 images of Travis was broken about bundler installation.
+    if RUBY_VERSION >= "2.5.0" && RUBY_VERSION < "2.6.0"
+      run('gem', %w(install bundler -v 1.16.2))
+    end
+
+    run('gem', %w(list --details))
+    run('gem', %w(env))
+  else
+    with_retries { run('rake', %w(spec:travis:deps)) }
+  end
+when %w(rubocop)
+  run('gem', %w(install rubocop -v ~>0.60.0))
+  run('util/rubocop')
+when %w(script)
+  if TOOL.rubygems?
+    run('rake test')
+  else
+    run('rake', %w(spec:travis -t))
+  end
+else
+  abort "unknown args #{ARGV.inspect}"
+end

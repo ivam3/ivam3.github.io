@@ -1,0 +1,115 @@
+have_header: checking for unistd.h... -------------------- yes
+
+"arm-linux-androideabi-clang -o conftest -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC conftest.c  -L. -L/data/sdext2/data/com.termux/files/usr/lib -L. -L/data/data/com.termux/files/usr/lib -march=armv7-a -landroid-support -fstack-protector-strong -rdynamic -Wl,-export-dynamic     -lruby  -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main(int argc, char **argv)
+4: {
+5:   return 0;
+6: }
+/* end */
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <unistd.h>
+/* end */
+
+--------------------
+
+have_header: checking for sys/select.h... -------------------- yes
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <sys/select.h>
+/* end */
+
+--------------------
+
+have_type: checking for port_event_t in poll.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:6:9: error: unknown type name 'port_event_t'
+typedef port_event_t conftest_type;
+        ^
+1 error generated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <poll.h>
+4: 
+5: /*top*/
+6: typedef port_event_t conftest_type;
+7: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_header: checking for sys/epoll.h... -------------------- yes
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <sys/epoll.h>
+/* end */
+
+--------------------
+
+have_header: checking for sys/event.h... -------------------- no
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+conftest.c:3:10: fatal error: 'sys/event.h' file not found
+#include <sys/event.h>
+         ^~~~~~~~~~~~~
+1 error generated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <sys/event.h>
+/* end */
+
+--------------------
+
+have_type: checking for port_event_t in port.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:3:10: fatal error: 'port.h' file not found
+#include <port.h>
+         ^~~~~~~~
+1 error generated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <port.h>
+4: 
+5: /*top*/
+6: typedef port_event_t conftest_type;
+7: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_header: checking for sys/resource.h... -------------------- yes
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <sys/resource.h>
+/* end */
+
+--------------------
+

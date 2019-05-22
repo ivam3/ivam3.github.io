@@ -1,0 +1,2 @@
+U:RDoc::Attr[iI"leftovers:ETI"Optimist::Parser#leftovers;TI"R;T:publico:RDoc::Markup::Document:@parts[o:RDoc::Markup::Paragraph;	[I"IThe values from the commandline that were not interpreted by #parse.;T:
+@fileI"lib/optimist.rb;T:0@omit_headings_from_table_of_contents_below0F@I"Optimist::Parser;TcRDoc::NormalClass0

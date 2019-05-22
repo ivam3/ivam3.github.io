@@ -1,0 +1,21 @@
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/http_parser.rb-0.6.0/ext/ruby_http_parser
+/data/sdext2/data/com.termux/files/usr/bin/ruby -I /data/sdext2/data/com.termux/files/usr/lib/ruby/site_ruby/2.6.0 -r ./siteconf20190422-21287-1l19ezu.rb extconf.rb
+creating Makefile
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/http_parser.rb-0.6.0/ext/ruby_http_parser
+make "DESTDIR=" clean
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/http_parser.rb-0.6.0/ext/ruby_http_parser
+make "DESTDIR="
+compiling ruby_http_parser.c
+ruby_http_parser.c:330:85: warning: format specifies type 'size_t' (aka 'unsigned int') but the argument has type 'long' [-Wformat]
+      rb_raise(eParserError, "Could not parse data entirely (%zu != %zu)", nparsed, len);
+                                                                    ~~~             ^~~
+                                                                    %ld
+1 warning generated.
+compiling ryah_http_parser.c
+linking shared-object ruby_http_parser.so
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/http_parser.rb-0.6.0/ext/ruby_http_parser
+make "DESTDIR=" install
+install -c -m 0755 ruby_http_parser.so ./.gem.20190422-21287-ja7pgg

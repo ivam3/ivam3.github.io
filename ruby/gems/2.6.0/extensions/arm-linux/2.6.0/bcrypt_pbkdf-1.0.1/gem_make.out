@@ -1,0 +1,19 @@
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/bcrypt_pbkdf-1.0.1/ext/mri
+/data/sdext2/data/com.termux/files/usr/bin/ruby -I /data/sdext2/data/com.termux/files/usr/lib/ruby/site_ruby/2.6.0 -r ./siteconf20190422-21287-1xdtz74.rb extconf.rb
+creating Makefile
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/bcrypt_pbkdf-1.0.1/ext/mri
+make "DESTDIR=" clean
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/bcrypt_pbkdf-1.0.1/ext/mri
+make "DESTDIR="
+compiling bcrypt_pbkdf.c
+compiling bcrypt_pbkdf_ext.c
+compiling blowfish.c
+compiling explicit_bzero.c
+compiling hash_sha512.c
+linking shared-object bcrypt_pbkdf_ext.so
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/bcrypt_pbkdf-1.0.1/ext/mri
+make "DESTDIR=" install
+install -c -m 0755 bcrypt_pbkdf_ext.so ./.gem.20190422-21287-174m5o4

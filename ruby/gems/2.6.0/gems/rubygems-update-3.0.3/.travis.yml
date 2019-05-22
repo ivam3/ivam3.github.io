@@ -1,0 +1,38 @@
+language: ruby
+dist: trusty
+sudo: required
+branches:
+  only:
+    - master
+    - staging
+    - trying
+    - /^[\d.]+$/
+    - /.+-stable$/
+rvm:
+  - 2.3.8
+  - 2.4.5
+  - 2.5.3
+  - ruby-head
+env:
+  - "TEST_TOOL=rubygems YAML=psych"
+  - "TEST_TOOL=bundler RGV=master"
+jobs:
+  include:
+    - stage: linting
+      rvm: 2.5
+      env:
+        - "TEST_TOOL=rubygems YAML=psych"
+      script: util/ci rubocop
+stages:
+  - linting
+  - test
+before_script:
+  - util/ci before_script
+script:
+  - util/ci script
+matrix:
+  allow_failures:
+    - rvm: ruby-head
+      env: "TEST_TOOL=rubygems YAML=psych"
+    - rvm: ruby-head
+      env: "TEST_TOOL=bundler RGV=master"

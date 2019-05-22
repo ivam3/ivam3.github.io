@@ -1,0 +1,2 @@
+U:RDoc::Attr[iI"output:ETI"#BetterCap::SniffOptions#output;TI"RW;T:publico:RDoc::Markup::Document:@parts[o:RDoc::Markup::Paragraph;	[I"0PCAP file name to save captured packets to.;T:
+@fileI"+lib/bettercap/options/sniff_options.rb;T:0@omit_headings_from_table_of_contents_below0F@I"BetterCap::SniffOptions;TcRDoc::NormalClass0

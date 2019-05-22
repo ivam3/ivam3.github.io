@@ -1,0 +1,19 @@
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/bcrypt-3.1.12/ext/mri
+/data/sdext2/data/com.termux/files/usr/bin/ruby -I /data/sdext2/data/com.termux/files/usr/lib/ruby/site_ruby/2.6.0 -r ./siteconf20190422-21287-ipvimv.rb extconf.rb
+creating Makefile
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/bcrypt-3.1.12/ext/mri
+make "DESTDIR=" clean
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/bcrypt-3.1.12/ext/mri
+make "DESTDIR="
+compiling bcrypt_ext.c
+compiling crypt.c
+compiling crypt_blowfish.c
+compiling crypt_gensalt.c
+compiling wrapper.c
+linking shared-object bcrypt_ext.so
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/bcrypt-3.1.12/ext/mri
+make "DESTDIR=" install
+install -c -m 0755 bcrypt_ext.so ./.gem.20190422-21287-wpy27d

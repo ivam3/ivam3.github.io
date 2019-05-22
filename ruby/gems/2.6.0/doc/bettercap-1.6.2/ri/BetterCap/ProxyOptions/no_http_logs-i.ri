@@ -1,0 +1,2 @@
+U:RDoc::Attr[iI"no_http_logs:ETI")BetterCap::ProxyOptions#no_http_logs;TI"RW;T:publico:RDoc::Markup::Document:@parts[o:RDoc::Markup::Paragraph;	[I"*If true, suppress HTTP requests logs.;T:
+@fileI"+lib/bettercap/options/proxy_options.rb;T:0@omit_headings_from_table_of_contents_below0F@I"BetterCap::ProxyOptions;TcRDoc::NormalClass0

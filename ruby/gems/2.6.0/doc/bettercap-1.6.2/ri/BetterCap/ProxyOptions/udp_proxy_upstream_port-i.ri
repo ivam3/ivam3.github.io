@@ -1,0 +1,2 @@
+U:RDoc::Attr[iI"udp_proxy_upstream_port:ETI"4BetterCap::ProxyOptions#udp_proxy_upstream_port;TI"RW;T:publico:RDoc::Markup::Document:@parts[o:RDoc::Markup::Paragraph;	[I"$UDP proxy upstream server port.;T:
+@fileI"+lib/bettercap/options/proxy_options.rb;T:0@omit_headings_from_table_of_contents_below0F@I"BetterCap::ProxyOptions;TcRDoc::NormalClass0

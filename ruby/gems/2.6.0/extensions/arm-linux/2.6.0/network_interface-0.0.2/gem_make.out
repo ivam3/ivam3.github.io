@@ -1,0 +1,66 @@
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/network_interface-0.0.2/ext/network_interface_ext
+/data/sdext2/data/com.termux/files/usr/bin/ruby -I /data/sdext2/data/com.termux/files/usr/lib/ruby/site_ruby/2.6.0 -r ./siteconf20190422-21287-n1wmjf.rb extconf.rb
+
+[*] Running checks for netifaces code...
+[*] Warning : this platform as not been tested
+checking for getifaddrs()... no
+checking for getnameinfo()... yes
+checking for SIOCGIFCONF in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... yes
+checking for SIOCGSIZIFCONF in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... no
+checking for SIOCGIFHWADDR in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... yes
+checking for SIOCGIFADDR in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... yes
+checking for SIOCGIFFLAGS in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... yes
+checking for SIOCGIFDSTADDR in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... yes
+checking for SIOCGIFBRDADDR in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... yes
+checking for SIOCGIFNETMASK in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... yes
+checking for SIOCGLIFNUM in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... no
+checking for SIOCGLIFCONF in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... no
+checking for SIOCGLIFFLAGS in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... no
+checking for net/if_dl.h... no
+checking for netash/ash.h... no
+checking for netatalk/at.h... no
+checking for netax25/ax25.h... no
+checking for neteconet/ec.h... no
+checking for netipx/ipx.h... no
+checking for netpacket/packet.h... yes
+checking for netrose/rose.h... no
+checking for linux/irda.h... no
+checking for linux/atm.h... yes
+checking for linux/llc.h... yes
+checking for linux/tipc.h... yes
+checking for linux/dn.h... yes
+checking for struct sockaddr.sa_len in sys/types.h,sys/socket.h,net/if.h... no
+checking for struct sockaddr_at in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... no
+checking for struct sockaddr_ax25 in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... no
+checking for struct sockaddr_dl in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... no
+checking for struct sockaddr_eon in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... no
+checking for struct sockaddr_in in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... yes
+checking for struct sockaddr_in6 in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... yes
+checking for struct sockaddr_inarp in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... no
+checking for struct sockaddr_ipx in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... no
+checking for struct sockaddr_iso in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... no
+checking for struct sockaddr_ns in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... no
+checking for struct sockaddr_un in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... yes
+checking for struct sockaddr_x25 in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... no
+checking for struct sockaddr_rose in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... no
+checking for struct sockaddr_ash in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... no
+checking for struct sockaddr_ec in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... no
+checking for struct sockaddr_ll in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... yes
+checking for struct sockaddr_atmpvc in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... yes
+checking for struct sockaddr_atmsvc in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... yes
+checking for struct sockaddr_dn in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... yes
+checking for struct sockaddr_irda in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... no
+checking for struct sockaddr_llc in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... yes
+creating Makefile
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/network_interface-0.0.2/ext/network_interface_ext
+make "DESTDIR=" clean
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/network_interface-0.0.2/ext/network_interface_ext
+make "DESTDIR="
+compiling netifaces.c
+linking shared-object network_interface_ext.so
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/network_interface-0.0.2/ext/network_interface_ext
+make "DESTDIR=" install
+install -c -m 0755 network_interface_ext.so ./.gem.20190422-21287-ff0fn9

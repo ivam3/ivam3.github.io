@@ -1,0 +1,45 @@
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/thin-1.7.2/ext/thin_parser
+/data/sdext2/data/com.termux/files/usr/bin/ruby -I /data/sdext2/data/com.termux/files/usr/lib/ruby/site_ruby/2.6.0 -r ./siteconf20190422-21287-ipexu7.rb extconf.rb
+checking for main() in -lc... yes
+creating Makefile
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/thin-1.7.2/ext/thin_parser
+make "DESTDIR=" clean
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/thin-1.7.2/ext/thin_parser
+make "DESTDIR="
+compiling parser.c
+compiling thin.c
+thin.c:242:3: warning: implicit declaration of function 'thin_http_parser_init' is invalid in C99 [-Wimplicit-function-declaration]
+  thin_http_parser_init(hp);
+  ^
+thin.c:260:3: warning: implicit declaration of function 'thin_http_parser_init' is invalid in C99 [-Wimplicit-function-declaration]
+  thin_http_parser_init(http);
+  ^
+thin.c:277:3: warning: implicit declaration of function 'thin_http_parser_init' is invalid in C99 [-Wimplicit-function-declaration]
+  thin_http_parser_init(http);
+  ^
+thin.c:294:3: warning: implicit declaration of function 'thin_http_parser_finish' is invalid in C99 [-Wimplicit-function-declaration]
+  thin_http_parser_finish(http);
+  ^
+thin.c:296:10: warning: implicit declaration of function 'thin_http_parser_is_finished' is invalid in C99 [-Wimplicit-function-declaration]
+  return thin_http_parser_is_finished(http) ? Qtrue : Qfalse;
+         ^
+thin.c:334:5: warning: implicit declaration of function 'thin_http_parser_execute' is invalid in C99 [-Wimplicit-function-declaration]
+    thin_http_parser_execute(http, dptr, dlen, from);
+    ^
+thin.c:338:8: warning: implicit declaration of function 'thin_http_parser_has_error' is invalid in C99 [-Wimplicit-function-declaration]
+    if(thin_http_parser_has_error(http)) {
+       ^
+thin.c:359:10: warning: implicit declaration of function 'thin_http_parser_has_error' is invalid in C99 [-Wimplicit-function-declaration]
+  return thin_http_parser_has_error(http) ? Qtrue : Qfalse;
+         ^
+thin.c:374:10: warning: implicit declaration of function 'thin_http_parser_is_finished' is invalid in C99 [-Wimplicit-function-declaration]
+  return thin_http_parser_is_finished(http) ? Qtrue : Qfalse;
+         ^
+9 warnings generated.
+linking shared-object thin_parser.so
+
+current directory: /data/sdext2/data/com.termux/files/usr/lib/ruby/gems/2.6.0/gems/thin-1.7.2/ext/thin_parser
+make "DESTDIR=" install
+install -c -m 0755 thin_parser.so ./.gem.20190422-21287-av4859

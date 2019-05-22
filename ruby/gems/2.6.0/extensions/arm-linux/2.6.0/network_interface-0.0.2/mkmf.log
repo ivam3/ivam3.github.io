@@ -1,0 +1,1207 @@
+have_func: checking for getifaddrs()... -------------------- no
+
+"arm-linux-androideabi-clang -o conftest -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC conftest.c  -L. -L/data/sdext2/data/com.termux/files/usr/lib -L. -L/data/data/com.termux/files/usr/lib -march=armv7-a -landroid-support -fstack-protector-strong -rdynamic -Wl,-export-dynamic     -lruby  -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main(int argc, char **argv)
+4: {
+5:   return 0;
+6: }
+/* end */
+
+"arm-linux-androideabi-clang -o conftest -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC conftest.c  -L. -L/data/sdext2/data/com.termux/files/usr/lib -L. -L/data/data/com.termux/files/usr/lib -march=armv7-a -landroid-support -fstack-protector-strong -rdynamic -Wl,-export-dynamic     -lruby  -lm   -lc"
+conftest.c:14:57: error: use of undeclared identifier 'getifaddrs'
+int t(void) { void ((*volatile p)()); p = (void ((*)()))getifaddrs; return !p; }
+                                                        ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return 0;
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))getifaddrs; return !p; }
+/* end */
+
+"arm-linux-androideabi-clang -o conftest -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC conftest.c  -L. -L/data/sdext2/data/com.termux/files/usr/lib -L. -L/data/data/com.termux/files/usr/lib -march=armv7-a -landroid-support -fstack-protector-strong -rdynamic -Wl,-export-dynamic     -lruby  -lm   -lc"
+/data/data/com.termux/files/usr/bin/arm-linux-androideabi-ld: /data/data/com.termux/files/usr/tmp/conftest-0e5541.o: in function `t':
+conftest.c:(.text+0x38): undefined reference to `getifaddrs'
+clang-8: error: linker command failed with exit code 1 (use -v to see invocation)
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return 0;
+13: }
+14: extern void getifaddrs();
+15: int t(void) { getifaddrs(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for getnameinfo()... -------------------- yes
+
+"arm-linux-androideabi-clang -o conftest -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC conftest.c  -L. -L/data/sdext2/data/com.termux/files/usr/lib -L. -L/data/data/com.termux/files/usr/lib -march=armv7-a -landroid-support -fstack-protector-strong -rdynamic -Wl,-export-dynamic     -lruby  -lm   -lc"
+conftest.c:14:57: error: use of undeclared identifier 'getnameinfo'
+int t(void) { void ((*volatile p)()); p = (void ((*)()))getnameinfo; return !p; }
+                                                        ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return 0;
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))getnameinfo; return !p; }
+/* end */
+
+"arm-linux-androideabi-clang -o conftest -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC conftest.c  -L. -L/data/sdext2/data/com.termux/files/usr/lib -L. -L/data/data/com.termux/files/usr/lib -march=armv7-a -landroid-support -fstack-protector-strong -rdynamic -Wl,-export-dynamic     -lruby  -lm   -lc"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return 0;
+13: }
+14: extern void getnameinfo();
+15: int t(void) { getnameinfo(); return 0; }
+/* end */
+
+--------------------
+
+have_macro: checking for SIOCGIFCONF in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/ioctl.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <arpa/inet.h>
+ 9: /*top*/
+10: #ifndef SIOCGIFCONF
+11: # error
+12: |:/ === SIOCGIFCONF undefined === /:|
+13: #endif
+/* end */
+
+--------------------
+
+have_macro: checking for SIOCGSIZIFCONF in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:11:3: error: 
+# error
+  ^
+conftest.c:12:1: error: expected identifier or '('
+|:/ === SIOCGSIZIFCONF undefined === /:|
+^
+2 errors generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/ioctl.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <arpa/inet.h>
+ 9: /*top*/
+10: #ifndef SIOCGSIZIFCONF
+11: # error
+12: |:/ === SIOCGSIZIFCONF undefined === /:|
+13: #endif
+/* end */
+
+--------------------
+
+have_macro: checking for SIOCGIFHWADDR in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/ioctl.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <arpa/inet.h>
+ 9: /*top*/
+10: #ifndef SIOCGIFHWADDR
+11: # error
+12: |:/ === SIOCGIFHWADDR undefined === /:|
+13: #endif
+/* end */
+
+--------------------
+
+have_macro: checking for SIOCGIFADDR in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/ioctl.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <arpa/inet.h>
+ 9: /*top*/
+10: #ifndef SIOCGIFADDR
+11: # error
+12: |:/ === SIOCGIFADDR undefined === /:|
+13: #endif
+/* end */
+
+--------------------
+
+have_macro: checking for SIOCGIFFLAGS in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/ioctl.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <arpa/inet.h>
+ 9: /*top*/
+10: #ifndef SIOCGIFFLAGS
+11: # error
+12: |:/ === SIOCGIFFLAGS undefined === /:|
+13: #endif
+/* end */
+
+--------------------
+
+have_macro: checking for SIOCGIFDSTADDR in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/ioctl.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <arpa/inet.h>
+ 9: /*top*/
+10: #ifndef SIOCGIFDSTADDR
+11: # error
+12: |:/ === SIOCGIFDSTADDR undefined === /:|
+13: #endif
+/* end */
+
+--------------------
+
+have_macro: checking for SIOCGIFBRDADDR in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/ioctl.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <arpa/inet.h>
+ 9: /*top*/
+10: #ifndef SIOCGIFBRDADDR
+11: # error
+12: |:/ === SIOCGIFBRDADDR undefined === /:|
+13: #endif
+/* end */
+
+--------------------
+
+have_macro: checking for SIOCGIFNETMASK in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/ioctl.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <arpa/inet.h>
+ 9: /*top*/
+10: #ifndef SIOCGIFNETMASK
+11: # error
+12: |:/ === SIOCGIFNETMASK undefined === /:|
+13: #endif
+/* end */
+
+--------------------
+
+have_macro: checking for SIOCGLIFNUM in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:11:3: error: 
+# error
+  ^
+conftest.c:12:1: error: expected identifier or '('
+|:/ === SIOCGLIFNUM undefined === /:|
+^
+2 errors generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/ioctl.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <arpa/inet.h>
+ 9: /*top*/
+10: #ifndef SIOCGLIFNUM
+11: # error
+12: |:/ === SIOCGLIFNUM undefined === /:|
+13: #endif
+/* end */
+
+--------------------
+
+have_macro: checking for SIOCGLIFCONF in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:11:3: error: 
+# error
+  ^
+conftest.c:12:1: error: expected identifier or '('
+|:/ === SIOCGLIFCONF undefined === /:|
+^
+2 errors generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/ioctl.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <arpa/inet.h>
+ 9: /*top*/
+10: #ifndef SIOCGLIFCONF
+11: # error
+12: |:/ === SIOCGLIFCONF undefined === /:|
+13: #endif
+/* end */
+
+--------------------
+
+have_macro: checking for SIOCGLIFFLAGS in sys/types.h,sys/socket.h,sys/ioctl.h,net/if.h,netinet/in.h,arpa/inet.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:11:3: error: 
+# error
+  ^
+conftest.c:12:1: error: expected identifier or '('
+|:/ === SIOCGLIFFLAGS undefined === /:|
+^
+2 errors generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/ioctl.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <arpa/inet.h>
+ 9: /*top*/
+10: #ifndef SIOCGLIFFLAGS
+11: # error
+12: |:/ === SIOCGLIFFLAGS undefined === /:|
+13: #endif
+/* end */
+
+--------------------
+
+have_header: checking for net/if_dl.h... -------------------- no
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+conftest.c:3:10: fatal error: 'net/if_dl.h' file not found
+#include <net/if_dl.h>
+         ^~~~~~~~~~~~~
+1 error generated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <net/if_dl.h>
+/* end */
+
+--------------------
+
+have_header: checking for netash/ash.h... -------------------- no
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+conftest.c:3:10: fatal error: 'netash/ash.h' file not found
+#include <netash/ash.h>
+         ^~~~~~~~~~~~~~
+1 error generated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <netash/ash.h>
+/* end */
+
+--------------------
+
+have_header: checking for netatalk/at.h... -------------------- no
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+conftest.c:3:10: fatal error: 'netatalk/at.h' file not found
+#include <netatalk/at.h>
+         ^~~~~~~~~~~~~~~
+1 error generated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <netatalk/at.h>
+/* end */
+
+--------------------
+
+have_header: checking for netax25/ax25.h... -------------------- no
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+conftest.c:3:10: fatal error: 'netax25/ax25.h' file not found
+#include <netax25/ax25.h>
+         ^~~~~~~~~~~~~~~~
+1 error generated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <netax25/ax25.h>
+/* end */
+
+--------------------
+
+have_header: checking for neteconet/ec.h... -------------------- no
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+conftest.c:3:10: fatal error: 'neteconet/ec.h' file not found
+#include <neteconet/ec.h>
+         ^~~~~~~~~~~~~~~~
+1 error generated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <neteconet/ec.h>
+/* end */
+
+--------------------
+
+have_header: checking for netipx/ipx.h... -------------------- no
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+conftest.c:3:10: fatal error: 'netipx/ipx.h' file not found
+#include <netipx/ipx.h>
+         ^~~~~~~~~~~~~~
+1 error generated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <netipx/ipx.h>
+/* end */
+
+--------------------
+
+have_header: checking for netpacket/packet.h... -------------------- yes
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <netpacket/packet.h>
+/* end */
+
+--------------------
+
+have_header: checking for netrose/rose.h... -------------------- no
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+conftest.c:3:10: fatal error: 'netrose/rose.h' file not found
+#include <netrose/rose.h>
+         ^~~~~~~~~~~~~~~~
+1 error generated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <netrose/rose.h>
+/* end */
+
+--------------------
+
+have_header: checking for linux/irda.h... -------------------- no
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+conftest.c:3:10: fatal error: 'linux/irda.h' file not found
+#include <linux/irda.h>
+         ^~~~~~~~~~~~~~
+1 error generated.
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <linux/irda.h>
+/* end */
+
+--------------------
+
+have_header: checking for linux/atm.h... -------------------- yes
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <linux/atm.h>
+/* end */
+
+--------------------
+
+have_header: checking for linux/llc.h... -------------------- yes
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <linux/llc.h>
+/* end */
+
+--------------------
+
+have_header: checking for linux/tipc.h... -------------------- yes
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <linux/tipc.h>
+/* end */
+
+--------------------
+
+have_header: checking for linux/dn.h... -------------------- yes
+
+"arm-linux-androideabi-cpp -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    conftest.c -o conftest.i"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <linux/dn.h>
+/* end */
+
+--------------------
+
+have_struct_member: checking for struct sockaddr.sa_len in sys/types.h,sys/socket.h,net/if.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:8:41: error: no member named 'sa_len' in 'struct sockaddr'
+int s = (char *)&((struct sockaddr*)0)->sa_len - (char *)0;
+                 ~~~~~~~~~~~~~~~~~~~~~  ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <net/if.h>
+ 6: 
+ 7: /*top*/
+ 8: int s = (char *)&((struct sockaddr*)0)->sa_len - (char *)0;
+ 9: int main(int argc, char **argv)
+10: {
+11:   return 0;
+12: }
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_at in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:16:17: error: invalid application of 'sizeof' to an incomplete type 'conftest_type' (aka 'struct sockaddr_at')
+int conftestval[sizeof(conftest_type)?1:-1];
+                ^     ~~~~~~~~~~~~~~~
+conftest.c:15:16: note: forward declaration of 'struct sockaddr_at'
+typedef struct sockaddr_at conftest_type;
+               ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_at conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_ax25 in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:16:17: error: invalid application of 'sizeof' to an incomplete type 'conftest_type' (aka 'struct sockaddr_ax25')
+int conftestval[sizeof(conftest_type)?1:-1];
+                ^     ~~~~~~~~~~~~~~~
+conftest.c:15:16: note: forward declaration of 'struct sockaddr_ax25'
+typedef struct sockaddr_ax25 conftest_type;
+               ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_ax25 conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_dl in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:16:17: error: invalid application of 'sizeof' to an incomplete type 'conftest_type' (aka 'struct sockaddr_dl')
+int conftestval[sizeof(conftest_type)?1:-1];
+                ^     ~~~~~~~~~~~~~~~
+conftest.c:15:16: note: forward declaration of 'struct sockaddr_dl'
+typedef struct sockaddr_dl conftest_type;
+               ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_dl conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_eon in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:16:17: error: invalid application of 'sizeof' to an incomplete type 'conftest_type' (aka 'struct sockaddr_eon')
+int conftestval[sizeof(conftest_type)?1:-1];
+                ^     ~~~~~~~~~~~~~~~
+conftest.c:15:16: note: forward declaration of 'struct sockaddr_eon'
+typedef struct sockaddr_eon conftest_type;
+               ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_eon conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_in in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_in conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_in6 in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_in6 conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_inarp in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:16:17: error: invalid application of 'sizeof' to an incomplete type 'conftest_type' (aka 'struct sockaddr_inarp')
+int conftestval[sizeof(conftest_type)?1:-1];
+                ^     ~~~~~~~~~~~~~~~
+conftest.c:15:16: note: forward declaration of 'struct sockaddr_inarp'
+typedef struct sockaddr_inarp conftest_type;
+               ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_inarp conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_ipx in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:16:17: error: invalid application of 'sizeof' to an incomplete type 'conftest_type' (aka 'struct sockaddr_ipx')
+int conftestval[sizeof(conftest_type)?1:-1];
+                ^     ~~~~~~~~~~~~~~~
+conftest.c:15:16: note: forward declaration of 'struct sockaddr_ipx'
+typedef struct sockaddr_ipx conftest_type;
+               ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_ipx conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_iso in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:16:17: error: invalid application of 'sizeof' to an incomplete type 'conftest_type' (aka 'struct sockaddr_iso')
+int conftestval[sizeof(conftest_type)?1:-1];
+                ^     ~~~~~~~~~~~~~~~
+conftest.c:15:16: note: forward declaration of 'struct sockaddr_iso'
+typedef struct sockaddr_iso conftest_type;
+               ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_iso conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_ns in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:16:17: error: invalid application of 'sizeof' to an incomplete type 'conftest_type' (aka 'struct sockaddr_ns')
+int conftestval[sizeof(conftest_type)?1:-1];
+                ^     ~~~~~~~~~~~~~~~
+conftest.c:15:16: note: forward declaration of 'struct sockaddr_ns'
+typedef struct sockaddr_ns conftest_type;
+               ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_ns conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_un in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_un conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_x25 in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:16:17: error: invalid application of 'sizeof' to an incomplete type 'conftest_type' (aka 'struct sockaddr_x25')
+int conftestval[sizeof(conftest_type)?1:-1];
+                ^     ~~~~~~~~~~~~~~~
+conftest.c:15:16: note: forward declaration of 'struct sockaddr_x25'
+typedef struct sockaddr_x25 conftest_type;
+               ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_x25 conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_rose in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:16:17: error: invalid application of 'sizeof' to an incomplete type 'conftest_type' (aka 'struct sockaddr_rose')
+int conftestval[sizeof(conftest_type)?1:-1];
+                ^     ~~~~~~~~~~~~~~~
+conftest.c:15:16: note: forward declaration of 'struct sockaddr_rose'
+typedef struct sockaddr_rose conftest_type;
+               ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_rose conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_ash in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:16:17: error: invalid application of 'sizeof' to an incomplete type 'conftest_type' (aka 'struct sockaddr_ash')
+int conftestval[sizeof(conftest_type)?1:-1];
+                ^     ~~~~~~~~~~~~~~~
+conftest.c:15:16: note: forward declaration of 'struct sockaddr_ash'
+typedef struct sockaddr_ash conftest_type;
+               ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_ash conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_ec in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:16:17: error: invalid application of 'sizeof' to an incomplete type 'conftest_type' (aka 'struct sockaddr_ec')
+int conftestval[sizeof(conftest_type)?1:-1];
+                ^     ~~~~~~~~~~~~~~~
+conftest.c:15:16: note: forward declaration of 'struct sockaddr_ec'
+typedef struct sockaddr_ec conftest_type;
+               ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_ec conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_ll in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_ll conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_atmpvc in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_atmpvc conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_atmsvc in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_atmsvc conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_dn in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_dn conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_irda in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- no
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+conftest.c:16:17: error: invalid application of 'sizeof' to an incomplete type 'conftest_type' (aka 'struct sockaddr_irda')
+int conftestval[sizeof(conftest_type)?1:-1];
+                ^     ~~~~~~~~~~~~~~~
+conftest.c:15:16: note: forward declaration of 'struct sockaddr_irda'
+typedef struct sockaddr_irda conftest_type;
+               ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_irda conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
+have_type: checking for struct sockaddr_llc in sys/types.h,sys/socket.h,sys/un.h,net/if.h,netinet/in.h,netpacket/packet.h,linux/atm.h,linux/llc.h,linux/tipc.h,linux/dn.h... -------------------- yes
+
+"arm-linux-androideabi-clang -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/arm-linux-androideabi -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0/ruby/backward -I/data/sdext2/data/com.termux/files/usr/include/ruby-2.6.0 -I. -I/data/data/com.termux/files/usr/include    -march=armv7-a -mfpu=neon -mfloat-abi=softfp -mthumb -Oz -fPIC   -c conftest.c"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <sys/types.h>
+ 4: #include <sys/socket.h>
+ 5: #include <sys/un.h>
+ 6: #include <net/if.h>
+ 7: #include <netinet/in.h>
+ 8: #include <netpacket/packet.h>
+ 9: #include <linux/atm.h>
+10: #include <linux/llc.h>
+11: #include <linux/tipc.h>
+12: #include <linux/dn.h>
+13: 
+14: /*top*/
+15: typedef struct sockaddr_llc conftest_type;
+16: int conftestval[sizeof(conftest_type)?1:-1];
+/* end */
+
+--------------------
+
