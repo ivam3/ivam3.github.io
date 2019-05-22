@@ -1,7 +1,0 @@
-#!/data/data/com.termux/files/usr/bin/env ruby
-
-require "bundler/setup"
-require "rake"
-
-require "irb"
-IRB.start

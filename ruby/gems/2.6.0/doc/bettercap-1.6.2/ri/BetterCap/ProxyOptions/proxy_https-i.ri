@@ -1,2 +1,0 @@
-U:RDoc::Attr[iI"proxy_https:ETI"(BetterCap::ProxyOptions#proxy_https;TI"RW;T:publico:RDoc::Markup::Document:@parts[o:RDoc::Markup::Paragraph;	[I"6If true, HTTPS transparent proxy will be enabled.;T:
-@fileI"+lib/bettercap/options/proxy_options.rb;T:0@omit_headings_from_table_of_contents_below0F@I"BetterCap::ProxyOptions;TcRDoc::NormalClass0

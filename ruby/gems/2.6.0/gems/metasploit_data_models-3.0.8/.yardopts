@@ -1,4 +1,0 @@
---markup markdown
---plugin yard-metasploit-erd
---protected
-{app,lib}/**/*.rb

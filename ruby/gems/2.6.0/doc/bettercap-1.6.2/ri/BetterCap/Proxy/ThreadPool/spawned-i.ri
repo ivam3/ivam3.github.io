@@ -1,2 +1,0 @@
-U:RDoc::Attr[iI"spawned:ETI")BetterCap::Proxy::ThreadPool#spawned;TI"R;T:publico:RDoc::Markup::Document:@parts[o:RDoc::Markup::Paragraph;	[I"+Number of spawned threads in the pool.;T:
-@fileI"'lib/bettercap/proxy/thread_pool.rb;T:0@omit_headings_from_table_of_contents_below0F@I"!BetterCap::Proxy::ThreadPool;TcRDoc::NormalClass0

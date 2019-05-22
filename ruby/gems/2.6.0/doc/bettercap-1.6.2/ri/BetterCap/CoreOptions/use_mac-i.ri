@@ -1,2 +1,0 @@
-U:RDoc::Attr[iI"use_mac:ETI"#BetterCap::CoreOptions#use_mac;TI"RW;T:publico:RDoc::Markup::Document:@parts[o:RDoc::Markup::Paragraph;	[I"IIf not nil, the interface MAC address will be changed to this value.;T:
-@fileI"*lib/bettercap/options/core_options.rb;T:0@omit_headings_from_table_of_contents_below0F@I"BetterCap::CoreOptions;TcRDoc::NormalClass0

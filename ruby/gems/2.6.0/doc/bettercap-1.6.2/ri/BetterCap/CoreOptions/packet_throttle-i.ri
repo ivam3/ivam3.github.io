@@ -1,2 +1,0 @@
-U:RDoc::Attr[iI"packet_throttle:ETI"+BetterCap::CoreOptions#packet_throttle;TI"RW;T:publico:RDoc::Markup::Document:@parts[o:RDoc::Markup::Paragraph;	[I"RIf different than 0, this time will be used as a delay while sending packets.;T:
-@fileI"*lib/bettercap/options/core_options.rb;T:0@omit_headings_from_table_of_contents_below0F@I"BetterCap::CoreOptions;TcRDoc::NormalClass0

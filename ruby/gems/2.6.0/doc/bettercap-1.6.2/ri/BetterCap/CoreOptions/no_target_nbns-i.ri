@@ -1,2 +1,0 @@
-U:RDoc::Attr[iI"no_target_nbns:ETI"*BetterCap::CoreOptions#no_target_nbns;TI"RW;T:publico:RDoc::Markup::Document:@parts[o:RDoc::Markup::Paragraph;	[I"BIf true, targets NBNS hostname resolution won't be performed.;T:
-@fileI"*lib/bettercap/options/core_options.rb;T:0@omit_headings_from_table_of_contents_below0F@I"BetterCap::CoreOptions;TcRDoc::NormalClass0

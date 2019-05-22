@@ -1,3 +1,0 @@
-U:RDoc::Attr[iI"
-rdata:ETI"Net::DNS::RR#rdata;TI"R;T:publico:RDoc::Markup::Document:@parts[o:RDoc::Markup::Paragraph;	[I"/Data belonging to that appropriate class, ;TI"0not to be used (use real accessors instead);T:
-@fileI"lib/net/dns/rr.rb;T:0@omit_headings_from_table_of_contents_below0F@I"Net::DNS::RR;TcRDoc::NormalClass0

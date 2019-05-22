@@ -1,9 +1,0 @@
-Description: SPBs
-Category:    basic
-
-Block counts:
-	IDB: 1
-	SHB: 1
-	SPB: 4
-
-Block sequence: SHB, IDB, SPB, SPB, SPB, SPB

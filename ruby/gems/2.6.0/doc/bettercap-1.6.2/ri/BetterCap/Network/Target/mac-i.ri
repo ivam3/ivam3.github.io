@@ -1,2 +1,0 @@
-U:RDoc::Attr[iI"mac:ETI"#BetterCap::Network::Target#mac;TI"RW;T:publico:RDoc::Markup::Document:@parts[o:RDoc::Markup::Paragraph;	[I"5The MAC address of the device network interface.;T:
-@fileI"$lib/bettercap/network/target.rb;T:0@omit_headings_from_table_of_contents_below0F@I"BetterCap::Network::Target;TcRDoc::NormalClass0
