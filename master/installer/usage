@@ -1,5 +1,16 @@
 #!/bin/bash 
+# created on june 2020 by @Ivam3
+# Menu for IbyC-installer script
 
+R='\033[1;31m'
+G='\033[1;32m'
+Goke='\033[92m'
+Glig=='\e[1;32m'
+Y='\033[1;33m'
+B='\033[1;34m'
+M='\033[1;35m'
+C='\033[1;36m'
+W='\033[0m'
 
 Usage() { printf "$Goke\n[usage]:─➤ IbyC-installer <argument> <option>\n$W\n-h\t\t\tShow this menu\n-l\t\t\tList of available tools\n-i  <name-of-tool> \tInstall a tool\n-f  <module|bigdecimal>\tFix a specific termux issues\n\nExamples:\tIbyC-installer -i IbyC-iHaklab\n\t\tIbyC-installer -f module\n\nFor help going to https://t.me/Ivam3_Bot\n" 1>&2; exit 1; }
 Usage
