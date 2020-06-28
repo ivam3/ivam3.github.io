@@ -1,0 +1,202 @@
+#!/data/data/com.termux/files/usr/bin/bash -e
+#Coded on March 2019 by @Ivam3
+IFS=$'\n\t'
+#trap ctrl_c 2
+function ctrl_c() {
+                echo
+                printf "$Y\n\n[!]$R Going me on$B Telegram$R t.me/Ivam3byCinderella$W\n\n"
+}
+R='\033[1;31m'
+G='\033[1;32m'
+Goke='\033[92m'
+Glig=='\e[1;32m'
+Y='\033[1;33m'
+B='\033[1;34m'
+M='\033[1;35m'
+C='\033[1;36m'
+W='\033[0m'
+
+Banner() {
+	echo $(clear)
+        printf "$C"
+                echo "         -{> Kali NetHunter <} "
+                echo "   -{ SO > Android - Only for Termux } "
+                echo "             -{ Coded by } "
+                printf "$G"
+                echo "      =============================="
+                echo "      .___.                 ______,"
+                echo "      |   |__ ______   ___  \_____ \ "
+                echo "      |   \ \/ /\__ \ /   \   _(__ <,"
+                echo "      |   |\   / __ \| Y Y \ /      \ "
+                echo "      |___| \_/ (____|__|_| /______ /"
+                echo "                     \/    \/      \/ "
+                echo "      ====== By ___ Cinderella ======"
+        printf "$C\n"
+                echo "          [---] Join me on [---]"
+                echo "[-] www.youtube.com/c/ivam3bycinderella [-]"
+                echo "      [-] t.me/Ivam3byCinderella [-]"
+                echo "            [-] t.me/ivam3 [-]"
+        printf "$G\n"
+                echo "        [---] SPECIAL THANKS [---]"
+                echo "                    TO "
+                echo "       [-] MY MASTER CINDERELLA [-]"
+        printf "$W"
+                echo "             People don't die"
+                echo "    If they still live in the hearts"
+                echo "           of their loved ones"
+                echo "       We love her ... We miss her"
+                echo "                  *RIP*"
+        printf "$R\n"
+                echo "          [---] DISCLAIMER [---]"
+        printf "$W"
+                echo "   If the law is violated with it's use"
+                echo "     This would be the responsibility"
+                echo "        of the user who handled it"
+        printf "$R"
+                echo "       [-] Use At Your Own Risk [-]"
+        printf "$W\n"
+        printf "$C         Press$G ENTER$C to continue"
+        printf "$W\n"
+        read enter
+}
+
+pre_cleanup() {
+	find $HOME -name "kali*" -type d -exec rm -rf {} \; || :
+} 
+
+post_cleanup() {
+	find $HOME -name "kalifs*" -type f -exec rm -rf {} \; || :
+} 
+setchroot() {
+	chroot=minimal
+}
+unknownarch() {
+	printf "$R[w]-> Unknown Architecture$W\n"
+	exit
+}
+checksysinfo() {
+	printf "$C[*]-> Checking your architecture ...$W\n"
+	case $(getprop ro.product.cpu.abi) in
+		arm64-v8a)
+			SETARCH=arm64
+			;;
+		armeabi|armeabi-v7a)
+			SETARCH=armhf
+			;;
+		*)
+			unknownarch
+			;;
+	esac
+}
+checkdeps() {
+	printf "$C[*]-> Updating aptitude repositories...$W\n"
+	apt update -y &> /dev/null
+	printf "$C[*]-> Installing all required tools$W |$C If it necessary...$W"
+
+	for i in proot tar axel; do
+		if [ -e $PREFIX/bin/$i ]; then
+			printf "$G  • $i is OK"
+		else
+			printf "$Y\n[!]-> Installing ${i}...$W"
+			apt install -y $i || {
+				printf "$R[w]-> ERROR: check your internet connection or apt\n Exiting...$W\n"
+				exit
+			}
+		fi
+	done
+	apt upgrade -y
+}
+seturl() {
+	URL="https://build.nethunter.com/kalifs/kalifs-20171013/kalifs-${1}-${chroot}.tar.xz"
+}
+gettarfile() {
+	printf "$C[*]-> Downloading tar file...$W\n"
+	DESTINATION=$HOME/kali-${SETARCH}
+	seturl $SETARCH
+	axel ${EXTRAARGS} --alternate "$URL"
+	rootfs="kalifs-${SETARCH}-${chroot}.tar.xz"
+}
+getsha() {
+	printf "\n$C[*]-> Downloading SHA ...$W\n"
+	axel ${EXTRAARGS} --alternate "https://build.nethunter.com/kalifs/kalifs-20171013/kalifs-${SETARCH}-${chroot}.sha512sum"
+}
+checkintegrity() {
+	printf "\n$C[*]-> Checking integrity of file...$W\n"
+	printf ' '
+	sha512sum -c kalifs-${SETARCH}-${chroot}.sha512sum || {
+		printf "$R[w]-> ERROR : File corrupted \n$W"
+		exit 1
+	}
+}
+extract() {
+	printf "$C\n[*]-> Extracting...$W\n"
+	proot --link2symlink tar -xf $rootfs 2> /dev/null || :
+}
+createloginfile() {
+	bin=${PREFIX}/bin/startkali
+	cat > $bin <<- EOM
+#!/data/data/com.termux/files/usr/bin/bash -e
+unset LD_PRELOAD
+exec proot --link2symlink -0 -r ${DESTINATION} -b /dev/ -b /sys/ -b /proc/ -b /storage/ -b $HOME -w $HOME /usr/bin/env -i HOME=/root USER=root TERM="$TERM" LANG=$LANG PATH=/bin:/usr/bin:/sbin:/usr/sbin /bin/bash --login
+EOM
+
+	chmod 700 $bin
+}
+
+
+# Start
+EXTRAARGS=""
+if [[ ! -z $1 ]]
+	then
+EXTRAARGS=$1
+if [[ $EXTRAARGS != "--insecure" ]]
+	then
+		
+		EXTRAARGS=""
+	
+	fi
+
+	fi
+# Dont run in non-home
+while [ ! $(id -u) -ne 0 ]; do
+        printf "$R[W]:-> You need to be a common user$W\n"
+        exit
+done
+if [ ! -e $HOME/IbyC-kalinethunter ]; then
+printf "$R[w]-> IbyC-kalinethunter file have to be in Home directory$W\n"
+exit 2
+fi
+if [ `pwd` != $HOME ]; then
+printf "$R[w]-> You are not in home directory$W\n"
+exit 2
+fi
+Banner
+pre_cleanup
+checksysinfo
+checkdeps
+setchroot
+gettarfile
+getsha
+checkintegrity
+extract
+createloginfile
+post_cleanup
+
+# Utility function for resolv.conf
+resolvconf() {
+	#create resolv.conf file 
+	printf "\nnameserver 8.8.8.8\nnameserver 8.8.4.4" > ${DESTINATION}/etc/resolv.conf
+} 
+resolvconf
+
+finalwork() {
+	[ -e $HOME/finaltouchup.sh ] && rm $HOME/finaltouchup.sh
+	echo
+	axel -a https://github.com/Hax4us/Nethunter-In-Termux/raw/master/finaltouchup.sh
+	DESTINATION=$DESTINATION SETARCH=$SETARCH bash $HOME/finaltouchup.sh
+}
+printf "\n\n$C ::::::::: KALI NETHUNTER INSTALLED :::::::::$W\n"
+printf "      Now you can run it with command$G\n\t$G   >    startkali    <\n"
+printf "\n$R :::::::::::::: ADVERSMENT ::::::::::::::$Y\n"
+printf "After run Kali NetHunter you have to get keys\n\tin Nethunter not in Termux type :\n$G•$W apt-key adv --keyserver hkp://keys.gnupg.net --recv-keys 7D8D0BF6 \n$G•$W apt update\n$G•$W apt --fix-broken install\n$G•$W apt upgrade\n$G•$W apt autoremove\n\n"
+#	@Ivam3
