@@ -1,0 +1,5 @@
+#!/bin/bash 
+
+
+Usage() { printf "$Goke\n[usage]:─➤ IbyC-installer <argument> <option>\n$W\n-h\t\t\tShow this menu\n-l\t\t\tList of available tools\n-i  <name-of-tool> \tInstall a tool\n-f  <module|bigdecimal>\tFix a specific termux issues\n\nExamples:\tIbyC-installer -i IbyC-iHaklab\n\t\tIbyC-installer -f module\n\nFor help going to https://t.me/Ivam3_Bot\n" 1>&2; exit 1; }
+Usage
