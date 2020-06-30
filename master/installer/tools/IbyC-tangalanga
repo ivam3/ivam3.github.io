@@ -20,15 +20,18 @@ ctrl_c() {
                 printf "$Y\n[!]$R Going me on$B Telegram$R t.me/Ivam3_Bot$W\n"
 		exit
 }
+
 if [ $SHLL = "bin" ]
 then
-	CONFIG_FILE="$PREFIX/etc/bash.bashrc"
+        CONFIG_FILE="$PREFIX/etc/bash.bashrc"
+        TEXT="4a GOPATH=$HOME/go"
 elif [ $SHLL = "fish" ]
 then
-	CONFIG_FILE="$PREFIX/etc/fish/config.fish"
+        CONFIG_FILE="$PREFIX/etc/fish/config.fish"
+        TEXT="20a set GOPATH $HOME/go"
 else
-	printf "$Y\n[w]$R ERROR 2 :$W Incompatible shell$W"
-	ctrl_c
+        printf "$Y\n[w]$R ERROR 2 :$W Incompatible shell$W"
+        ctrl_c
 fi
 
 while [ ! $(id -u) -ne 0 ]; do
@@ -100,7 +103,7 @@ elif [ ! -d $DIR/ ]; then
 fi
 VAR=$(cat $CONFIG_FILE | grep "GOPATH")
 if [ -z $VAR ]; then
-        sed -i "20a set GOPATH $HOME/go" $CONFIG_FILE
+        sed -i "$TEXT" $CONFIG_FILE
 fi
 chmod +x -R $HOME/go/
 git clone github.com/elcuervo/tangalanga.git $DIR/$TOOL > /dev/null
