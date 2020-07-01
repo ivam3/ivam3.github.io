@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
 #
 
 if [ -d /data/data/com.termux/files/home/i-Haklab ]; then
