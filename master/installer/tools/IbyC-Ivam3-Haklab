@@ -2,7 +2,7 @@
 #Created on Feb/2020
 IFS=$'\n\t'
 trap ctrl_c 2
-TOOL="AIOChk"
+TOOL="Ivam3-Haklab"
 SCRIPT_NAME="IbyC-$TOOL"
 
 R='\033[1;31m'
@@ -28,7 +28,10 @@ until [ -e $HOME/$SCRIPT_NAME ]; do
 	printf "$R\n[W]:-> $SCRIPT_NAME file have to be in Home directory$W\n"
 	exit
 done
-
+#CHECK ROOT
+if [ -x /system/xbin/su ] || [ -x /su/bin/su ] || [ -x /sbin/su ]; then
+        ROOT="YES"
+fi
 echo $(clear)
         printf "$C"
         echo "                -{ IbyC } "
@@ -50,7 +53,7 @@ printf "$C"
         printf "      [-]$W t.me/Ivam3byCinderella$C [-]\n"
         printf "          [-]$W t.me/Ivam3_Bot$C [-]\n"
         sleep 1
-printf "$C\n"
+printf "$C\n"	
         echo "        [---] SPECIAL THANKS [---]"
         echo "                    TO "
         echo "       [-] MY MASTER CINDERELLA [-]"
@@ -72,34 +75,11 @@ printf "\n$C         Press$G ENTER$C to continue"
         read enter
 printf "$W\n"
 
-if [ -L $HOME/storage/external-1 ]; then
-	SDCARD=$(ls -l $HOME/storage/external-1 | awk '{print $11}')
-	if [ ! -z $SDCARD ]; then
-		DIR=$SDCARD
-	else
-		DIR=$HOME
-	fi
-else
-	DIR=$HOME
-fi
-printf "$Y\n[IbyC]:->$W Set the directory where $SCRIPT_NAME will be install$Y\n[default]:->$W $DIR\n"
-read -p "[R]:-> " ANSW
-DIR="${ANSW:-${DIR}}"
-
 #INSTALLATION
-apt update && apt upgrade
-apt install -y php
-git clone https://github.com/Juni0r007/AIOChk.git $DIR/$TOOL
-chmod +x -R $DIR/$TOOL
+yes | pkg install git
+git clone https://github.com/ivam3/i-Haklab.git $HOME/i-Haklab > /dev/nul 1>&2
+chmod -R +x $HOME/i-Haklab
+pushd bash setup
+popd
 
-#ENDING SCRIPT
-echo "$DIR"
-if [ -d $DIR/$TOOL ]; then
-	printf "$G\n[DIR TOOL]:->$W $DIR/$TOOL"
-	printf "$G\n[RUN IT]:->$W php aio.php\n"
-printf "$Y\n[!]-> ::::::::::::::: DONE !! :::::::::::::::: <-[!]$G\n\tTo fix issues going to$B t.me/Ivam3_Bot$W\n"
-else
-	printf "$R\n[FATAL ERROR]"
-	ctrl_c
-fi
 #                                               @Ivam3

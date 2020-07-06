@@ -2,7 +2,7 @@
 #Created on Feb/2020
 IFS=$'\n\t'
 trap ctrl_c 2
-TOOL="DTECT"
+TOOL="dtect"
 SCRIPT_NAME="IbyC-$TOOL"
 
 R='\033[1;31m'

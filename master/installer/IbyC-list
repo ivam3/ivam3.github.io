@@ -1,9 +1,9 @@
-IbyC-AIOChk
-IbyC-DTECT
+IbyC-DoS-A-Tool
 IbyC-EMBED
-IbyC-GetNPUsers
+IbyC-Ivam3-Haklab
 IbyC-a2sv
 IbyC-adminpanel
+IbyC-aiochk
 IbyC-androbugs
 IbyC-apacheserver
 IbyC-aquatone
@@ -18,11 +18,13 @@ IbyC-credmap
 IbyC-crunch
 IbyC-cryptovenom
 IbyC-dnsenum
+IbyC-dtect
 IbyC-evilurl
 IbyC-exploitdb
 IbyC-fbbrute
 IbyC-fbi
 IbyC-games
+IbyC-getnpusers
 IbyC-gobuster
 IbyC-gophish
 IbyC-hakku
@@ -32,7 +34,6 @@ IbyC-hunner
 IbyC-ipgeolocation
 IbyC-kalinethunter
 IbyC-kerbrute
-IbyC-lockphish
 IbyC-metasploit
 IbyC-nikto
 IbyC-phoneinfoga
