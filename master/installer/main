@@ -2,13 +2,13 @@
 #Created on Feb/2020
 IFS=$'\n\t'
 trap ctrl_c 2
-TMP_FILE=$(mktemp)
+TMP_FILE=$PREFIX/tmp/tmp	#$(mktemp)
 SCRIPT_NAME="IbyC-installer"
 DB_iHAKLAB="https://raw.githubusercontent.com/ivam3/i-Haklab/master/.set"
 DB_IVAM3="https://raw.githubusercontent.com/ivam3/ivam3.github.io/master/master/installer/"
 
-wget $DB_iHAKLAB/libexec/colors -O $TMP_FILE -q
-source $TMP_FILE
+#wget -q $DB_iHAKLAB/libexec/colors -O $TMP_FILE
+source $TMP_FILE.colors
 
 while [ ! $(id -u) -ne 0 ]; do
 	printf "$R\n[w]:─➤ You need to be a common user$W\n"
@@ -36,14 +36,19 @@ ctrl_c() {
 	exit
 }
 
-Usage(){ wget $DB_IVAM3/usage -O $TMP_FILE -q 1>&2; chmod +x $TMP_FILE; exec $TMP_FILE; exit 1; }
+Perm() { 
+	chmod 711 $TMP_FILE.*
+}
+
+Usage(){ wget -q $DB_IVAM3/usage -O $TMP_FILE.usage 1>&2; chmod +x $TMP_FILE.usage; exec $TMP_FILE.usage; exit 1; }
 
 Listools() {
-	wget $DB_IVAM3/IbyC-list -O $TMP_FILE -q
+	wget -q $DB_IVAM3/IbyC-list -O $TMP_FILE.list
+	Perm
 }
 
 Instatool() {
-	wget $DB_IVAM3/tools/$TOOL -O $HOME/$TOOL -q
+	wget -q $DB_IVAM3/tools/$TOOL -O $HOME/$TOOL
 	chmod 711 $HOME/$TOOL
 	bash $HOME/$TOOL
 	rm $HOME/$TOOL
@@ -86,7 +91,7 @@ while getopts ":hlif" ARGS ; do
 			MODULE=${OPTARG}
 			Listools
 			printf "$Goke\n      [IbyC]$W Tools Availables$Goke [IbyC]$W\n\n"
-			cat -n $TMP_FILE
+			cat -n $TMP_FILE.list
 			CC
 			;;
 		i)
@@ -97,7 +102,7 @@ while getopts ":hlif" ARGS ; do
 				exit
 			else
 				Listools
-				TOOL=$(cat $TMP_FILE | grep -oE $2)
+				TOOL=$(cat $TMP_FILE.list | grep -oE $2)
 				if [ "$TOOL" = "$2" ]
 				then
 					Instatool
@@ -111,12 +116,14 @@ while getopts ":hlif" ARGS ; do
 		f)
 			if [ "$2" = module ] 
 			then
-				wget $DB_iHAKLAB/bin/IbyC-fixer -O $PREFIX/bin/IbyC-fixer -q
+				wget -q $DB_iHAKLAB/bin/IbyC-fixer -O $PREFIX/bin/IbyC-fixer
+				Perm
 				$(which IbyC-fixer) 
 			elif [ "$2" = bigdecimal ]
 			then
-				wget $DB_iHAKLAB/.set/fix-tools/IbyC-fixbigdecimal -O $TMP_FILE -q
-				exec $TMP_FILE
+				wget -q $DB_iHAKLAB/.set/fix-tools/IbyC-fixbigdecimal -O $TMP_FILE.fbd
+				Perm
+				exec $TMP_FILE.fbd
 			else
 				Usage
 			fi
