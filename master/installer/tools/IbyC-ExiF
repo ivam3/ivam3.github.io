@@ -2,7 +2,7 @@
 #Created on Feb/2020
 IFS=$'\n\t'
 trap ctrl_c 2
-TOOL="IbyC-DoS-A-Tool"
+TOOL="ExiF"
 SCRIPT_NAME="IbyC-$TOOL"
 
 R='\033[1;31m'
@@ -75,13 +75,12 @@ printf "\n$C         Press$G ENTER$C to continue"
         read enter
 printf "$W\n"
 
-
 #INSTALLATION
-for Del in DoS-A-Tool Ivam3 ; do
-        rm -rf $PREFIX/bin/$Del
-done
-wget -q https://raw.githubusercontent.com/ivam3/$TOOL/master/$TOOL -O $PREFIX/bin/$TOOL
-wget -q https://raw.githubusercontent.com/ivam3/$TOOL/master/Ivam3 -O $PREFIX/bin/Ivam3
+yes | pkg install wget
+if [ -e $PREFIX/bin/ExiF ]; then
+        rm -rf $PREFIX/bin/ExiF
+fi
+wget -q https://raw.githubusercontent.com/ivam3/i-Haklab/master/.set/bin/ExiF -O $PREFIX/bin/ExiF
 chmod +x $PREFIX/bin/*
 
 
