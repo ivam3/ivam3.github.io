@@ -2,7 +2,7 @@
 #Created on Feb/2020
 IFS=$'\n\t'
 trap ctrl_c 2
-TOOL="sherlock"
+TOOL="translate"
 SCRIPT_NAME="IbyC-$TOOL"
 
 R='\033[1;31m'
@@ -93,51 +93,18 @@ DIR="${ANSW:-${DIR}}"
 if [ -d $DIR/$TOOL ]; then
         rm -rf $DIR/$TOOL
 fi
-Basic() {
-        for module in beautifulsoup bs certifi colorama lxml PySocks requests requests-futures soupsieve stem torrequest ; do
-                python2 -m pip install $module
-        done
-}
-LDFLAGS() {
-        export LDFLAGS="-L/system/lib/ -lm -lcompiler_rt"
-        for module in beautifulsoup bs certifi colorama lxml PySocks requests requests-futures soupsieve stem torrequest ; do
-                python2 -m pip install $module --global-option="build_ext" --global-option="--disable-jpeg"
-        done
-}
-SODIUM() {
-        export SODIUM_INSTALL=system
-        for module in beautifulsoup bs certifi colorama lxml PySocks requests requests-futures soupsieve stem torrequest ; do
-                python2 -m pip install --no-binary :all: $module
-        done
-}
-yes | pkg update && pkg upgrade && pkg install git python
-for version in python ; do
-        $version -m pip install --upgrade pip
-done
-git clone https://github.com/sherlock-project/sherlock.git $DIR/$TOOL
+
+yes | pkg update && pkg upgrade && pkg install git golang
+git clone https://github.com/soimort/translate-shell.git $DIR/$TOOL
 chmod +x -R $DIR/$TOOL
-
-printf "$Y[!]->$W There are 3 methods to install the repositories : choose one$Y\n[01]->$W BASIC$Y\n[02]->$W LDFLAGS$Y\n[03]->$W SODIUM\n\n"
-
-while read -p "[*]:-> " ANSW && [ -z $ANSW ]; do
-        continue
-done
-if [ $ANSW = '1' ] || [ $ANSW = '01' ]; then
-        Basic
-elif [ $ANSW = '2' ] || [ $ANSW = '02' ]; then
-        LDFLAGS
-elif [ $ANSW = '3' ] || [ $ANSW = '03' ]; then
-        SODIUM
-else
-        printf "$R[w]->$W method $ANSW doesn't exist\n"
-        exit
-fi
-
+pushd $DIR/$TOOL
+make && make install
+popd
 
 #ENDING SCRIPT
 if [ -d $DIR/$TOOL ]; then
 	printf "$G\n[DIR TOOL]:->$W $DIR/$TOOL"
-	printf "$G\n[RUN IT]:->$W python $TOOL.py\n"
+	printf "$G\n[RUN IT]:->$W trans :es \"texto a traducir\"\n"
 printf "$Y\n[!]-> ::::::::::::::: DONE !! :::::::::::::::: <-[!]$G\n\tTo fix issues going to$B t.me/Ivam3_Bot$W\n"
 else
 	printf "$R\n[FATAL ERROR]$W"
