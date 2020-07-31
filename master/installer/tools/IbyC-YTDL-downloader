@@ -89,10 +89,16 @@ fi
 
 for i in termux-url-opener update; do
         wget $FILE/$i -O $PREFIX/bin/update -q
-        chmod +x $PREFIX/bin/$i
+        chmod +x $PREFIX/bin/$i > /dev/null 2>&1
 done
-source ~/bin/update
-_FIX
+if [ -e ~/bin/update ]
+then
+	source ~/bin/update
+	_FIX
+else
+	printf "$R\n[FATAL ERROR]-update$W"
+	exit
+fi
 touch $HOME/.milux/date
 
 
