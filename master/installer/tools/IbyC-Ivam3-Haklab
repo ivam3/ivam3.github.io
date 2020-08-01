@@ -30,7 +30,7 @@ until [ -e $HOME/$SCRIPT_NAME ]; do
 done
 #CHECK ROOT
 if [ -x /system/xbin/su ] || [ -x /su/bin/su ] || [ -x /sbin/su ]; then
-        ROOT="YES"
+        ROOT="true"
 fi
 echo $(clear)
         printf "$C"
@@ -77,9 +77,14 @@ printf "$W\n"
 
 #INSTALLATION
 yes | pkg install git
-git clone https://github.com/ivam3/i-Haklab.git $HOME/i-Haklab > /dev/nul 1>&2
-chmod -R +x $HOME/i-Haklab
-pushd bash setup
-popd
-
+git clone https://github.com/ivam3/i-Haklab.git $HOME/i-Haklab > /dev/null 1>&2
+if [ -d $HOME/i-Haklab ]
+then
+	chmod -R +x $HOME/i-Haklab
+	pushd bash setup
+	popd
+else
+	printf "$R\n[FATAL ERROR]->$W i-Haklab directory doesn't exist"
+	exit
+fi
 #                                               @Ivam3
