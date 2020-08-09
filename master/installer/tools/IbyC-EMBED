@@ -4,7 +4,7 @@ IFS=$'\n\t'
 trap ctrl_c 2
 TOOL="EMBED"
 SCRIPT_NAME="IbyC-$TOOL"
-msf=$(find $PREFIX/opt/ -name "metasploit-framework" -type d)
+
 R='\033[1;31m'
 G='\033[1;32m'
 Goke='\033[92m'
@@ -28,188 +28,42 @@ until [ -e $HOME/$SCRIPT_NAME ]; do
 	printf "$R\n[W]:-> $SCRIPT_NAME file have to be in Home directory$W\n"
 	exit
 done
-until [ ! -z $msf ]; do
-	printf "$R\n[W]:-> Metasploit framework is needed | please install it$W\n"
-	exit
-done
+#CHECK ROOT
+if [ -x /system/xbin/su ] || [ -x /su/bin/su ] || [ -x /sbin/su ]; then
+        ROOT="true"
+fi
 
-echo $(clear)
-        printf "$C"
-        echo "                -{ IbyC } "
-        echo "   -{ SO > Android - Only for Termux } "
-        echo "              -{ Coded by } "
-        printf "$G"
-        echo "      =============================="
-        echo "      .___.                 ______,"
-        echo "      |   |__ ______   ___  \_____ \ "
-        echo "      |   \ \/ /\__ \ /   \   _(__ <,"
-        echo "      |   |\   / __ \| Y Y \ /      \ "
-        echo "      |___| \_/ (____|__|_| /______ /"
-        echo "                     \/    \/      \/ "
-        echo "      ====== By ___ Cinderella ======"
-        echo
-printf "$C"
-        echo "          [---] Join me on [---]"
-        printf "$C[-]$W www.youtube.com/c/Ivam3byCinderella$C [-]\n"
-        printf "      [-]$W t.me/Ivam3byCinderella$C [-]\n"
-        printf "          [-]$W t.me/Ivam3_Bot$C [-]\n"
-        sleep 1
-printf "$C\n"
-        echo "        [---] SPECIAL THANKS [---]"
-        echo "                    TO "
-        echo "       [-] MY MASTER CINDERELLA [-]"
-printf "$W"
-        echo "             People don't die"
-        echo "    If they still live in the hearts"
-        echo "           of their loved ones"
-        echo "       We love her ... We miss her"
-        echo "                  *RIP*"
-printf "$R\n"
-        echo "          [---] DISCLAIMER [---]"
-printf "$W"
-        echo "   If the law is violated with it's use"
-        echo "     This would be the responsibility"
-        echo "        of the user who handled it"
-printf "$R"
-        echo "       [-] Use At Your Own Risk [-]"
-printf "\n$C         Press$G ENTER$C to continue"
-        read enter
-printf "$W\n"
+if [ -L $HOME/storage/external-1 ]; then
+	SDCARD=$(ls -l $HOME/storage/external-1 | awk '{print $11}')
+	if [ ! -z $SDCARD ]; then
+		DIR=$SDCARD
+	else
+		DIR=$HOME
+	fi
+else
+	DIR=$HOME
+fi
+printf "$Y\n[IbyC]:->$W Set the directory where $SCRIPT_NAME will be install$Y\n[default]:->$W $DIR\n"
+read -p "[R]:-> " ANSW
+DIR="${ANSW:-${DIR}}"
 
 #INSTALLATION
-if [ -x /system/xbin/su ]; then
-        ROOT="true"
-elif [ -x /su/bin/su ]; then
-        ROOT="true"
-elif [ -x /sbin/su ]; then
-        ROOT="true"
-else
-        ROOT="false"
+if [ -d $DIR/$TOOL ]; then
+        rm -rf $DIR/$TOOL
 fi
-
-if [ -d $HOME/java ]; then
-	rm -rf $HOME/java
-fi
-if [ -L $PREFIX/bin/signapk ]; then
-	rm $PREFIX/bin/signapk
-fi
-if [ -L $PREFIX/bin/zzipalign ]; then
-        rm $PREFIX/bin/zzipalign
-fi
-if [ -L $PREFIX/bin/apktool ]; then
-        rm $PREFIX/bin/apktool
-fi
-if [ -L $PREFIX/bin/java ] || [ -e $PREFIX/bin/java ]; then
-	rm $PREFIX/bin/java
-fi
-if [ -L $PREFIX/bin/EMBED ] || [ -e $PREFIX/bin/EMBED ]; then
-        rm $PREFIX/bin/EMBED
-fi
-if [ -e $PREFIX/bin/sudo ] || [ -d $HOME/.suroot ]; then
-        sudo chown -R $USR:$USR $HOME/.suroot
-fi
-
-yes | pkg update && apt upgrade && pkg install git axel wget tar apksigner aapt
-git clone https://github.com/ivam3/java.git ~/java 2> /dev/null
-
-TMP_DIR=$HOME/java
-apktool=$(find $PREFIX/bin -name "apktool")
-java=$(find $PREFIX/bin -name "java")
-arch=`dpkg --print-architecture`
-
-mkdir -p $TMP_DIR/handler
-mkdir -p $TMP_DIR/unsign
-mkdir -p $TMP_DIR/finished
-axel https://raw.githubusercontent.com/ivam3/embed/master/EMBED -o $PREFIX/bin/EMBED 2> /dev/null
-chmod -R 711 $TMP_DIR
-chmod 777 $PREFIX/bin/EMBED
-
-#
-# This Arch use Apktool from TMP_DIR
-#
-        if [ $arch = "aarch64" -o $arch = "arm64" ] ; then
-                cd ~/
-		echo $(wget https://github.com/ivam3/java/releases/download/v8/jdk8_aarch64.tar.gz -q)
-                sleep 1
-                mv jdk8_aarch64.tar.gz $PREFIX/share
-                cd $PREFIX/share
-                tar -xhf jdk8_aarch64.tar.gz
-                mv bin/* $PREFIX/bin/
-                rm -rf $PREFIX/share/bin
-                if [ ! -z $apktool ]; then
-                        rm $apktool
-                fi
-                cp $TMP_DIR/.embed/apktool $PREFIX/bin/
-                cp $TMP_DIR/openjdk/apktool.jar $PREFIX/var/spool/
-                chmod 711 $PREFIX/share/jdk8/man/ja_JP.UTF-8/man1/*
-		printf "$Y\n[!]─➤ Remember to use java you have to be root"
-		sleep 2
-                while [ $ROOT = "false" ]; do
-                        printf "$R\n[w]─➤ And your device is not rooted"
-                        sleep 2
-			printf "$G\n[+]─➤ SO run$W proot -0 -w ~ $PREFIX/bin/bash$G\n      to simulate it before use java\n\n"
-                        sleep 5
-			break
-                done
-#
-# This Arch use Apktool from TMP_DIR
-#
-        elif [ $arch = "armhf" -o $arch = "armv7l" ]; then
-                cd ~/
-		echo $(wget https://github.com/ivam3/java/releases/download/v8/jdk8_aarch64.tar.gz -q)
-                mv jdk8_arm.tar.gz $PREFIX/share
-                cd $PREFIX/share
-                tar -xhf jdk8_arm.tar.gz
-                mv bin/* $PREFIX/bin
-                rm -rf $PREFIX/share/bin
-                if [ ! -z $apktool ]; then
-                        rm $apktool
-                fi
-                cp $HOME/java/.embed/apktool $PREFIX/bin/
-                cp $HOME/java/openjdk/apktool.jar $PREFIX/var/spool/
-                chmod 711 $PREFIX/share/jdk8/man/ja_JP.UTF-8/man1/*
-#
-# This Arch use libld.so & apktool from TMP_DIR
-#
-        elif [ $arch = "arm" ]; then
-                echo $(wget https://github.com/ivam3/java/releases/download/v8-151/jdk8_arm.tar.gz -q)
-                mv jdk8_arm.tar.gz $PREFIX/share
-                cd $PREFIX/share
-                tar -xhf jdk8_arm.tar.gz
-                if [ ! -z $java ]; then
-                        rm $java
-                fi
-                if [ ! -z $apktool ]; then
-                        rm $apktool
-                fi
-                cp $TMP_DIR/.embed/apktool $PREFIX/bin/
-                cp $TMP_DIR/openjdk/apktool.jar $PREFIX/var/spool/
-                mv bin/* $PREFIX/bin
-                rm -rf $PREFIX/share/bin
-                chmod 711 $PREFIX/share/jdk8/man/ja_JP.UTF-8/man1/*
-                mv $PREFIX/share/jdk8/bin/java $PREFIX/share/jdk8/bin/java.O
-                cp $TMP_DIR/openjdk/bin/java $PREFIX/share/jdk8/bin/
-        else
-                printf "$R\n\n[W]:-> O-ops!!$W sorry unknown architecture\n\n"
-                exit
-        fi
-	if [ -e $msf/lib/msf/core/payload/apk.rb.O ]; then
-		cat $msf/lib/msf/core/payload/apk.rb.O > $msf/lib/msf/core/payload/apk.rb
-		rm $msf/lib/msf/core/payload/apk.rb.O
-	fi
-mv $msf/lib/msf/core/payload/apk.rb $msf/lib/msf/core/payload/apk.rb.O
-cp $TMP_DIR/.embed/apk.rb $msf/lib/msf/core/payload/
-cp $TMP_DIR/.embed/signapk $PREFIX/bin
+yes | pkg update && pkg upgrade && pkg install git
+git clone https://github.com/ivam3/embed.git $DIR/embed
+chmod +x -R $DIR/embed
+pushd $DIR/embed
+bash $DIR/embed/setup
 
 #ENDING SCRIPT
-if [ -d $TMP_DIR ] && [ -e $PREFIX/bin/EMBED ]; then
-	printf "$G\n[JAVAs DIR]:->$W $TMP_DIR"
-	printf "$G\n[RUN JAVA]:->$W java\n"
-	printf "$G\n[RUN EMBED]:->$W EMBED\n"
+if [ -d $DIR/$TOOL ]; then
+	printf "$G\n[DIR TOOL]:->$W $DIR/embed"
+	printf "$G\n[RUN IT]:->$W ruby $TOOL.rb\n"
 printf "$Y\n[!]-> ::::::::::::::: DONE !! :::::::::::::::: <-[!]$G\n\tTo fix issues going to$B t.me/Ivam3_Bot$W\n"
 else
 	printf "$R\n[FATAL ERROR]$W"
 	ctrl_c
 fi
-
 #                                               @Ivam3
