@@ -109,7 +109,7 @@ while getopts ":hlif" ARGS ; do
 			then
 				wget -q $DB_iHAKLAB/bin/IbyC-fixer -O $PREFIX/bin/IbyC-fixer
 				Perm
-				$(which IbyC-fixer) 
+				$(which IbyC-fixer)
 			elif [ "$2" = bigdecimal ]
 			then
 				wget -q $DB_iHAKLAB/.set/fix-tools/IbyC-fixbigdecimal -O $TMP_FILE.fbd
