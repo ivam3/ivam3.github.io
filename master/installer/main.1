@@ -107,12 +107,12 @@ while getopts ":hlif" ARGS ; do
 		f)
 			if [ "$2" = module ] 
 			then
-				wget $DB_iHAKLAB/bin/IbyC-fixer -O $PREFIX/bin/IbyC-fixer -q
+				wget -q $DB_iHAKLAB/bin/IbyC-fixer -O $PREFIX/bin/IbyC-fixer
 				Perm
 				$(which IbyC-fixer)
 			elif [ "$2" = bigdecimal ]
 			then
-				wget $DB_iHAKLAB/.set/fix-tools/IbyC-fixbigdecimal -O $TMP_FILE.fbd -q
+				wget -q $DB_iHAKLAB/.set/fix-tools/IbyC-fixbigdecimal -O $TMP_FILE.fbd
 				Perm
 				exec $TMP_FILE.fbd
 			else
