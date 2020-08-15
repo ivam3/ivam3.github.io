@@ -106,7 +106,7 @@ if [ -z $VAR ]; then
         sed -i "$TEXT" $CONFIG_FILE
 fi
 chmod +x -R $HOME/go/
-git clone github.com/elcuervo/tangalanga.git $DIR/$TOOL > /dev/null
+git clone https://github.com/elcuervo/tangalanga.git $DIR/$TOOL > /dev/null
 if [ -d $DIR/$TOOL ]
 then
         chmod 711 -R $DIR/$TOOL
