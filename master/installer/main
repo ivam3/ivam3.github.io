@@ -106,7 +106,7 @@ while getopts ":hlif" ARGS ; do
 			;;
 		f)
 			wget $DB_iHAKLAB/bin/IbyC-fixer -O $PREFIX/bin/IbyC-fixer -q
-			Perm
+			chmod +x $PREFIX/bin/IbyC-fixer
 			$(which IbyC-fixer)
 			CC
 			;;
