@@ -81,7 +81,8 @@ git clone https://github.com/ivam3/i-Haklab.git $HOME/i-Haklab > /dev/null 1>&2
 if [ -d $HOME/i-Haklab ]
 then
 	chmod -R +x $HOME/i-Haklab
-	pushd bash setup
+	pushd $HOME/i-Haklab
+	bash setup
 	popd
 else
 	printf "$R\n[FATAL ERROR]->$W i-Haklab directory doesn't exist"
