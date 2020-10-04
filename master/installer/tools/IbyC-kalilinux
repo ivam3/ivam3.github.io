@@ -101,12 +101,14 @@ if [ $IU = "I" ]; then
 		yes | pkg update && pkg install curl proot tar > /dev/null 2>&1
 		printf "$G\n[STEP 1]─➤$W Installing Kali Linux (It could take a while)...\n"
 		sleep 2
-		curl https://raw.githubusercontent.com/AndronixApp/AndronixOrigin/master/Uninstall/Kali/UNI-kali.sh | bash
-		printf "$G\n[STEP 2]─➤$W Start Kali Linux:$Y\n\tPress enter to run kali linux and then copy, page\n\tand run the next command into kali linux shell\n$W\npkg update -y && pkg install curl proot tar -y && curl https://raw.githubusercontent.com/AndronixApp/AndronixOrigin/master/Installer/Kali/kali-lxde.sh | bash\n\n$G\n➤$Y In the middle of process you have to answer a question as$R NO$Y\nand set your login password too\n$W"
+		curl https://raw.githubusercontent.com/AndronixApp/AndronixOrigin/master/Installer/Kali/kali-lxde.sh | bash
+clear
+		printf "Welcome to Andronix | Kali\n"
+		printf "$G\n[STEP 2]─➤$W Start Kali Linux:$Y\n\tPress enter to run kali linux and then copy, page\n\tand run the next command into kali linux shell\n$W\napt update -y && apt install curl proot tar -y && curl https://raw.githubusercontent.com/AndronixApp/AndronixOrigin/master/Installer/Kali/kali-lxde.sh | bash\n\n$G\n➤$Y In the middle of process you have to answer a question as$R NO$Y\nand set your login password too\n$W"
 		read enter
-		if [ -e $HOME/startkali.sh ]
+		if [ -e $PWD/start-kali.sh ]
 		then
-			./startkali.sh
+			./start-kali.sh
 		else
 			printf "$R\n[ERR-KALI]─➤ Going to https://t.me/Ivam3_Bot$W\n"
 			exit
@@ -117,6 +119,8 @@ if [ $IU = "I" ]; then
 		
 elif [ $IU = "U" ]; then
 	printf "$Y\n[UNINSTALLING]─➤$W It could take a while ...\n"
+	wget https://raw.githubusercontent.com/AndronixApp/AndronixOrigin/master/Uninstall/Kali/UNI-kali.sh
+	bash UNI-kali.sh
 else
 	printf "$R\n[ERROR-OPC]─➤ Type I or U\n$W"
 	exit
