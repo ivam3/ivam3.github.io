@@ -108,6 +108,7 @@ clear
 		read enter
 		if [ -e $PWD/start-kali.sh ]
 		then
+			echo "deb http://http.kali.org/kali kali-rolling main none-free contrib" >> $HOME/kali-fs/etc/apt/sources.list
 			./start-kali.sh
 		else
 			printf "$R\n[ERR-KALI]─➤ Going to https://t.me/Ivam3_Bot$W\n"
