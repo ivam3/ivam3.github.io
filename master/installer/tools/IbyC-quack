@@ -114,7 +114,12 @@ SODIUM() {
         done
 }
 yes | pkg update && pkg upgrade && pkg install git python python2
-git clone https://github.com/entynetproject/quack.git $DIR/$TOOL 2> /dev/null
+#git clone https://github.com/entynetproject/quack.git $DIR/$TOOL 2> /dev/null
+wget https://github.com/ivam3/i-Haklab/raw/master/.set/to-install/$TOOL.zip
+unzip $TOOL.zip -d $DIR
+rm $TOOL.zip
+mv $TOOL $DIR
+chmod 711 -R $DIR/$TOOL
 for file in bin install.sh uninstall.sh ; do
         if [ -e $DIR/$TOOL/$file ] || [ -d $DIR/$TOOL/$file ]; then
                 rm -rf $DIR/$TOOL/$file
