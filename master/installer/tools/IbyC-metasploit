@@ -3,8 +3,8 @@
 IFS=$'\n\t'
 trap ctrl_c 2
 
-SCRIPT_NAME="IbyC-$TOOL"
 TOOL="metasploit"
+SCRIPT_NAME="IbyC-$TOOL"
 UNAME=$(uname -m)
 SOv=$(termux-info |awk '$1 < 11 {print $1}' |tail -n 1 |awk -F "." '{print $1}')
 if [ "$SOv" -lt "7" ]
