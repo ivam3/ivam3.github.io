@@ -13,7 +13,7 @@ then
 	R7=True
         GEMS=2.6.0
 else
-	Tmux=Tue
+	Tmux=True
 	R7=False
         GEMS=2.7.0
 fi
@@ -42,11 +42,11 @@ ctrl_c() {
 
 #::::::::BLOCKING:::::::#
 while [ ! $(id -u) -ne 0 ]; do
-	printf "$R\n[W]:-> You need to be a common user$W\n"
+	printf "$R\n[W]─➤ You need to be a common user$W\n"
 	exit
 done
 until [ -e $HOME/$SCRIPT_NAME ]; do
-	printf "$R\n[W]:-> $SCRIPT_NAME file have to be in Home directory$W\n"
+	printf "$R\n[W]─➤ $SCRIPT_NAME file have to be in Home directory$W\n"
 	exit
 done
 
@@ -88,13 +88,13 @@ done
 UPandINSTALL() {
 	yes|pkg update && pkg upgrade
 	yes|pkg update && pkg upgrade
-	for i in libiconv zlib autoconf bison clang coreutils curl findutils apr apr-util libffi libgmp libpcap postgresql readline libsqlite openssl libtool libxml2 libxslt ncurses pkg-config wget make ruby libgrpc termux-tools ncurses-utils ncurses unzip zip tar termux-elf-cleaner util-linux axel unstable-repo; do
+	for i in libiconv zlib autoconf bison clang coreutils curl findutils apr apr-util libffi libgmp libpcap postgresql readline libsqlite openssl libtool libxml2 libxslt ncurses pkg-config wget make ruby libgrpc ncurses-utils ncurses unzip zip tar termux-elf-cleaner util-linux axel unstable-repo; do
 		PKG=$(pkg list-all|grep -o $i)
 		if [ ! -z $PKG ]
 		then
 			yes|pkg install $i
 		else
-			printf ¨$R\n[w]->$W The repository$R $i is not$W candidate\n¨
+			printf "$R\n[w]─➤$W The repository $i is not candidate$W\n"
 		fi
 	done
 }
@@ -131,7 +131,7 @@ Ivam3() {
 }
 
 Ending() {
-	if [ -d $MSFDIR ] && [ -d ~/java ]
+	if [ -d $MSFDIR ]
 	then
 		printf "\n\n$C ::::::::: METASPLOIT INSTALLED :::::::::$W\n"
 		printf " The data base can be active with command\n\t$G   > postgresql start <$W\n"
@@ -139,7 +139,7 @@ Ending() {
 		printf "\n$R :::::::::::::: ADVERSMENT ::::::::::::::$W\n"
 		printf "        If msfconsole didn't run\n         execute the file RuGiR\n       (Ruby Gem issues Resolved)\n    to try to fix it with another steps\n\t$G   >       RuGiR      <$W\n\n"
 	else
-		printf "$R\n[ERROR-PATH]-> Going to https://t.me/Ivam3_Bot$W\n"
+		printf "$R\n[ERROR-PATH]─➤ Going to https://t.me/Ivam3_Bot$W\n"
 	fi
 }
 
@@ -165,7 +165,7 @@ Rapid7() {
         sed 's|nokogiri (1.*)|nokogiri (1.10.4)|g' -i Gemfile.lock
         gem install nokogiri -v '1.10.4' -- --use-system-libraries
         gem update --system
-        bundle install -j5
+        bundle install -j3
 	$PREFIX/bin/find $MSFDIR -type f -executable -print0 | xargs -0 -r termux-fix-shebang
         rm $MSFDIR/modules/auxiliary/gather/http_pdf_authors.rb
 	$PREFIX/bin/find $PREFIX/lib/ruby/gems -type f -iname \*.so -print0 | xargs -0 -r termux-elf-cleaner
