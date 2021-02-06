@@ -15,10 +15,9 @@ M='\033[1;35m'
 C='\033[1;36m'
 W='\033[0m'
 
-ctrl_c() {
-                echo
-                printf "$Y\n[!]$R Going me on$B Telegram$R t.me/Ivam3byCinderella$W\n"
-		exit
+ctrl_c(){
+	printf "$Y\n\n[!]$R Going me on$B Telegram$R t.me/Ivam3byCinderella$W\n"
+	exit
 }
 while [ ! $(id -u) -ne 0 ]; do
 	printf "$R\n[W]:-> You need to be a common user$W\n"
@@ -75,42 +74,86 @@ printf "\n$C         Press$G ENTER$C to continue"
         read enter
 printf "$W\n"
 
-if [ -L $HOME/storage/external-1 ]; then
-	SDCARD=$(ls -l $HOME/storage/external-1 | awk '{print $11}')
-	if [ ! -z $SDCARD ]; then
-		DIR=$SDCARD
+setPath(){
+	if [ -L $HOME/storage/external-1 ]; then
+		SDCARD=$(ls -l $HOME/storage/external-1 | awk '{print $11}')
+		if [ ! -z $SDCARD ]; then
+			DIR=$SDCARD
+		else
+			DIR=$HOME
+		fi
 	else
 		DIR=$HOME
 	fi
-else
-	DIR=$HOME
-fi
-printf "$Y\n[IbyC]:->$W Set the directory where $SCRIPT_NAME will be install$Y\n[default]:->$W $DIR\n"
-read -p "[R]:-> " ANSW
-DIR="${ANSW:-${DIR}}"
+	printf "$Y\n[IbyC]:->$W Set the directory where $SCRIPT_NAME will be install$Y\n[default]:->$W $DIR\n"
+	read -p "[R]:-> " ANSW
+	DIR="${ANSW:-${DIR}}"
+}
 
-#INSTALLATION
-apt update && apt upgrade
-apt install python python2 git -y
-printf "$Y\n[!]->$W Choose a type of installation$Y\n[01]->$W Github$Y\n[02]->$W Python module(recommended)\n"
+#::::::::INSTALLATION:::::::::#
+Termux(){
+        for i in unstable-repo sqlmap; do
+                PKG=$(pkg list-all|grep -o $i)
+                if [ ! -z "$PKG" ]
+                then
+                        printf "$G\n[+]─➤$W Installing the repository $i $W\n"
+                        yes|pkg install $i >/dev/null 2>&1
+                else
+                        printf "$R\n[w]─➤$W The repository $i is not candidate$W\n"
+                        sleep 1
+                fi
+        done
+}
+Python(){
+        yes|pkg install python python2 git
+        for i in python python2 ; do
+                $i -m pip --no-color install --upgrade pip -q
+                $i -m pip --no-color install sqlmap -q
+        done
+}
+Github(){
+	setPath
+        if [ -d $DIR/$TOOL ]
+	then
+		rm -rf $DIR/$TOOL
+        fi
+        git clone https://github.com/sqlmapproject/$TOOL $DIR/$TOOL
+        chmod 711 -R $DIR/$TOOL
+}
+
+printf "$C#::::::::::::::::::::::::::::::::::::#$Y\n[!?]->$W Choose a type of installation$G\n[01]->$W Termux repositories$G\n[02]->$W Github$G\n[03]->$W Python-pip modules\n"
 while read -p "[R]-> " ANSW && [ -z $ANSW ]; do
         continue
 done
-if [ $ANSW = '01' ] || [ $ANSW = '1' ]; then
-        git clone https://github.com/sqlmapproject/$TOOL $DIR/$TOOL
-        chmod 711 -R $DIR/$TOOL
-else
-        python -m pip install --upgrade pip
-        python -m pip install $TOOL
-fi
+yes|pkg update && pkg upgrade
+case $ANSW in
+        01|1)
+                Termux
+                ;;
+        02|2)
+                Github
+                ;;
+        03|3)
+                Python
+                ;;
+        *)
+                ctrl_c
+                exit
+                ;;
+esac
 
 #ENDING SCRIPT
 if [ -d $DIR/$TOOL ]; then
-	printf "$G\n[DIR TOOL]:->$W $DIR/$TOOL"
-	printf "$G\n[RUN IT]:->$W $TOOL or python $TOOL.py\n"
-printf "$Y\n[!]-> ::::::::::::::: DONE !! :::::::::::::::: <-[!]$G\n\tTo fix issues going to$B t.me/Ivam3_Bot$W\n"
+	endPath=$DIR/$TOOL
+elif [ -e $PREFIX/bin/$TOOL ]; then
+	endPath=$PREFIX/bin/$TOOL
 else
 	printf "$R\n[FATAL ERROR]$W"
 	ctrl_c
 fi
+
+printf "$G\n[DIR TOOL]:->$W $endPath"
+printf "$G\n[RUN IT]:->$W $TOOL or python $TOOL.py\n"
+printf "$Y\n[!]-> ::::::::::::::: DONE !! :::::::::::::::: <-[!]$G\n\tTo fix issues going to$B t.me/Ivam3_Bot$W\n"
+
 #                                               @Ivam3
