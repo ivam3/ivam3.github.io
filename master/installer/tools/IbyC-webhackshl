@@ -105,9 +105,11 @@ read -p "[R]:-> " ANSW
 DIR="${ANSW:-${DIR}}"
 
 #SEARCHING FOR TOOLS/REPOSITORIES NEEDED
-find $HOME -type f -name "nikto.pl" 2> /dev/null >> $LOGFILE
-find $HOME -type f -name "whatweb" 2> /dev/null >> $LOGFILE
-find $HOME -type f -name "wpscan" 2> /dev/null >> $LOGFILE
+for path in $HOME $PREFIX ; do
+	find $path -type f -name "nikto.pl" 2> /dev/null >> $LOGFILE
+	find $path -type f -name "whatweb" 2> /dev/null >> $LOGFILE
+	find $path -type f -name "wpscan" 2> /dev/null >> $LOGFILE
+done
 
 for framework in nikto whatweb wpscan ; do
 	SEARCH=$(grep -oE $framework $LOGFILE | head -n1 )
@@ -121,8 +123,7 @@ for repo in dnsenum sqlmap wpscan ; do
 done
 
 #INSTALLATION
-apt update && apt upgrade
-apt install git curl python2 python tor ruby nmap -y
+yes|pkg update && pkg upgrade && pkg install git curl python2 python tor ruby nmap
 git clone https://github.com/sechacklabs/$TOOL.git $DIR/$TOOL
 curl https://raw.githubusercontent.com/ivam3/i-Haklab/master/.set/libexec/checker.py -o $DIR/$TOOL/modules/checker.py
 python -m pip install fierce

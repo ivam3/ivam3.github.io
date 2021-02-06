@@ -51,7 +51,7 @@ DIR="${ANSW:-${DIR}}"
 if [ -d $DIR/$TOOL ]; then
         rm -rf $DIR/$TOOL
 fi
-yes | pkg update && pkg upgrade && pkg install git
+yes|pkg update && pkg upgrade && pkg install git
 git clone https://github.com/ivam3/embed.git $DIR/embed
 chmod +x -R $DIR/embed
 pushd $DIR/embed
