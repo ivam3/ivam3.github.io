@@ -58,7 +58,7 @@ pushd $DIR/embed
 bash $DIR/embed/setup
 
 #ENDING SCRIPT
-if [ -d $DIR/$TOOL ]; then
+if [ -d $DIR/embed ]; then
 	printf "$G\n[DIR TOOL]:->$W $DIR/embed"
 	printf "$G\n[RUN IT]:->$W ruby $TOOL.rb\n"
 printf "$Y\n[!]-> ::::::::::::::: DONE !! :::::::::::::::: <-[!]$G\n\tTo fix issues going to$B t.me/Ivam3_Bot$W\n"
