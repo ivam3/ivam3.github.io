@@ -124,6 +124,9 @@ done
 
 #INSTALLATION
 yes|pkg update && pkg upgrade && pkg install git curl python2 python tor ruby nmap
+if [ $DIR/$TOOL ]; then
+	rm -rf $DIR/$TOOL
+fi
 git clone https://github.com/sechacklabs/$TOOL.git $DIR/$TOOL
 curl https://raw.githubusercontent.com/ivam3/i-Haklab/master/.set/libexec/checker.py -o $DIR/$TOOL/modules/checker.py
 python -m pip install fierce
