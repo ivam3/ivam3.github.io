@@ -121,6 +121,18 @@ Ivam3() {
 	wget $JAVADB/.embed/apk.rb -O $MSFDIR/lib/msf/core/payload/apk.rb -q
 	wget $iHDB/.set/bin/RuGiR -O $PREFIX/bin/RuGiR -q
 	chmod +x $PREFIX/bin/RuGiR
+
+#:::: FIXING BIG DECIMAL ISSUES ::::#
+LINUXANDROID=$(find $PREFIX/lib/ruby/$GEMS -iname "bigdecimal.so" |awk -F "/" '{print $10}')
+	yes|apt install -yq patchelf >/dev/null 2>&1
+	if [ -e "$PREFIX/lib/ruby/$GEMS/$LINUXANDROID/bigdecimal.so" ]; then
+		if [ -n "$(patchelf --print-needed "$PREFIX/lib/ruby/$GEMS/$LINUXANDROID/bigdecimal/util.so" | grep bigdecimal.so)" ]; then
+			exit 0
+		fi
+		patchelf --add-needed \
+			"$PREFIX/lib/ruby/$GEMS/$LINUXANDROID/bigdecimal.so" \
+			"$PREFIX/lib/ruby/$GEMS/$LINUXANDROID/bigdecimal/util.so"
+	fi
 }
 
 Ending() {
@@ -156,7 +168,9 @@ Rapid7() {
         sed '/rbnacl/d' -i metasploit-framework.gemspec
         gem install --no-document --verbose bundler:2.2.7
         sed 's|nokogiri (1.*)|nokogiri (1.10.4)|g' -i Gemfile.lock
-        gem install nokogiri -v '1.10.4' -- --use-system-libraries
+	sed 's|pcaprub (0.*)|pcaprub (1.12.4)|g' -i Gemfile.lock
+	sed 's|ttfunk (1.*)|ttfunk (1.7.0)|g' -i Gemfile.lock
+	gem install nokogiri -v '1.10.4' -- --use-system-libraries
         gem update --system
         bundle install -j3
 	$PREFIX/bin/find $MSFDIR -type f -executable -print0 | xargs -0 -r termux-fix-shebang
@@ -164,22 +178,23 @@ Rapid7() {
 	$PREFIX/bin/find $PREFIX/lib/ruby/gems -type f -iname \*.so -print0 | xargs -0 -r termux-elf-cleaner
 	msfdb #:::TO CREATING MSF DATABASE::#
 #:::::::MSFCONSOLE MSFVENOM FILES:::::::#
+	BIGDECIMAL=$(find $PREFIX/lib/ruby/$GEMS -iname "bigdecimal.so")
 	echo "#!/data/data/com.termux/files/usr/bin/sh" > $PREFIX/bin/msfconsole
 	echo "SCRIPT_NAME=\$(basename \"\$0\")" >> $PREFIX/bin/msfconsole
 	echo "METASPLOIT_PATH=\"\${PREFIX}/opt/metasploit-framework\"" >> $PREFIX/bin/msfconsole
 	echo "# Fix ruby bigdecimal extensions linking error." >> $PREFIX/bin/msfconsole
 	echo "case \"\$(uname -m)\" in" >> $PREFIX/bin/msfconsole
 	echo "        aarch64)" >> $PREFIX/bin/msfconsole
-	echo "                export LD_PRELOAD=\"\${PREFIX}/lib/ruby/$GEMS/aarch64-linux-android/bigdecimal.so:\$LD_PRELOAD\"" >> $PREFIX/bin/msfconsole
+	echo "                export LD_PRELOAD=\"$BIGDECIMAL:\$LD_PRELOAD\"" >> $PREFIX/bin/msfconsole
 	echo "                ;;" >> $PREFIX/bin/msfconsole
 	echo "        arm*)" >> $PREFIX/bin/msfconsole
-	echo "                export LD_PRELOAD=\"\${PREFIX}/lib/ruby/$GEMS/arm-linux-androideabi/bigdecimal.so:\$LD_PRELOAD\"" >> $PREFIX/bin/msfconsole
+	echo "                export LD_PRELOAD=\"$BIGDECIMAL:\$LD_PRELOAD\"" >> $PREFIX/bin/msfconsole
 	echo "                ;;" >> $PREFIX/bin/msfconsole
 	echo "        i686)" >> $PREFIX/bin/msfconsole
-	echo "                export LD_PRELOAD=\"\${PREFIX}/lib/ruby/$GEMS/i686-linux-android/bigdecimal.so:\$LD_PRELOAD\"" >> $PREFIX/bin/msfconsole
+	echo "                export LD_PRELOAD=\"$BIGDECIMAL:\$LD_PRELOAD\"" >> $PREFIX/bin/msfconsole
 	echo "                ;;" >> $PREFIX/bin/msfconsole
 	echo "        x86_64)" >> $PREFIX/bin/msfconsole
-	echo "                export LD_PRELOAD=\"\${PREFIX}/lib/ruby/$GEMS/x86_64-linux-android/bigdecimal.so:\$LD_PRELOAD\""
+	echo "                export LD_PRELOAD=\"$BIGDECIMAL:\$LD_PRELOAD\""
 	echo "                ;;" >> $PREFIX/bin/msfconsole
 	echo "        *)" >> $PREFIX/bin/msfconsole
 	echo "                ;;" >> $PREFIX/bin/msfconsole
@@ -283,6 +298,7 @@ if [ -d ~/metasploit-framework ] || [ -d $MSFDIR ]; then
 		sleep 0.5
 	fi
 else
+
 	MAIN
 fi
 
