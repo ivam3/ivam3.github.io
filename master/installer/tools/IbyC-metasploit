@@ -168,15 +168,20 @@ Rapid7() {
 	rm Gemfile.lock
 #       sed '/rbnacl/d' -i Gemfile.lock
         sed '/rbnacl/d' -i metasploit-framework.gemspec
+	sed "s|gem 'sqlite3', '~>1.*.*'|gem 'sqlite3', '~>1.4.2'|g" -i Gemfile
 	gem install --no-document --verbose bundler:2.2.9 #2.2.7
 #       sed 's|nokogiri (1.*)|nokogiri (1.10.4)|g' -i Gemfile.lock
 #	sed 's|pcaprub (0.*)|pcaprub (0.12.4)|g' -i Gemfile.lock
 #	sed 's|ttfunk (1.*)|ttfunk (1.7.0)|g' -i Gemfile.lock
 #	gem install nokogiri -v '1.10.4' -- --use-system-libraries
-	for gem in nokogiri pcaprub net-ssh metasploit-credential;do
+	for gem in nokogiri pcaprub net-ssh metasploit-credential actionpack;do
+		gem uninstall $gem --all
+		cd $HOME
 		gem install $gem -- --use-system-libraries
+		cd $MSFDIR
+		bundle update $gem
 	done
-        gem update --system
+	gem update --system
         bundle install -j3
 	$PREFIX/bin/find $MSFDIR -type f -executable -print0 | xargs -0 -r termux-fix-shebang
         rm $MSFDIR/modules/auxiliary/gather/http_pdf_authors.rb
