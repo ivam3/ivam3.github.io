@@ -7,6 +7,7 @@ SCRIPT_NAME="IbyC-installer"
 DB_iHAKLAB="https://raw.githubusercontent.com/ivam3/i-Haklab/master/.set"
 DB_IVAM3="https://raw.githubusercontent.com/ivam3/ivam3.github.io/master/master/installer/"
 
+command -v ruby >/dev/null || apt install ruby -y >/dev/null 2>&1                                        command -v lolcat >/dev/null || gem install lolcat >/dev/null 2>&1
 source $TMP_FILE.colors
 
 while [ ! $(id -u) -ne 0 ]; do
@@ -20,51 +21,26 @@ CC() {
 	then
 		rm $HOME/$TOOL 2>/dev/null
 	fi
-}
-ctrl_c() {
-	CC
-	printf "$Y\n[!]:─➤$R Going me on$B Telegram$R t.me/Ivam3byCinderella$W\n"
-	exit
-}
+	}
+ctrl_c(){ CC;printf "$Y\n   [¿] Need a help [?]$B\nTelegram : t.me/Ivam3_Bot$W\n";}
 
-Perm() { 
-	chmod 711 $TMP_FILE.*
-}
+Perm() { chmod 711 $TMP_FILE.* ;}
 
 Usage(){ wget -q $DB_IVAM3/usage -O $TMP_FILE.usage 1>&2; chmod +x $TMP_FILE.usage; exec $TMP_FILE.usage; exit 1; }
 
 Listools() {
 	wget -q $DB_IVAM3/IbyC-list -O $TMP_FILE.list
 	Perm
-}
+	}
 
 Instatool() {
 	wget -q $DB_IVAM3/tools/$TOOL -O $HOME/$TOOL
 	chmod 711 $HOME/$TOOL
 	bash $HOME/$TOOL
 	rm $HOME/$TOOL
-}
-
-echo $(clear)
-        printf "$C"
-        echo "           -{ IbyC-installer } "
-        echo "   -{ SO > Android - Only for Termux } "
-        echo "              -{ Coded by } "
-        printf "$G"
-        echo "      =============================="
-        echo "      .___.                 ______,"
-        echo "      |   |__ ______   ___  \_____ \ "
-        echo "      |   \ \/ /\__ \ /   \   _(__ <,"
-        echo "      |   |\   / __ \| Y Y \ /      \ "
-        echo "      |___| \_/ (____|__|_| /______ /"
-        echo "                     \/    \/      \/ "
-        echo "      ====== By ___ Cinderella ======"
-        echo
-printf "$C"
-        echo "          [---] Join me on [---]"
-        printf "$C[-]$W www.youtube.com/c/Ivam3byCinderella$C [-]\n"
-        printf "      [-]$W t.me/Ivam3byCinderella$C [-]\n"
-        printf "          [-]$W t.me/Ivam3_Bot$C [-]\n"
+	}
+Banner(){ printf " ___ _            ____   _           _        _ _\n|_ _| |__  _   _ / ___| (_)_ __  ___| |_ __ _| | | ___ _ __\n | || '_ \| | | | |     | | '_ \/ __| __/ _\` | | |/ _ \ '__|\n | || |_) | |_| | |___  | | | | \__ \ || (_| | | |  __/ |\n|___|_.__/ \__, |\____| |_|_| |_|___/\__\__,_|_|_|\___|_|\n           |___/Termux installer tools by @Ivam3byCinderella\n";}
+Banner|lolcat
 
 if [ -z $1 ]
 then
