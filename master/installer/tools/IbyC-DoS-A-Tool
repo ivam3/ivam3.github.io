@@ -51,23 +51,23 @@ if [ -L $HOME/storage/external-1 ]; then
 else
         DIR=$HOME
 fi
-printf "$Y╰─[!]─➤$W Set the directory where $TOOL will be install$Y\n   ╰─[default]─➤$W $DIR\n"
-read -p "[DIR]:-> " ANSW
+printf "$Y ╰─[!]─➤$W Set the directory where $TOOL will be install$Y\n    ╰─[default]─➤$W $DIR\n"
+read -p "[DIR]─➤ " ANSW
 DIR="${ANSW:-${DIR}}"
 
 printf "$G[+]─➤$W Installing tool $TOOL..";
         sleep 1
 #        Install
-        echo "$G. DONE!!$W"
+        printf "$G. DONE!!$W"
         sleep 1
 
 #ENDING SCRIPT
 if [ -d $DIR/$TOOL ]; then
-	printf "$G\n[DIR TOOL]:->$W $DIR/$TOOL"
-	printf "$G\n[RUN IT]:->$W perl $TOOL\n"
+	printf "$G\n[DIR TOOL]─➤$W $DIR/$TOOL"
+	printf "$G\n[RUN IT]─➤$W perl $TOOL\n"
 printf "$Y\n[!]-> ::::::::::::::: DONE !! :::::::::::::::: <-[!]$G\n\tTo fix issues going to$B t.me/Ivam3_Bot$W\n"
 else
-	printf "$R\n[FATAL ERROR]$W"
+	printf "$R\n      [FATAL ERROR]$W"
 	ctrl_c
 fi
 #                                               @Ivam3
