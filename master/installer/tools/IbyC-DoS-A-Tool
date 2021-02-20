@@ -57,7 +57,7 @@ DIR="${ANSW:-${DIR}}"
 
 printf "$G[+]─➤$W Installing tool $TOOL..";
         sleep 1
-#        Install
+	Install
         printf "$G. DONE!!$W"
         sleep 1
 
