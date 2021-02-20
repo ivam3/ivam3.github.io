@@ -1,9 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
 #Created on Feb/2020
-IFS=$'\n\t'
 trap ctrl_c 2
 
-iHDB="https://raw.githubusercontent.com/ivam3/i-Haklab/master/.set"
+IFS=$'\n\t'
 TOOL="johntheripper"
 SCRIPT_NAME="IbyC-$TOOL"
 R='\033[1;31m'
@@ -18,9 +17,6 @@ W='\033[0m'
 
 ctrl_c(){ printf "$Y\n   [¿] Need a help [?]$B\nTelegram : t.me/Ivam3_Bot$W\n";}
 
-command -v curl >/dev/null 2>&1 || pkg install curl -y >/dev/null 2>&1
-clear;curl -Ls "${iHDB}/libexec/banner/Ivam3"|bash
-
 while [ ! $(id -u) -ne 0 ]; do
 	printf "$R\n[W]:-> You need to be a common user$W\n"
 	exit
@@ -30,11 +26,11 @@ until [ -e $HOME/$SCRIPT_NAME ]; do
 	exit
 done
 
-Installation(){
+Install(){
 JTRv="1.8.0"
 JTRtar="https://download.openwall.net/pub/projects/john/contrib/android/john-$JTRv-android-1.tar.gz"
 
-for del in $PREFIX/bin/john $iHAKLAB/../JohnTheRipper $PREFIX/opt/john $TMPDIR/john-$JTRv-android;do
+for del in $PREFIX/bin/john $PREFIX/opt/john $TMPDIR/john-$JTRv-android;do
         if [ -e $del ] || [ -d $del ];then
                 rm -rf $del
         fi
@@ -68,26 +64,39 @@ case $(uname -a) in
 esac
 rm -rf $TMPDIR/john-$JTRv-android
 chmod +x $JTR/*
-ln -s $JTR/john $PREFIX/bin/john
+echo "#!/data/data/com.termux/files/usr/bin/bash" > $PREFIX/bin/john
+echo "#This script find and execute johntheripper tool" >> $PREFIX/bin/john
+echo "#" >> $PREFIX/bin/john
+echo "R='\033[1;31m'"  >> $PREFIX/bin/john
+echo "W='\033[0m'" >> $PREFIX/bin/john
+echo " " >> $PREFIX/bin/john
+echo "if [ -d $PREFIX/opt/john ];then" >> $PREFIX/bin/john
+echo "        cd $PREFIX/opt/john" >> $PREFIX/bin/john
+echo "        ./john" >> $PREFIX/bin/john
+echo "else" >> $PREFIX/bin/john
+echo "        printf \"$R[ERROR]─➤ JohnTheRipper is not installed$W\"" >> $PREFIX/bin/john
+echo "fi" >> $PREFIX/bin/john
+echo "#            @Ivam3" >> $PREFIX/bin/john
+chmod +x $PREFIX/bin/john
 }
 
-printf "$Y[!]─➤$W Looking for $TOOL..";
+printf "$G[+]─➤$W Looking for $SCRIPT_NAME..";
 sleep 2
         printf "$G. DONE!!$W\n"
         sleep 1
-printf "$G[+]─➤$W Installing tool $TOOL..";
+printf "$G[+]─➤$W Installing $TOOL..";
 	sleep 1
-        Installation
-        echo "$G. DONE!!$W"
+	Install
+        printf "$G. DONE!!$W"
         sleep 1
 
 #ENDING SCRIPT
 if [ -d $JTR ]; then
-	printf "$G\n[DIR TOOL]:->$W $JTR"
-	printf "$G\n[RUN IT]:->$W john\n"
+	printf "$G\n[DIR TOOL]─➤$W $JTR"
+	printf "$G\n[RUN IT]─➤$W john\n"
 printf "$Y\n[!]-> ::::::::::::::: DONE !! :::::::::::::::: <-[!]$G\n\tTo fix issues going to$B t.me/Ivam3_Bot$W\n"
 else
-	printf "$R\n[FATAL ERROR]$W"
+	printf "$R\n      [FATAL ERROR]$W"
 	ctrl_c
 fi
 #                                               @Ivam3
