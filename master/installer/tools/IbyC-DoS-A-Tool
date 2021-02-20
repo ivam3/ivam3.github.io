@@ -36,7 +36,7 @@ git clone https://github.com/Ivam3/$TOOL.git $DIR/$TOOL
 chmod +x $DIR/$TOOL/*
 }
 
-printf "$Y[!]─➤$W Looking for $TOOL..";
+printf "$G[+]─➤$W Looking for $TOOL..";
 sleep 2
         printf "$G. DONE!!$W\n"
         sleep 1
@@ -51,13 +51,13 @@ if [ -L $HOME/storage/external-1 ]; then
 else
         DIR=$HOME
 fi
-printf "$Y\n[IbyC]─➤$W Set the directory where $TOOL will be install$Y\n[default]:->$W $DIR\n"
-read -p "[R]:-> " ANSW
+printf "$Y╰─[!]─➤$W Set the directory where $TOOL will be install$Y\n   ╰─[default]─➤$W $DIR\n"
+read -p "[DIR]:-> " ANSW
 DIR="${ANSW:-${DIR}}"
 
 printf "$G[+]─➤$W Installing tool $TOOL..";
         sleep 1
-        Install
+#        Install
         echo "$G. DONE!!$W"
         sleep 1
 
