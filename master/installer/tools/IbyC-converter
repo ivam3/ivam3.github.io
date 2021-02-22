@@ -16,11 +16,8 @@ M='\033[1;35m'
 C='\033[1;36m'
 W='\033[0m'
 
-ctrl_c() {
-                echo
-                printf "$Y\n[!]$R Going me on$B Telegram$R t.me/Ivam3byCinderella$W\n"
-		exit
-}
+ctrl_c(){ printf "$Y\n\n   [¿] Need a help [?]$B\nTelegram : t.me/Ivam3_Bot$W\n\n";exit;}
+
 while [ ! $(id -u) -ne 0 ]; do
 	printf "$R\n[W]:-> You need to be a common user$W\n"
 	exit
@@ -29,62 +26,30 @@ until [ -e $HOME/$SCRIPT_NAME ]; do
 	printf "$R\n[W]:-> $SCRIPT_NAME file have to be in Home directory$W\n"
 	exit
 done
+Install(){
+	DIR="$PREFIX/bin"
+	iHDB="https://raw.githubusercontent.com/ivam3/i-Haklab/master/.set"
+	if [ -e $DIR/$TOOL ]; then
+        	rm $DIR/$TOOL
+	fi
+	yes|pkg install curl dialog >/dev/null 2>&1
+	curl -Ls ${iHDB}/bin/$TOOL -o $DIR/$TOOL
+	chmod +x $DIR/$TOOL
+}
 
-echo $(clear)
-        printf "$C"
-        echo "                -{ IbyC } "
-        echo "   -{ SO > Android - Only for Termux } "
-        echo "              -{ Coded by } "
-        printf "$G"
-        echo "      =============================="
-        echo "      .___.                 ______,"
-        echo "      |   |__ ______   ___  \_____ \ "
-        echo "      |   \ \/ /\__ \ /   \   _(__ <,"
-        echo "      |   |\   / __ \| Y Y \ /      \ "
-        echo "      |___| \_/ (____|__|_| /______ /"
-        echo "                     \/    \/      \/ "
-        echo "      ====== By ___ Cinderella ======"
-        echo
-printf "$C"
-        echo "          [---] Join me on [---]"
-        printf "$C[-]$W www.youtube.com/c/Ivam3byCinderella$C [-]\n"
-        printf "      [-]$W t.me/Ivam3byCinderella$C [-]\n"
-        printf "          [-]$W t.me/Ivam3_Bot$C [-]\n"
+printf "$G[+]─➤$W Looking for $SCRIPT_NAME..";
+sleep 2
+	printf "$G. DONE!!$W\n"
         sleep 1
-printf "$C\n"
-        echo "        [---] SPECIAL THANKS [---]"
-        echo "                    TO "
-        echo "       [-] MY MASTER CINDERELLA [-]"
-printf "$W"
-        echo "             People don't die"
-        echo "    If they still live in the hearts"
-        echo "           of their loved ones"
-        echo "       We love her ... We miss her"
-        echo "                  *RIP*"
-printf "$R\n"
-        echo "          [---] DISCLAIMER [---]"
-printf "$W"
-        echo "   If the law is violated with it's use"
-        echo "     This would be the responsibility"
-        echo "        of the user who handled it"
-printf "$R"
-        echo "       [-] Use At Your Own Risk [-]"
-printf "\n$C         Press$G ENTER$C to continue"
-        read enter
-printf "$W\n"
-
-#INSTALLATION
-if [ -e $DIR/$TOOL ]; then
-        rm $DIR/$TOOL
-fi
-yes | pkg install wget dialog 2> /dev/null
-wget https://raw.githubusercontent.com/ivam3/i-Haklab/master/.set/bin/$TOOL -O $DIR/$TOOL -q
-chmod 777 $DIR/$TOOL
-
+printf "$G[+]─➤$W Installing $TOOL..";
+        sleep 1
+        Install
+        printf "$G. DONE!!\n$W"
+        sleep 1
 
 #ENDING SCRIPT
 if [ -e $DIR/$TOOL ]; then
-	printf "$G\n[DIR TOOL]:->$W $(which converter)"
+	printf "$G\n[DIR TOOL]:->$W $DIR/$TOOL"
 	printf "$G\n[RUN IT]:->$W $TOOL\n"
 printf "$Y\n[!]-> ::::::::::::::: DONE !! :::::::::::::::: <-[!]$G\n\tTo fix issues going to$B t.me/Ivam3_Bot$W\n"
 else
