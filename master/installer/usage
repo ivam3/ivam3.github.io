@@ -12,5 +12,5 @@ M='\033[1;35m'
 C='\033[1;36m'
 W='\033[0m'
 
-Usage() { printf "$Y\n[usage]:─➤ IbyC-installer <argument> <option>\n$W\n-h\t\t\tShow this menu\n-l\t\t\tList of available tools\n-i  <name-of-tool> \tInstall a tool\n-f\t\t\tDownload script IbyC-fixer to fix Termux issues\n\nExamples:\tIbyC-installer -i IbyC-iHaklab\n\t\tIbyC-installer -f\n\nFor help going to https://t.me/Ivam3_Bot\n" 1>&2; exit 1; }
+Usage() { printf "$Y\n[usage]:─➤ IbyC-installer <option> <argument>\n$W\n|─option─|──argument──|────────────Description────────────────────────|\n   -h\t\t\tShow this menu\n   -l\t\t\tList of available tools\n   -i    <name-of-tool>\tInstall a tool\n   -f\t\t\tDownload script IbyC-fixer to fix Termux issues\n\nExamples:\tIbyC-installer -i IbyC-iHaklab\n\t\tIbyC-installer -f\n\nFor help going to https://t.me/Ivam3_Bot\n\n" 1>&2; exit 1; }
 Usage
