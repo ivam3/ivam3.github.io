@@ -80,6 +80,9 @@ install(){
 				echo "# alias rm='rm -i'" >> ~/kali-fs/root/.bashrc
 				echo "# alias cp='cp -i'" >> ~/kali-fs/root/.bashrc
 				echo "# alias mv='mv -i'" >> ~/kali-fs/root/.bashrc
+				if [ -e ~/kali-fs/root/kali-archive-keyring_2020.2_all.deb ]; then
+					rm ~/kali-fs/root/kali-archive-keyring_2020.2_all.deb	
+				fi
 			else
 				ctrl_c
 				exit
