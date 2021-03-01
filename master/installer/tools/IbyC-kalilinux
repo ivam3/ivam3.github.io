@@ -1,10 +1,9 @@
 #!/data/data/com.termux/files/usr/bin/bash
-#Created on SEPT/2020
+#Created on SEPT/2020 update on MARCH/2021
 IFS=$'\n\t'
 trap ctrl_c 2
 TOOL="kalilinux"
 SCRIPT_NAME="IbyC-$TOOL"
-SHLL=$(env | grep SHELL | awk -F "/" '{print $7}')
 R='\033[1;31m'
 G='\033[1;32m'
 Goke='\033[92m'
@@ -15,24 +14,7 @@ M='\033[1;35m'
 C='\033[1;36m'
 W='\033[0m'
 
-ctrl_c() {
-                echo
-                printf "$Y\n[!]$R Going me on$B Telegram$R t.me/Ivam3byCinderella$W\n"
-		exit
-}
-
-if [ $SHLL = "bin" ]
-then
-        CONFIG_FILE="$PREFIX/etc/bash.bashrc"
-	TEXT="4a GOPATH=$HOME/go"
-elif [ $SHLL = "fish" ]
-then
-        CONFIG_FILE="$PREFIX/etc/fish/config.fish"
-	TEXT="20a set GOPATH $HOME/go"
-else
-        printf "$Y\n[w]$R ERROR 2 :$W Incompatible shell$W"
-        ctrl_c
-fi
+ctrl_c(){ printf "$Y\n   [¿] Need a help [?]$B\nTelegram : t.me/Ivam3_Bot$W\n";}
 
 while [ ! $(id -u) -ne 0 ]; do
 	printf "$R\n[W]:-> You need to be a common user$W\n"
@@ -42,91 +24,79 @@ until [ -e $HOME/$SCRIPT_NAME ]; do
 	printf "$R\n[W]:-> $SCRIPT_NAME file have to be in Home directory$W\n"
 	exit
 done
-#CHECK ROOT
-if [ -x /system/xbin/su ] || [ -x /su/bin/su ] || [ -x /sbin/su ]; then
-        ROOT="YES"
-fi
-echo $(clear)
-        printf "$C"
-        echo "                -{ IbyC } "
-        echo "   -{ SO > Android - Only for Termux } "
-        echo "              -{ Coded by } "
-        printf "$G"
-        echo "      =============================="
-        echo "      .___.                 ______,"
-        echo "      |   |__ ______   ___  \_____ \ "
-        echo "      |   \ \/ /\__ \ /   \   _(__ <,"
-        echo "      |   |\   / __ \| Y Y \ /      \ "
-        echo "      |___| \_/ (____|__|_| /______ /"
-        echo "                     \/    \/      \/ "
-        echo "      ====== By ___ Cinderella ======"
-        echo
-printf "$C"
-        echo "          [---] Join me on [---]"
-        printf "$C[-]$W www.youtube.com/c/Ivam3byCinderella$C [-]\n"
-        printf "      [-]$W t.me/Ivam3byCinderella$C [-]\n"
-        printf "          [-]$W t.me/Ivam3_Bot$C [-]\n"
-        sleep 1
-printf "$C\n"
-        echo "        [---] SPECIAL THANKS [---]"
-        echo "                    TO "
-        echo "       [-] MY MASTER CINDERELLA [-]"
-printf "$W"
-        echo "             People don't die"
-        echo "    If they still live in the hearts"
-        echo "           of their loved ones"
-        echo "       We love her ... We miss her"
-        echo "                  *RIP*"
-printf "$R\n"
-        echo "          [---] DISCLAIMER [---]"
-printf "$W"
-        echo "   If the law is violated with it's use"
-        echo "     This would be the responsibility"
-        echo "        of the user who handled it"
-printf "$R"
-        echo "       [-] Use At Your Own Risk [-]"
-printf "\n$C         Press$G ENTER$C to continue"
-        read enter
-printf "$W\n"
 
-#INSTALLATION
-printf "$Y\n[TO-DO]─➤$W (I)nstall or (U)ninstall "
-while read -p "[I/U]─➤ " IU && [ -z $IU ]; do
+install(){
 	printf "$Y\n[TO-DO]─➤$W (I)nstall or (U)ninstall "
-done
-
-if [ $IU = "I" ]; then
+	while read -p "[I/U]─➤ " IU && [ -z $IU ]; do
+		printf "$Y\n[TO-DO]─➤$W (I)nstall or (U)ninstall "
+	done
+	if [ $IU = "I" ]; then
 		printf "$G\n[UPGRADING]─➤$W Updating and upgrading Termux\n"
 		sleep 1
-		yes | pkg update && pkg install curl proot wget tar > /dev/null 2>&1
+		yes|pkg update && pkg upgrade && pkg install curl proot wget tar > /dev/null 2>&1
 		printf "$G\n[STEP 1]─➤$W Installing Kali Linux (It could take a while)...\n"
-		sleep 2
-		curl https://raw.githubusercontent.com/AndronixApp/AndronixOrigin/master/Installer/Kali/kali-lxde.sh | bash
-clear
-		printf "Welcome to Andronix | Kali\nPlease follow the next steps\n"
 		sleep 1
-		printf "$G\n[STEP 2]─➤$W Start Kali Linux:$Y\n\tPress enter to run kali linux and then copy, page\n\tand run the next command into kali linux shell\n$W\napt update -y && apt install curl proot tar -y && curl https://raw.githubusercontent.com/AndronixApp/AndronixOrigin/master/Installer/Kali/kali-lxde.sh | bash\n\n$G\n➤$Y In the middle of process you have to set your login password\nand answer a question as$R NO\n$W"
-		sleep 3
-		printf "$G\n[STEP 3]─➤$W Copy, page and run the next command into kali linux shell$G\n➤$W echo \"deb http://http.kali.org/kali kali-rolling main none-free contrib\" >> /etc/apt/sources.list && apt update -y && apt upgrade -y\n"
-		sleep 3
-		printf "$G\n[STEP 4]─➤$W Open VNC app and add connection at$G localhost:1\n➤$W Set a session name and login with your password\n\n\t$Y Press$G enter$Y to continue$W\n"
-		read enter
-		if [ -e $HOME/start-kali.sh ]
-		then
-			./start-kali.sh
+		curl https://raw.githubusercontent.com/AndronixApp/AndronixOrigin/master/Installer/Kali/kali.sh |bash
+		if [ -e ~/kali-fs/etc/apt/sources.list ] && [ -e ~/kali-fs/root/.bashrc ]; then
+			printf "$G\n[STEP 2]─➤$W During the following process you will have to set your password to connect to VNC and you will answer negatively to the question about 'view display only' with a letter 'n'.\nAt the finish the installation shell of Kali-Linux began, when that happens exit the session with 'exit' command and read the next steps.\n\n\t$Y Press$G enter$Y to continue$W\n"
+			read enter
+
+#::::SET THE SOURCES LIST FILE::::#
+#			echo "deb http://ftp.debian.org/debian buster main" > ~/kali-fs/etc/apt/sources.list
+#			echo "deb http://ftp.debian.org/debian buster-updates main" > ~/kali-fs/etc/apt/sources.list
+#			echo "deb http://http.kali.org/kali kali-rolling main none-free contrib" > ~/kali-fs/etc/apt/sources.list
+			echo "deb-src http://http.kali.org/kali kali-rolling main contrib non-free" > ~/kali-fs/etc/apt/sources.list
+			echo "deb http://ftp.debian.org/debian buster main" >> ~/kali-fs/etc/apt/sources.list
+
+#::::SET BASHRC TO AUTOMATE THE KALI-LINUX CONFIGURATION::::#
+			echo "curl https://http.kali.org/kali/pool/main/k/kali-archive-keyring/kali-archive-keyring_2020.2_all.deb" >> ~/kali-fs/root/.bashrc
+			echo "apt install ./kali-archive-keyring_2020.2_all.deb" >> ~/kali-fs/root/.bashrc
+			echo "gpg --keyserver hkp://keys.gnupg.net --recv-key 7D8D0BF6" >> ~/kali-fs/root/.bashr
+			echo "gpg -a --export ED444FF07D8D0BF6 | sudo apt-key add -" >> ~/kali-fs/root/.bashrc
+#::::NOTE::::#
+#TO FIX KEY ISSUES
+#RUN # deb http://http.kali.org/kali kali-rolling main non-free contrib
+#IT DROP A KEY EXPIRED, THEN RUN ..
+#gpg –keyserver hkp://keys.gnupg.net –recv-key 7D8D0BF6 <---(las 8 dig of expired key)
+			echo "yes|apt update && apt upgrade && apt install curl proot ta" >> ~/kali-fs/root/.bashrc
+			echo "curl https://raw.githubusercontent.com/AndronixApp/AndronixOrigin/master/Installer/Kali/kali-lxde.sh | bash" >> ~/kali-fs/root/.bashrc
+			if [ -e $HOME/start-kali.sh ];then
+				./start-kali.sh
+				echo "# ~/.bashrc: executed by bash(1) for non-login shells." > ~/kali-fs/root/.bashrc
+				echo "#" >> ~/kali-fs/root/.bashrc
+				echo "# Note: PS1 and umask are already set in /etc/profile. You should not" >> ~/kali-fs/root/.bashrc
+				echo "# need this unless you want different defaults for root." >> ~/kali-fs/root/.bashrc
+				echo "# PS1='\${debian_chroot:+(\$debian_chroot)}\h:\w\$ '" >> ~/kali-fs/root/.bashrc
+				echo "# umask 022" >> ~/kali-fs/root/.bashrc
+				echo "#" >> ~/kali-fs/root/.bashrc
+				echo "# You may uncomment the following lines if you want 'ls' to be colorized:" >> ~/kali-fs/root/.bashrc
+				echo "# export LS_OPTIONS='--color=auto'" >> ~/kali-fs/root/.bashrc
+				echo "# eval \"\`dircolors\`\"" >> ~/kali-fs/root/.bashrc
+				echo "# alias ls='ls \$LS_OPTIONS'" >> ~/kali-fs/root/.bashrc
+				echo "# alias ll='ls \$LS_OPTIONS -l'" >> ~/kali-fs/root/.bashrc
+				echo "# alias l='ls \$LS_OPTIONS -lA'" >> ~/kali-fs/root/.bashrc
+				echo "#" >> ~/kali-fs/root/.bashrc
+				echo "# Some more alias to avoid making mistakes:" >> ~/kali-fs/root/.bashrc
+				echo "# alias rm='rm -i'" >> ~/kali-fs/root/.bashrc
+				echo "# alias cp='cp -i'" >> ~/kali-fs/root/.bashrc
+				echo "# alias mv='mv -i'" >> ~/kali-fs/root/.bashrc
+			else
+				ctrl_c
+				exit
+			fi
+			printf "$G\n\n[STEP 3]─➤$W Restart Termux$G\n[STEP 4]─➤$W Run kali as$G ./start-kali.sh\n[STEP 5]─➤$W Strat VNC server as$G vncserver-start\n[STEP 6]─➤$W Open VNC app and add connection at$G localhost:1\n   ╰─────➤$W Set a session name and login with your password$G\n[STEP 7]─➤$W Enjoy it!!\n"
 		else
-			printf "$R\n[ERR-KALI]─➤ Going to https://t.me/Ivam3_Bot$W\n"
+			ctrl_c
 			exit
 		fi
-elif [ $IU = "U" ]; then
-	printf "$Y\n[UNINSTALLING]─➤$W It could take a while ...\n"
-	wget https://raw.githubusercontent.com/AndronixApp/AndronixOrigin/master/Uninstall/Kali/UNI-kali.sh
-	bash UNI-kali.sh
 
-else
-	printf "$R\n[ERROR-OPC]─➤ Type I or U\n$W"
-	exit
-fi
+	elif [ $IU = "U" ]; then
+		printf "$Y\n[UNINSTALLING]─➤$W It could take a while ...\n"
+		curl https://raw.githubusercontent.com/AndronixApp/AndronixOrigin/master/Uninstall/Kali/UNI-kali.sh |bash
+	else
+		printf "$R\n[ERROR-OPC]─➤ Type I or U\n$W"
+		Install
+	fi
 
 
 #ENDING SCRIPT
