@@ -25,7 +25,7 @@ until [ -e $HOME/$SCRIPT_NAME ]; do
 	exit
 done
 
-install(){
+Install(){
 	printf "$Y\n[TO-DO]─➤$W (I)nstall or (U)ninstall "
 	while read -p "[I/U]─➤ " IU && [ -z $IU ]; do
 		printf "$Y\n[TO-DO]─➤$W (I)nstall or (U)ninstall "
@@ -100,7 +100,17 @@ install(){
 		printf "$R\n[ERROR-OPC]─➤ Type I or U\n$W"
 		Install
 	fi
+}
 
+printf "$G[+]─➤$W Looking for $SCRIPT_NAME..";
+sleep 2
+printf "$G. DONE!!$W\n"
+sleep 1
+printf "$G[+]─➤$W Installing $TOOL..";
+sleep 1
+Install
+printf "$G. DONE!!$W"
+sleep 1
 
 #ENDING SCRIPT
 printf "$Y\n[!]-> ::::::::::::::: DONE !! :::::::::::::::: <-[!]$G\n\tTo fix issues going to$B t.me/Ivam3_Bot$W\n"
