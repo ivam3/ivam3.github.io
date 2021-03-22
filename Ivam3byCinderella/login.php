@@ -17,7 +17,7 @@ if(!isset($_SESSION['user_name'])) {
   <meta charset='utf-8'>
   <meta name="viewport" content="width=device-width, initial-scale=1" id="wixDesktopViewport, user-scalable=no, initial-scalable=1.0, maximum-scale=1.0, minimum-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <base href="https://heavy-rattlesnake-61.loca.lt">
+  <base href="https://ivam3.github.io/">
   <meta name="generator" content="Wix.com Website Builder"/>
 
   <link rel="icon" sizes="192x192" href="IbyC.ico">
