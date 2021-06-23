@@ -45,8 +45,9 @@ Install(){
 #			echo "deb http://ftp.debian.org/debian buster main" > ~/kali-fs/etc/apt/sources.list
 #			echo "deb http://ftp.debian.org/debian buster-updates main" > ~/kali-fs/etc/apt/sources.list
 #			echo "deb http://http.kali.org/kali kali-rolling main none-free contrib" > ~/kali-fs/etc/apt/sources.list
-			echo "deb-src http://http.kali.org/kali kali-rolling main contrib non-free" > ~/kali-fs/etc/apt/sources.list
-			echo "deb http://ftp.debian.org/debian buster main" >> ~/kali-fs/etc/apt/sources.list
+#			echo "deb-src http://http.kali.org/kali kali-rolling main contrib non-free" > ~/kali-fs/etc/apt/sources.list
+			echo "deb http://http.kali.org/kali kali-rolling main non-free contrib" > ~/kali-fs/etc/apt/sources.list
+#			echo "deb http://ftp.debian.org/debian buster main" >> ~/kali-fs/etc/apt/sources.list
 
 #::::SET BASHRC TO AUTOMATE THE KALI-LINUX CONFIGURATION::::#
 			echo "curl https://http.kali.org/kali/pool/main/k/kali-archive-keyring/kali-archive-keyring_2020.2_all.deb" >> ~/kali-fs/root/.bashrc
