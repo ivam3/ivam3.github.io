@@ -1,0 +1,14 @@
+ /**
+ * VFM - veno file manager SKIN
+ 	- skin: blank.css
+ 	- put here your custom CSS, following the bootstrap's markup:
+ 	- http://getbootstrap.com/
+ */
+
+/* Padding-top for Fixed navbar.
+ * to avoid the fixed navbar
+ * remove the class "navbar-fixed-top" from the file /include/navbar.php
+*/
+body {
+  padding-top: 50px;
+}

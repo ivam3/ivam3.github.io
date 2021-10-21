@@ -1,0 +1,289 @@
+ /**
+ * VFM - veno file manager SKIN
+ 	- skin: vfm-2015.css
+ 	- author: @NicolaFranchini
+ 	- author URI: http://www.veno.it/
+ 	- version: 1.1
+
+    body background: #daddd6;
+    body color: #086f96;
+	link color: #3c4b58;
+	link hover color: #0193B7;
+
+	primary: #0193B7; | rgb(1,147,183);
+ */
+body{
+    background: #ecf0f5;
+    color: #3c4b58;
+}
+a, .btn-link, .round-butt{
+	color: #2c3944;
+}
+a:hover, a:active, a:focus{
+	color: #0193B7;
+	text-decoration: none;
+}
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body{
+	padding-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  vertical-align: middle;
+  float: none;
+  padding: 10px 0;
+}
+
+/* Fixed navbar
+-------------------------------------------------- */
+body {
+  padding-top: 50px;
+}
+
+.navbar{
+    -moz-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+.panel{
+	background: rgba(255,255,255,0.8);
+}
+.userspace{
+	background: rgba(255,255,255,0.5);
+}
+.modal-content, .dataTables_length select{
+	-webkit-border-radius: 0;
+	border-radius: 0;
+}
+.progress{
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+}
+
+.navbar-inverse, .footer{
+	background: #0193B7;
+}
+
+.navbar-inverse .navbar-nav > li > a, 
+.footer a,
+.navbar-inverse .navbar-brand{
+	color: #fff;
+}
+.navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
+    color: #086f96;
+}
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form{
+	border: none;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus,
+.navbar-inverse .navbar-nav > .open > a, 
+.navbar-inverse .navbar-nav > .open > a:hover, 
+.navbar-inverse .navbar-nav > .open > a:focus,
+.navbar-inverse .navbar-toggle:hover,
+.navbar-inverse .navbar-toggle:focus{
+	background: #086f96;
+}
+.input-group .form-control:first-child, 
+.input-group-addon:first-child, 
+.input-group-btn:first-child > .btn, 
+.input-group-btn:first-child > .btn-group > .btn, 
+.input-group-btn:first-child > .dropdown-toggle, 
+.input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle), 
+.input-group-btn:last-child > .btn-group:not(:last-child) > .btn,
+.input-group .form-control:last-child, 
+.input-group-addon:last-child, 
+.input-group-btn:last-child > .btn, 
+.input-group-btn:last-child > .btn-group > .btn, 
+.input-group-btn:last-child > .dropdown-toggle, 
+.input-group-btn:first-child > .btn:not(:first-child), 
+.input-group-btn:first-child > .btn-group:not(:first-child) > .btn,
+.btn, .input-group-addon, .alert, .panel{
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	-o-border-radius: 0px;
+	border-radius: 0px;
+}
+.input-group-addon,
+.has-success .input-group-addon,
+.has-error .input-group-addon,
+.has-warning .input-group-addon{
+	background: rgba(255,255,255,0.4);
+}
+.vfmwrapper{
+	max-width: 1200px;
+}
+.tableblock, .uploadarea{
+	border-top: 2px solid #0193B7;
+	background: rgba(255,255,255,0.5);
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+.uploadarea{
+	border: none;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	-o-border-radius: 0px;
+	border-radius: 0px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.12);
+}
+hr, 
+.table > thead > tr > th, 
+.table > tbody > tr > th, 
+.table > tfoot > tr > th, 
+.table > thead > tr > td, 
+.table > tbody > tr > td, 
+.table > tfoot > tr > td {
+	border-color: #e3e7ec;
+}
+.table > tbody > tr:hover{
+	-webkit-transition: all 0.3s;
+	transition: all 0.3s;
+	background: rgba(255,255,255,0.5);
+}
+.nav-pills > li.active > a, 
+.nav-pills > li.active > a:focus, 
+.nav-pills > li.active > a:hover {
+	border-color: #0193B7;
+}
+.label-primary,
+.btn-primary,
+.btn-primary.disabled, 
+.btn-primary[disabled], 
+fieldset[disabled] .btn-primary, 
+.btn-primary.disabled:hover, 
+.btn-primary[disabled]:hover, 
+fieldset[disabled] .btn-primary:hover, 
+.btn-primary.disabled:focus, 
+.btn-primary[disabled]:focus, 
+fieldset[disabled] .btn-primary:focus, 
+.btn-primary.disabled:active, 
+.btn-primary[disabled]:active, 
+fieldset[disabled] .btn-primary:active, 
+.btn-primary.disabled.active, 
+.btn-primary.active[disabled], 
+fieldset[disabled] .btn-primary.active {
+	background: #0193B7;
+	border-color: #0193B7;
+}
+.btn-primary:hover, 
+.btn-primary:focus, 
+.btn-primary:active, 
+.btn-primary.active, 
+.open .dropdown-toggle.btn-primary,
+.btn-primary.active.focus,
+.btn-primary.active:focus,
+.btn-primary.active:hover,
+.btn-primary:active.focus,
+.btn-primary:active:focus,
+.btn-primary:active:hover,
+.open > .dropdown-toggle.btn-primary.focus,
+.open > .dropdown-toggle.btn-primary:focus,
+.open > .dropdown-toggle.btn-primary:hover{
+	background: #086f96;
+	color: #fff;
+}
+
+.btn-default
+{
+	background: none;
+	border: none;
+	color: #3d3f42;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.btn-default:hover, 
+.btn-default:focus, 
+.btn-default:active, 
+.btn-default.active, 
+.open .dropdown-toggle.btn-default,
+.btn-default.active.focus,
+.btn-default.active:focus,
+.btn-default.active:hover,
+.btn-default:active.focus,
+.btn-default:active:focus,
+.btn-default:active:hover,
+.open > .dropdown-toggle.btn-default.focus,
+.open > .dropdown-toggle.btn-default:focus,
+.open > .dropdown-toggle.btn-default:hover{
+	background: #3d3f42;
+	border-color: #3d3f42;
+	color: #fff;
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+
+
+.btn-default.disabled, 
+.btn-default[disabled], 
+fieldset[disabled] .btn-default, 
+.btn-default.disabled:hover, 
+.btn-default[disabled]:hover, 
+fieldset[disabled] .btn-default:hover, 
+.btn-default.disabled:focus, 
+.btn-default[disabled]:focus, 
+fieldset[disabled] .btn-default.disabled:active, 
+.btn-default[disabled]:active, 
+fieldset[disabled] .btn-default:active, 
+.btn-default.disabled.active, 
+.btn-default.active[disabled], 
+fieldset[disabled] .btn-default.active{
+	background: none;
+	border: none;
+	color: #3d3f42;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.12);
+}
+
+.form-control, .dataTables_filter input{
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	-o-border-radius: 0px;
+	border-radius: 0px;
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
+}
+
+.dataTables_filter .input-group-addon{
+	background: none;
+	border-color:transparent;
+}
+.dataTables_filter input{
+	background: rgba(255,255,255,0.3);
+	border-color:transparent;
+	webkit-transition: all 300ms ease-out;
+	transition: all 300ms ease-out;
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
+}
+.dataTables_filter input:focus{
+	background: #fff;
+	background: rgba(255,255,255,1);
+}
+.uploadarea .form-control, .uploadarea .input-group-addon{
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	-o-border-radius: 0px;
+	border-radius: 0px;
+}
+
+.progress-bar{
+	background-color: #0193B7;
+}
+
+.gridview .itemicon .hover{
+	background: rgba(1,147,183,0.5);
+}
+
+tbody > .rowa.attivo .checkb .round-butt,
+.gridview tbody > .rowa.attivo .name .relative{
+	color: #fff;
+	background-color: #0193B7;
+}
