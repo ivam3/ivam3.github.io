@@ -1,5 +1,12 @@
 ## DESARROLLO DE MALWARE BY @N3XXU5_666
 
+- Dependencies
+```bash
+apt update && apt upgrade
+apt install curl python
+python3 -m pip install pillow wave numpy
+```
+NOTE: en Termux numpy se instala desde APT y python se ejecuta sin el '3'
 - Descarga de imagen .ico
 ```bash
 curl https://www.iconfinder.com/icons/7150904/download/ico/4096 -o pornhub.ico
