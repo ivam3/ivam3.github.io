@@ -3,7 +3,7 @@
 - Dependencias
 ```bash
 apt update && apt upgrade
-apt install curl python
+apt install curl python3
 python3 -m pip install pillow wave numpy
 ```
 NOTE: en Termux numpy se instala desde APT y python se ejecuta sin el '3'
@@ -196,5 +196,5 @@ compile.bat
 ```
 
 #### Sigueme en todas las [Redes_Sociales](https://wlo.link/@Ivam3)
-#### Sigue a N3XU5 en [Telegram](https://t.me/N3XU5_666). [Canal_CyberneticOps](https://t.me/CyberneticOps), [Canal_CyberOps](https://t.me/CyberOpsChannel), & [YouTube](https://www.youtube.com/@N3XU5_666)
+#### Sigue a N3XU5 en [Telegram](https://t.me/N3XU5_666). [Grupo_CyberneticOps](https://t.me/CyberneticOps), [Canal_CyberOps](https://t.me/CyberOpsChannel), & [YouTube](https://www.youtube.com/@N3XU5_666)
 #### ASISTE al proximo [LIVESTREAM](https://t.me/Ivam3byCinderella?livestream)
