@@ -794,3 +794,5 @@ Dudas? ... Unete a la [charla](https://t.me/Ivam3by_Cinderella/22) en nuestro [C
 3. DLL Malicioso (evildll.dll): Esta etapa del malware es un DLL que se va a encargar de ejecutar un shellcode payload malicioso en la memoria del proceso inyectado, justo cuando es cargado en la memoria de ejecución, que nos va a dar una reverse shell, conectándose directamente al servidor C2 en la nube. Para conseguir esto realiza el proceso estándar de un shellcode loader.
 
     Asiste a la [Tercera Parte](https://t.me/Ivam3byCinderella?livestream) de la ponencia en el [canal de Telegram](https://t.me/Ivam3byCinderella) de la comunidad.
+
+    Escaneo de malware en [AntiScanMe](https://antiscan.me), [Windows Defender](https://www.microsoft.com/es-mx/windows/comprehensive-security), [VirusTotal](https://www.virustotal.com) y [Kaspersky](https://latam.kaspersky.com/) sin ser detectado a Diciembre 2022.
