@@ -1186,4 +1186,12 @@ rm {pornhublsb.png,resources.o,trojan.exe,dllinjector.exe,evildll.dll,client.exe
 rm $HOME/.ssh/{id_rsa,id_rsa.pub}
 ```
 
-    Escaneo de malware en [AntiScanMe](https://antiscan.me), [Windows Defender](https://www.microsoft.com/es-mx/windows/comprehensive-security), [VirusTotal](https://www.virustotal.com) y [Kaspersky](https://latam.kaspersky.com/) sin ser detectado a Diciembre 2022.
+Escaneo de malware sin ser detectado en Diciembre del 2022 en :
+- [AntiScanMe](https://antiscan.me)
+- [Windows Defender](https://www.microsoft.com/es-mx/windows/comprehensive-security)
+- [VirusTotal](https://www.virustotal.com)
+- [Kaspersky](https://latam.kaspersky.com/)
+
+Dudas? ... Unete a la [charla](https://t.me/Ivam3by_Cinderella/22) en nuestro [Chat de Telegram](https://t.me/Ivam3by_Cinderella)
+
+Apoyate con el video de la ponencia que encontraras en la sección de 'Cursos Hacking' del [BOT de la comunidad](https://t.me/Ivam3_Bot) al adquirir tu [membresia](https://www.youtube.com/ivam3bycinderella/join).
