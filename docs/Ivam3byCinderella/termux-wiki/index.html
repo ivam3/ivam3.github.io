@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ivam3byCinderella TH2</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #f0f7f4;
+    }
+
+    header {
+      background-color: #005f73;
+      color: white;
+      padding: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 36px;
+      font-weight: bold;
+    }
+
+    .sub-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 30px;
+      margin-bottom: 10px;
+      color: #033f49;
+    }
+
+    .how-to {
+      margin-bottom: 20px;
+      border: 1px solid #dbe7e4;
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    .how-to h3 {
+      margin-top: 0;
+      margin-bottom: 5px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #005f73;
+    }
+
+    .how-to p {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .how-to small {
+      display: block;
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 5px;
+    }
+
+    .how-to a {
+      color: #005f73;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .how-to a:hover {
+      text-decoration: underline;
+    }
+
+    .new-how-to-form {
+      background-color: white;
+      border: 1px solid #dbe7e4;
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    .new-how-to-form label {
+      display: block;
+      font-weight: bold;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      color: #033f49;
+    }
+
+    .new-how-to-form input,
+    .new-how-to-form textarea {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .new-how-to-form button {
+      background-color: #005f73;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      padding: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .new-how-to-form button:hover {
+      background-color: #033f49;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Termux How-To</h1>
+		<nav>
+			<ul>
+				<li><a href="index.html">Inicio</a></li>
+				<li><a href="https://www.youtube.com/c/Ivam3byCinderella">Youtube</a></li>
+				<li><a href="https://t.me/Ivam3byCinderella">Telegram Channel</a></li>
+				<li><a href="https://t.me/Ivam3by_Cinderella">Telegram CHAT</a></li>
+				<li><a href="https://t.me/Ivam3_Bot">Telegram BOT</a></li>
+				<li><a href="https://github.com/Ivam3">GitHub</a></li>
+			</ul>
+		</nav>
+  </header>
+  <main>
+
+    <h2 class="sub-title">Add a new How-To</h2>
+    <form class="new-how-to-form" action="upload.php" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" required>
+      </div>
+        
+      <div class="form-group">
+        <label for="author">Author</label>
+        <input type="text" name="author" id="author" required>
+      </div>
+        
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input type="date" name="date" id="date" required>
+      </div>
+        
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea name="description" id="description" rows="3" required></textarea>
+      </div>
+        
+      <div class="form-group">
+        <label for="content">Content of your How To</label>
+        <textarea name="content" id="content" rows="10" required></textarea>
+      </div>
+        
+      <div class="form-group">
+        <label for="file">File (only in .md)</label>    
+        <input type="file" name="file" id="file" accept=".md" required>
+      </div>
+      <button type="submit">Add How To</button>
+    </form>
+
+    <div class="container">
+      <h2>Last how-tos</h2>
+      <ul>
+        <!-- Ultimos how-tos -->
+      </ul>
+  </main>
+
+  <footer>
+    <p>© 2023 - Ivam3 by Cinderella</p>
+  </footer>
+    
+  <script src="script.js"></script>
+<!--
+      <h2 class="sub-title">Last How-To's</h2>
+      <div class="how-to">
+        <h3><a href="how-tos/como-instalar-cython-en-termux.md">Cómo instalar Cython en Termux</
+-->
+</body>
+</html>
