@@ -44,7 +44,7 @@ if ($uploadOk == 0) {
     echo "The file ". htmlspecialchars( basename( $_FILES["file"]["name"])). " was uploaded.";
 
     // Agregar enlace al nuevo post en index.html
-    $url = "how-to/" . basename($_FILES["file"]["name"]);
+    $url = "https://github.com/ivam3/ivam3.github.io/blob/master/docs/Ivam3byCinderella/termux-wiki/how-tos/" . basename($_FILES["file"]["name"]);
     $name = pathinfo($_FILES["file"]["name"], PATHINFO_FILENAME);
     $content = '<div class="how-to"><h3><a href="' . $url . '">' . $name . '</a></h3></div>';
 
