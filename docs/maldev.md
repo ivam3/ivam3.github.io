@@ -11,7 +11,7 @@ La ponencia muestra su desarrollo desde Distribucion Linux Debian, sin embargo e
 - Dependencias en Linux
 ```bash
 apt update && yes|apt upgrade
-yes|apt install curl mingw-w64 python python-pip rust gcc cargo winehq-stable
+yes|apt install curl mingw-w64 python python-pip rust gcc cargo wine
 python3 -m pip install pillow numpy azure-cli
 ```
 - Dependencias en Termux
@@ -820,7 +820,7 @@ rm PoC-maldev/donut.zip
 
   - Ejecucion en Linux
 ```bash
-wine donut.exe -e 1 -b 1 -o dllinjector.bin -t dllinjector.exe
+wine64 donut.exe -e 1 -b 1 -o dllinjector.bin -t dllinjector.exe
 ```
 
   - Ejecucion en Alpine
