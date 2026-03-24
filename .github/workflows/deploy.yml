@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   build-web:
@@ -17,7 +16,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12" # Versión estable y recomendada
+          python-version: "3.12"
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -40,23 +39,13 @@ jobs:
       - name: Build Web App
         working-directory: docs/landpage
         run: |
-          # FLET_TEMPLATE_REF ayuda a evitar errores de versión en el build
           export FLET_TEMPLATE_REF=0.82.0
-          flet build web -vv
+          flet build web --base-url / --verbose
       
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          name: Ivam3byCinderella landing page
-          path: |
-            docs/landpage/build/web
-
-      - name: Commit web builds to repo
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git add docs/landpage/build/web
-          git commit -m "actions(web): Build landing page" || echo "No changes to commit"
-          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:master
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/landpage/build/web
+          publish_branch: gh-pages
+          force_orphan: true # Crea una rama limpia sin historial innecesario
