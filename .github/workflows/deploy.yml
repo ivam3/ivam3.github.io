@@ -41,7 +41,7 @@ jobs:
         working-directory: docs/landpage
         run: |
           # FLET_TEMPLATE_REF ayuda a evitar errores de versión en el build
-          export FLET_TEMPLATE_REF=0.82.0<F12>
+          export FLET_TEMPLATE_REF=0.82.0
           flet build web -vv
       
       - name: Upload artifacts
