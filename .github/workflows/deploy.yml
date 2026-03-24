@@ -17,7 +17,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.14"
+          python-version: "3.12" # Versión estable y recomendada
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -32,7 +32,7 @@ jobs:
             libgtk-3-dev libglib2.0-0 libnss3 libx11-6 libxcomposite1 \
             libxdamage1 libxrandr2 libxtst6 libxkbcommon0 libasound2t64
 
-      - name: Install Flet CLI
+      - name: Install Build Tools
         run: |
           pip install --upgrade pip
           pip install flet==0.82.0 flet-cli==0.82.0 
@@ -58,5 +58,5 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add docs/landpage/build/web
-          git commit -m "actions(web): Migrating Landing Page from html to Flet" || echo "No changes to commit"
+          git commit -m "actions(web): Build landing page" || echo "No changes to commit"
           git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:master
