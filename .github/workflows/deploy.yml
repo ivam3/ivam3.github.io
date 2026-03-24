@@ -2,33 +2,61 @@ name: Deploy Flet App to GitHub Pages
 
 on:
   push:
-    branches:
-      - master # O 'main', asegúrate de cuál usas
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
-  build-and-deploy:
+  build-web:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.14"
 
-      - name: Install Flet
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.41.4"
+          channel: stable
+
+      - name: Install system dependencies
         run: |
-          pip install flet==0.24.1
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev libglib2.0-0 libnss3 libx11-6 libxcomposite1 \
+            libxdamage1 libxrandr2 libxtst6 libxkbcommon0 libasound2t64
+
+      - name: Install Flet CLI
+        run: |
+          pip install --upgrade pip
+          pip install flet==0.82.0 flet-cli==0.82.0 requests==2.32.5 urllib3==2.6.3 charset-normalizer==3.4.5
 
       - name: Build Web App
+        working-directory: docs/landpage
         run: |
           # FLET_TEMPLATE_REF ayuda a evitar errores de versión en el build
           export FLET_TEMPLATE_REF=0.82.0
-          flet build web --base-url /
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+          flet build web -vv
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web
+          name: Ivam3byCinderella landing page
+          path: |
+            docs/landpage/build/web
+
+      - name: Commit web builds to repo
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add docs/landpage/build/web
+          git commit -m "actions(web): Migrating Landing Page from html to Flet" || echo "No changes to commit"
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:master
