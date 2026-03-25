@@ -209,7 +209,7 @@ async def main(page: ft.Page):
         elif idx == 1: content_area.controls.append(projects_view())
         elif idx == 2: content_area.controls.append(social_view())
         elif idx == 3: content_area.controls.append(how_to_view())
-        await page.update()
+        page.update()
 
     nav = ft.NavigationBar(
         destinations=[
@@ -224,7 +224,7 @@ async def main(page: ft.Page):
     )
 
     content_area.controls.append(home_view())
-    await page.add(
+    page.add(
         ft.SafeArea(
             content=ft.Column([content_area, nav], expand=True, spacing=0),
             expand=True
