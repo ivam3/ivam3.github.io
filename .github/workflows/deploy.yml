@@ -40,7 +40,7 @@ jobs:
         working-directory: docs/landpage
         run: |
           export FLET_TEMPLATE_REF=0.82.0
-          flet build web --base-url / --verbose
+          flet build web --base-url / --web-renderer html --verbose
       
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
