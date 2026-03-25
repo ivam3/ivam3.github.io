@@ -121,7 +121,7 @@ async def main(page: ft.Page):
                 content=ft.FilledButton(
                     "EXPLORALOS EN GITHUB",
                     icon=ft.Icons.OPEN_IN_BROWSER,
-                    on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3"),
+                    on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3?tab=repositories"),
                     style=ft.ButtonStyle(bgcolor=teal, color="white")
                 ),
                 margin=ft.Margin.only(top=20, bottom=40)
@@ -199,17 +199,32 @@ async def main(page: ft.Page):
             ft.Container(height=40)
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER)
 
-    # --- ESTRUCTURA ---
+    # --- ESTRUCTURA DE RUTAS ---
+    # Diccionario para mapear rutas con sus vistas e índices
+    route_map = {
+        "/": (home_view, 0),
+        "/proyectos": (projects_view, 1),
+        "/redes": (social_view, 2),
+        "/how-to": (how_to_view, 3),
+    }
+
     content_area = ft.Column(scroll=ft.ScrollMode.AUTO, expand=True)
 
-    async def change_tab(e):
-        idx = e.control.selected_index
+    def route_change(e):
+        # Obtenemos la vista y el índice según la ruta actual
+        view_func, index = route_map.get(page.route, (home_view, 0))
+        
         content_area.controls.clear()
-        if idx == 0: content_area.controls.append(home_view())
-        elif idx == 1: content_area.controls.append(projects_view())
-        elif idx == 2: content_area.controls.append(social_view())
-        elif idx == 3: content_area.controls.append(how_to_view())
+        content_area.controls.append(view_func())
+        nav.selected_index = index
         page.update()
+
+    async def change_tab(e):
+        # Cambiamos la ruta según la pestaña seleccionada
+        routes = ["/", "/proyectos", "/redes", "/how-to"]
+        page.go(routes[e.control.selected_index])
+
+    page.on_route_change = route_change
 
     nav = ft.NavigationBar(
         destinations=[
@@ -223,13 +238,16 @@ async def main(page: ft.Page):
         selected_index=0
     )
 
-    content_area.controls.append(home_view())
     page.add(
         ft.SafeArea(
             content=ft.Column([content_area, nav], expand=True, spacing=0),
             expand=True
         )
     )
+
+    # Iniciamos la navegación según la URL de entrada después de construir el layout
+    # Llamamos directamente a route_change para poblar el contenido inicial
+    route_change(None)
 
 if __name__ == "__main__":
     assets_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "assets"))
