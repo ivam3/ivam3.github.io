@@ -1,2 +1,4 @@
 flet==0.82.0
 httpx==0.28.1
+oauthlib
+requests-oauthlib
