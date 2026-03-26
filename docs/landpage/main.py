@@ -23,7 +23,7 @@ async def main(page: ft.Page):
             margin=ft.Margin.only(top=30, bottom=15)
         )
 
-    def detail_card(title, description, icon_obj=None, color=card_bg):
+    def detail_card(title, description, icon_obj=None, color=card_bg, on_click=None):
         return ft.Container(
             content=ft.Card(
                 content=ft.Container(
@@ -39,7 +39,8 @@ async def main(page: ft.Page):
                 bgcolor=color,
                 elevation=5
             ),
-            margin=ft.Margin.symmetric(vertical=5, horizontal=15)
+            margin=ft.Margin.symmetric(vertical=5, horizontal=15),
+            on_click=on_click
         )
 
     async def open_url(url):
@@ -99,23 +100,24 @@ async def main(page: ft.Page):
         return ft.Column([
             section_title("NUESTROS PROYECTOS", ft.Icons.CODE),
             detail_card("i-Haklab", "Laboratorio Hacking completo para Termux para Pentesting, Vibe Code, Desarrollo y mucho mas.",
-                ft.Icons.WHATSHOT_OUTLINED), 
+                ft.Icons.WHATSHOT_OUTLINED, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/i-Haklab")), 
             detail_card("Termux-Packages", "Herramientas de sistemas GNU/Linux compilados con Android NDK y parchados para su compatibilidad, instalables bajo el administrador APT|PKG.", 
-                ft.Icons.BLUR_ON),
+                ft.Icons.BLUR_ON, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/termux-packages")),
             detail_card("xapt-management", "Gestor gráfico para APT en Termux. Simplifica la administración de paquetes, permitiendo buscar, instalar y eliminar software sin necesidad de recordar comandos complejos.",
-                ft.Icons.SETTINGS),
+                ft.Icons.SETTINGS, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/xapt-management")),
             detail_card("Embed", "Herramienta avanzada para la inyección de payloads en archivos APK legítimos. Ideal para estudiar técnicas de persistencia y análisis de malware en Android.",
-                ft.Icons.CORONAVIRUS_OUTLINED),
+                ft.Icons.CORONAVIRUS_OUTLINED, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/embed")),
             detail_card("Botgram","Cli scrapper para Telegram. Obtenen toda la información sobre los miembros de los grupos de Telegram. Automatiza el envío masivo de mensajes y la adición de miembros a otros grupos desde la línea de comandos.", 
-                ft.Icons.SMART_TOY),
+                ft.Icons.SMART_TOY, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/botgram")),
             detail_card("DoS-A-Tool","Realiza ataques de denegación de servicio mediante el método SYN Flood configurando el ataque en detalle, incluyendo su duración, intervalo de envío, tamaño de paquetes y el ancho de banda a utilizar desde Termux.", 
-                ft.Icons.FLOOD),
-            detail_card("Exiftool", "Extrae y modifica metadata de archivos multimedia desde la Cli con Termux.",
-                ft.Icons.ADD_PHOTO_ALTERNATE_OUTLINED), 
+                ft.Icons.FLOOD, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/DoS-A-Tool")),
+            detail_card("Exif", "Extrae y modifica metadata de archivos multimedia desde la Cli con Termux.",
+                ft.Icons.ADD_PHOTO_ALTERNATE_OUTLINED, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/Exif")), 
             detail_card("Termux-adbfastboot", "Android SDK platform tools - adb & fastboot para Termux.", 
-                ft.Icons.ADB),
+                ft.Icons.ADB, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/Termux-adbfastboot")),
             detail_card("Proyectos-flet", "Conjunto de aplicaciones multiplataforma desarrolladas con flet(flutter) de Python desde Android con Termux.", 
-                ft.Icons.APPS),
+                ft.Icons.APPS, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/proyectos_flet")),
+
 
             ft.Container(
                 content=ft.FilledButton(
