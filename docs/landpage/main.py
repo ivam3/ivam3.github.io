@@ -172,8 +172,31 @@ async def main(page: ft.Page):
 
     def how_to_view():
         guides = [
+            ("Anonimato con TOR", "Configuración de TOR y Privoxy en Termux para navegar anónimamente.", "torifica_tu_red.md"),
+            ("Ataque Slowloris", "Entiende y practica ataques DoS a la capa de aplicación con slowhttptest.", "DoS_slowloris.md"),
+            ("Bash scripting - dialog", "Practica la creacion de interfaz grafica de texto (TUI) con Dialog", "bashScripting_dialog.md"),
+            ("Bash scripting - getopts", "Practica el manejo de argumentos y/o entradas de usuario", "bashScripting_getopts.md"),
+            ("Bash scripting - if-elif-else", "Practica el manejo de condicionales.", "bashScripting_if-elif-else.md"),
+            ("Brute Force por SSH", "Practica el ataque a fuerza bruta mediante el protocolo SSH.", "bruteForce_a_SSH.md"),
+            ("Conexiones Reversa", "Practica la explitacion y obtencion de conexion reversa 'bindshell' y 'reverseshell'.", "CCA_bindShell_&_reverseShell.md"),
+            ("Dominando cURL", "Aprende a interactuar con sitios web y APIs desde la terminal con cURL.", "dominando_curl.md"),
+            ("Email con MUTT", "Envío de correos y archivos desde la terminal de forma manual o automatizada.", "envia_email_con_mutt.md"),
+            ("Entorno de Pruebas", "Configura un laboratorio seguro en Termux con aplicaciones vulnerables.", "entorno_de_pruebas_hacking.md"),
+            ("Enumeración Web", "Aprende a enumerar servicios, directorios y archivos ocultos en aplicaciones web.", "CCA_enumeracion.md"),
+            ("Fuerza Bruta con Hydra", "Práctica de ataques de fuerza bruta a cuentas de correo usando Hydra.", "hydra_fb_a_email.md"),
+            ("Inyección en APK", "Aprende a inyectar payloads de Meterpreter en aplicaciones Android legítimas.", "msf_payload_en_apk_legitima.md"),
             ("Malware Development", "Desarrolla malware ético sin PC desde Android con Termux.", "maldev.md"),
-            # Puedes añadir más archivos aquí siguiendo el mismo formato
+            ("Metasploit + Shodan", "Uso de Metasploit para localizar servidores vulnerables mediante Shodan.", "msf_con_shodan.md"),
+            ("Post-Explotación Android", "Comandos de post-explotación en Android tras una intrusión exitosa.", "msf_payloadAPK.md"),
+            ("Ofuscación BASH", "Técnicas de codificación y ofuscación para proteger tus scripts en BASH.", "obfuscado.md"),
+            ("Payloads en Imágenes", "Ocultación de scripts en metadatos de imágenes para evadir detección.", "payload_en_imagen.md"),
+            ("Phishing con BeeF", "Ataques avanzados al navegador integrando BeeF y Metasploit.", "phishing_con_BeEF.md"),
+            ("PoC: SQL Injection", "Prueba de concepto sobre exposición de datos sensibles mediante SQLi.", "PoC_SQL_exposicion_de_datos.md"),
+            ("PoC: HTTP Verb Tampering", "Explotación de vulnerabilidades en verbos HTTP para saltar controles.", "PoC_vulnerabilidad_http_verb_tampering.md"),
+            ("PoC: LFI", "Explotación detallada de vulnerabilidades Local File Inclusion.", "PoC_vulnerabilidad_LFI.md"),
+            ("PoC: RFI", "Explotación de Remote File Inclusion para ejecución de código remoto.", "PoC_vulnerabilidad_RFI.md"),
+            ("Writeup: HTB - Dog", "Resolución detallada de la máquina Dog de HackTheBox.", "CCAvsHTB_dog.md"),
+            ("Writeup: HTB - Planning", "Planificación y resolución de la máquina Planning de HackTheBox.", "CCAvsHTB_Planning.md"),
         ]
 
         guide_buttons = []
