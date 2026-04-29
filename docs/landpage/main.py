@@ -139,6 +139,7 @@ async def main(page: ft.Page):
             ("Pagina Web", "Conoce todo lo que tenemos para ti", ft.Icons.WEB, "https://ivam3.github.io"),
             ("Wiki Técnica", "Información que cura dolores de cabeza", ft.Icons.SCHOOL, "https://victorh028.github.io/"),
             ("Github", "Conoce nuestros proyectos de código abierto", ft.Icons.CYCLONE, "https://github.com/ivam3"),
+            ("Spotify", "Escucha nuestro podcast 'Hacking Cueva'", ft.Icons.ALBUM, "https://open.spotify.com/show/2VFhDOc39I4UaHdTMUd9az"),
             ("Equipo Countking Cyber Army", "Únete y practica métodos hacking en grupo", ft.Icons.SECURITY, "https://app.hackthebox.com/public/teams/5053"),
             ("Tik Tok", "Videos tutoriales cortos", ft.Icons.TIKTOK, "https://www.tiktok.com/@ivam3bycinderella?_r=1&_t=ZS-94wBN5R80Kj"),
             ("Whatsapp", "Canal Oficial", ft.Icons.WECHAT_OUTLINED, "https://whatsapp.com/channel/0029VaM2Qbd9MF8wiloJx510"),
