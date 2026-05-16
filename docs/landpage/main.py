@@ -196,6 +196,7 @@ async def main(page: ft.Page):
             ("PoC: HTTP Verb Tampering", "Explotación de vulnerabilidades en verbos HTTP para saltar controles.", "PoC_vulnerabilidad_http_verb_tampering.md"),
             ("PoC: LFI", "Explotación detallada de vulnerabilidades Local File Inclusion.", "PoC_vulnerabilidad_LFI.md"),
             ("PoC: RFI", "Explotación de Remote File Inclusion para ejecución de código remoto.", "PoC_vulnerabilidad_RFI.md"),
+            ("Servidor FTP con Termux", "Monta tu propio servidor y accede a tu administrador de archivos desde cualquier otro dispositivo como PC,iOS o Android.", "servidor_ftp.md"),
             ("Writeup: HTB - DevArea", "Resolución detallada de la máquina DevArea de HackTheBox.", "CCAvsHTB_devArea.md"),
             ("Writeup: HTB - Dog", "Resolución detallada de la máquina Dog de HackTheBox.", "CCAvsHTB_dog.md"),
             ("Writeup: HTB - Planning", "Planificación y resolución de la máquina Planning de HackTheBox.", "CCAvsHTB_Planning.md"),
