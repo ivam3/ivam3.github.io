@@ -103,6 +103,8 @@ async def main(page: ft.Page):
                 ft.Icons.WHATSHOT_OUTLINED, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/i-Haklab")), 
             detail_card("Termux-Packages", "Herramientas de sistemas GNU/Linux compilados con Android NDK y parchados para su compatibilidad, instalables bajo el administrador APT|PKG.", 
                 ft.Icons.BLUR_ON, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/termux-packages")),
+            detail_card("termux-oracle", "Centro de documentación técnica oficial de i-HakLab e Ivam3bycinderella! Esta diseñada y estructurada específicamente para servir como el núcleo de información técnica sobre Termux, Linux en Android, i-Haklab, termux-packages, automatización, Desarrollo y Seguridad Informática, sirviendo de soporte directo a la comunidad Ivam3byCinderella a través de asistentes de Inteligencia Artificial como DevinAI de DeepWiki o con el agente AI de tu preferencia como opencode, claude-code, codex, etc mediante su version de SKILLL (termux-oracle-skill)",
+                ft.Icons.SETTINGS, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/xapt-management")),
             detail_card("xapt-management", "Gestor gráfico para APT en Termux. Simplifica la administración de paquetes, permitiendo buscar, instalar y eliminar software sin necesidad de recordar comandos complejos.",
                 ft.Icons.SETTINGS, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/xapt-management")),
             detail_card("Embed", "Herramienta avanzada para la inyección de payloads en archivos APK legítimos. Ideal para estudiar técnicas de persistencia y análisis de malware en Android.",
