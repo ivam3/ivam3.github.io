@@ -137,6 +137,7 @@ async def main(page: ft.Page):
             ("YouTube", "Canal principal", ft.Icons.PLAY_CIRCLE_FILL, "https://www.youtube.com/ivam3bycinderella"),
             ("Telegram", "Canal sin censura", ft.Icons.SEND, "https://t.me/ivam3bycinderella"),
             ("Telegram Bot", "Todo el material gratuito en un solo lugar", ft.Icons.SMART_TOY, "https://t.me/Ivam3_Bot"),
+            ("Patreon", "Adaquiere software desarrollado por Ivam3", ft.Icons.CARD_MEMBERSHIP, "https://www.patreon.com/cw/Ivam3"),
             ("Grupo Oficial", "Aprende dialogando con todos los subscriptores", ft.Icons.WECHAT, "https://t.me/Ivam3by_Cinderella"),
             ("Pagina Web", "Conoce todo lo que tenemos para ti", ft.Icons.WEB, "https://ivam3.github.io"),
             ("Wiki Técnica", "Información que cura dolores de cabeza", ft.Icons.SCHOOL, "https://victorh028.github.io/"),
