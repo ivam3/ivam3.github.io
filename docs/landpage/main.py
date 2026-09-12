@@ -70,9 +70,25 @@ async def main(page: ft.Page):
                 padding=20
             ),
             section_title("¿QUIÉNES SOMOS?", ft.Icons.INFO),
-            detail_card("Nuestra Misión", "Somos una comunidad dedicada a la enseñanza y aprendizaje de Linux en Android bajo el emulador de terminal TERMUX."),
-            detail_card("Nuestra Meta", "Sembrar conocimiento y mentalidad hacker en cada usuario para hacer de este mundo más seguro."),
-            detail_card("Nuestro Objetivo", "Eliminar la imagen ciberdelincuencial que la sociedad misma le ha brindado al termino Hacker."),
+            detail_card("Proposito", "Democratizar el acceso al conocimiento tecnológico mediante dispositivos móviles, demostrando que la falta de una computadora no tiene por qué ser una barrera para aprender, experimentar, crear y desarrollarse en tecnología."),
+            detail_card("Misión", "Impulsar el aprendizaje práctico de Linux, programación, ciberseguridad, automatización e inteligencia artificial desde dispositivos móviles, utilizando Termux como entorno principal de aprendizaje y desarrollo.
+Proporcionamos conocimiento, herramientas y una comunidad que permita a cualquier persona transformar un dispositivo móvil en una plataforma para aprender, experimentar y construir, independientemente de si dispone o no de una computadora."),
+            detail_card("Vision", "Construir una comunidad donde el acceso a una computadora deje de ser un requisito para iniciarse y crecer en el mundo de la tecnología.
+Aspiramos a formar una nueva generación de desarrolladores, investigadores y entusiastas de la tecnología capaces de aprender, crear y resolver problemas utilizando los recursos que tienen a su alcance."),
+            detail_card("Filosofia hacker", "Para nuestra comunidad, la cultura hacker representa una actitud ante el conocimiento: cuestionar, comprender cómo funcionan las cosas, experimentar, resolver problemas y compartir lo aprendido.
+Ser hacker no está determinado por el dispositivo que utilizas ni por una intención maliciosa, sino por la curiosidad, la capacidad de aprender y la voluntad de comprender y transformar la tecnología."),
+            detail_card("Principios", "1. Acceso al conocimiento
+El acceso limitado a recursos tecnológicos no debe impedir que una persona pueda aprender.
+2. Aprendizaje práctico
+La tecnología se comprende mejor experimentando, construyendo y resolviendo problemas reales.
+3. Mentalidad hacker
+Cuestionar, investigar, comprender, experimentar y buscar soluciones.
+4. Tecnología accesible
+Aprovechar herramientas abiertas y dispositivos disponibles para reducir las barreras de entrada al conocimiento.
+5. Uso responsable
+El conocimiento tecnológico y de seguridad debe ejercerse con responsabilidad, respeto y criterio.
+6. Comunidad y conocimiento compartido
+Lo aprendido adquiere mayor valor cuando se documenta, se comparte y permite que otros continúen aprendiendo."),
 
             section_title("¿QUÉ ES TERMUX?", ft.Icons.TERMINAL),
             detail_card("Poder de Linux en tu Bolsillo", "Termux es un emulador de terminal para Android que comparte el mismo entorno del sistema operativo iniciando la línea de comando del programa (shell) utilizando la llamada al sistema (execve) y redireccionando los flujos de entrada, salida y error estándar a la pantalla, proporcionando así un entorno Linux completo sin necesidad de root."),
