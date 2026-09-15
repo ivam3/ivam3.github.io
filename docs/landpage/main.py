@@ -44,8 +44,7 @@ async def main(page: ft.Page):
         )
 
     async def open_url(url):
-        # Usamos web_popup_window_name como sugiere el error de tu versión de Flet
-        await page.launch_url(url, web_popup_window_name="_blank")
+        await ft.UrlLauncher().launch_url(url, web_only_window_name="_blank")
 
     # --- VISTAS ---
 
@@ -72,40 +71,49 @@ async def main(page: ft.Page):
             section_title("¿QUIÉNES SOMOS?", ft.Icons.INFO),
             detail_card("Proposito", "Democratizar el acceso al conocimiento tecnológico mediante dispositivos móviles, demostrando que la falta de una computadora no tiene por qué ser una barrera para aprender, experimentar, crear y desarrollarse en tecnología."),
             detail_card("Misión", """Impulsar el aprendizaje práctico de Linux, programación, ciberseguridad, automatización e inteligencia artificial desde dispositivos móviles, utilizando Termux como entorno principal de aprendizaje y desarrollo.
+
 Proporcionamos conocimiento, herramientas y una comunidad que permita a cualquier persona transformar un dispositivo móvil en una plataforma para aprender, experimentar y construir, independientemente de si dispone o no de una computadora."""),
             detail_card("Vision", """Construir una comunidad donde el acceso a una computadora deje de ser un requisito para iniciarse y crecer en el mundo de la tecnología.
+
 Aspiramos a formar una nueva generación de desarrolladores, investigadores y entusiastas de la tecnología capaces de aprender, crear y resolver problemas utilizando los recursos que tienen a su alcance."""),
             detail_card("Filosofia hacker", """Para nuestra comunidad, la cultura hacker representa una actitud ante el conocimiento: cuestionar, comprender cómo funcionan las cosas, experimentar, resolver problemas y compartir lo aprendido.
+
 Ser hacker no está determinado por el dispositivo que utilizas ni por una intención maliciosa, sino por la curiosidad, la capacidad de aprender y la voluntad de comprender y transformar la tecnología."""),
-            detail_card("Principios", """1. Acceso al conocimiento
-El acceso limitado a recursos tecnológicos no debe impedir que una persona pueda aprender.
-2. Aprendizaje práctico
-La tecnología se comprende mejor experimentando, construyendo y resolviendo problemas reales.
-3. Mentalidad hacker
-Cuestionar, investigar, comprender, experimentar y buscar soluciones.
-4. Tecnología accesible
-Aprovechar herramientas abiertas y dispositivos disponibles para reducir las barreras de entrada al conocimiento.
-5. Uso responsable
-El conocimiento tecnológico y de seguridad debe ejercerse con responsabilidad, respeto y criterio.
-6. Comunidad y conocimiento compartido
-Lo aprendido adquiere mayor valor cuando se documenta, se comparte y permite que otros continúen aprendiendo."""),
+            detail_card("Principios", """1. Acceso al conocimiento: El acceso limitado a recursos tecnológicos no debe impedir que una persona pueda aprender.
+
+2. Aprendizaje práctico: La tecnología se comprende mejor experimentando, construyendo y resolviendo problemas reales.
+
+3. Mentalidad hacker: Cuestionar, investigar, comprender, experimentar y buscar soluciones.
+
+4. Tecnología accesible: Aprovechar herramientas abiertas y dispositivos disponibles para reducir las barreras de entrada al conocimiento.
+
+5. Uso responsable: El conocimiento tecnológico y de seguridad debe ejercerse con responsabilidad, respeto y criterio.
+
+6. Comunidad y conocimiento compartido: Lo aprendido adquiere mayor valor cuando se documenta, se comparte y permite que otros continúen aprendiendo."""),
 
             section_title("¿QUÉ ES TERMUX?", ft.Icons.TERMINAL),
             detail_card("Poder de Linux en tu Bolsillo", "Termux es un emulador de terminal para Android que comparte el mismo entorno del sistema operativo iniciando la línea de comando del programa (shell) utilizando la llamada al sistema (execve) y redireccionando los flujos de entrada, salida y error estándar a la pantalla, proporcionando así un entorno Linux completo sin necesidad de root."),
 
             section_title("ESCALA TUS PRIVILEGIOS", ft.Icons.STAR),
-            ft.Text("Mejora tu experiencia de aprendizaje y accede a tu membresia", 
+            ft.Text("Mismo contenido en YouTube y Telegram, ambos con comentarios",
                     size=14, color=teal, weight=ft.FontWeight.W_500, text_align=ft.TextAlign.CENTER),
-            detail_card("Nivel SUDOERS", "Acceso a videos exclusivos | Mensajes directos con Ivam3.", ft.Icons.SCHOOL, color="#1a3a4a"),
+            detail_card("Nivel SUDOERS", "Videos exclusivos + grupo solo miembros + inbox directo con Ivam3.", ft.Icons.SCHOOL, color="#1a3a4a"),
             detail_card("Nivel SPONSOR", "Acceso anticipado a los estrenos.", ft.Icons.STAR, color="#1a3a4a"),
-            
+
             ft.Container(
-                content=ft.FilledButton(
-                    "ACTIVALA AQUI",
-                    icon=ft.Icons.SUBSCRIPTIONS,
-                    on_click=lambda _: page.run_task(open_url, "https://www.youtube.com/ivam3bycinderella/join"),
-                    style=ft.ButtonStyle(bgcolor=teal, color="white")
-                ),
+                content=ft.Row([
+                    ft.FilledButton(
+                        "VER PLANES Y MATERIAL",
+                        icon=ft.Icons.CARD_MEMBERSHIP,
+                        on_click=lambda _: page.run_task(page.push_route, "/membresias"),
+                        style=ft.ButtonStyle(bgcolor=teal, color="white")
+                    ),
+                    ft.OutlinedButton(
+                        "ACTIVALA AQUI",
+                        icon=ft.Icons.SUBSCRIPTIONS,
+                        on_click=lambda _: page.run_task(open_url, "https://www.youtube.com/ivam3bycinderella/join"),
+                    ),
+                ], alignment=ft.MainAxisAlignment.CENTER, wrap=True),
                 margin=ft.Margin.only(top=10, bottom=20)
             ),
 
@@ -245,6 +253,66 @@ Lo aprendido adquiere mayor valor cuando se documenta, se comparte y permite que
             ft.Container(height=40)
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER)
 
+    def memberships_view():
+        return ft.Column([
+            section_title("MEMBRESÍAS", ft.Icons.CARD_MEMBERSHIP),
+            ft.Text("Mismo contenido en YouTube y Telegram",
+                    size=14, color=teal, weight=ft.FontWeight.W_500, text_align=ft.TextAlign.CENTER),
+
+            section_title("¿CÓMO UNIRTE?", ft.Icons.HELP),
+            detail_card("Desde YouTube (Recomendado)", "Acceso a YouTube + Telegram. Únete en YouTube y luego pide tu acceso en Telegram.",
+                ft.Icons.PLAY_CIRCLE_FILL, color="#1a3a4a",
+                on_click=lambda _: page.run_task(open_url, "https://www.youtube.com/ivam3bycinderella/join")),
+            detail_card("Desde Telegram", "Acceso solo a Telegram. Ideal si prefieres todo en un solo lugar.",
+                ft.Icons.SEND, color="#1a3a4a",
+                on_click=lambda _: page.run_task(open_url, "https://t.me/+WkDK2kKhqbNkMmYx")),
+
+            section_title("VERIFICACIÓN AUTOMÁTICA", ft.Icons.VERIFIED),
+            detail_card("Activa tu acceso con el bot", """1. Toma captura de la compra de tu membresía.
+2. Ten a la mano tu @ (ID) de YouTube.
+3. Envíalos al bot de Telegram.
+4. El bot verifica que coincidan los IDs de Telegram y YouTube y libera tu acceso.""",
+                ft.Icons.SMART_TOY,
+                on_click=lambda _: page.run_task(open_url, "https://t.me/Ivam3_Bot")),
+
+            section_title("COMPARA NIVELES", ft.Icons.STAR),
+            detail_card("Nivel SUDOERS", "Videos exclusivos + grupo solo miembros + inbox directo con Ivam3.",
+                ft.Icons.SCHOOL, color="#1a3a4a"),
+            detail_card("Nivel SPONSOR", "Acceso anticipado a los estrenos.",
+                ft.Icons.STAR, color="#1a3a4a"),
+
+            section_title("MATERIAL DE MIEMBROS", ft.Icons.VIDEO_LIBRARY),
+            detail_card("Playlist en YouTube", "Todo el material exclusivo bajo membresía, con opción de dejar comentarios.",
+                ft.Icons.PLAY_CIRCLE_FILL,
+                on_click=lambda _: page.run_task(open_url, "https://www.youtube.com/playlist?list=PLLQIRET13t-I")),
+            detail_card("Canal privado en Telegram", "El mismo contenido de YouTube en Telegram, con opción de dejar comentarios.",
+                ft.Icons.SEND,
+                on_click=lambda _: page.run_task(open_url, "https://t.me/+WkDK2kKhqbNkMmYx")),
+            detail_card("Grupo exclusivo", "Dialoga, convive y comparte experiencias con todos los miembros e Ivam3.",
+                ft.Icons.WECHAT,
+                on_click=lambda _: page.run_task(open_url, "https://t.me/+ibLtWFJImfY4ZTgx")),
+            detail_card("Asesoria", "Aclara tus dudas via chat privado con Ivam3.",
+                ft.Icons.SCHOOL,
+                on_click=lambda _: page.run_task(open_url, "https://t.me/Ivam3")),
+
+            ft.Container(
+                content=ft.Row([
+                    ft.FilledButton(
+                        "UNIRME EN YOUTUBE",
+                        icon=ft.Icons.SUBSCRIPTIONS,
+                        on_click=lambda _: page.run_task(open_url, "https://www.youtube.com/ivam3bycinderella/join"),
+                        style=ft.ButtonStyle(bgcolor=teal, color="white")
+                    ),
+                    ft.OutlinedButton(
+                        "PEDIR ACCESO POR TELEGRAM",
+                        icon=ft.Icons.SEND,
+                        on_click=lambda _: page.run_task(open_url, "https://t.me/Ivam3_Bot"),
+                    ),
+                ], alignment=ft.MainAxisAlignment.CENTER, wrap=True),
+                margin=ft.Margin.only(top=20, bottom=40)
+            )
+        ], horizontal_alignment=ft.CrossAxisAlignment.CENTER)
+
     # --- ESTRUCTURA DE RUTAS ---
     # Diccionario para mapear rutas con sus vistas e índices
     route_map = {
@@ -252,6 +320,7 @@ Lo aprendido adquiere mayor valor cuando se documenta, se comparte y permite que
         "/proyectos": (projects_view, 1),
         "/redes": (social_view, 2),
         "/how-to": (how_to_view, 3),
+        "/membresias": (memberships_view, 4),
     }
 
     content_area = ft.Column(scroll=ft.ScrollMode.AUTO, expand=True)
@@ -267,8 +336,8 @@ Lo aprendido adquiere mayor valor cuando se documenta, se comparte y permite que
 
     async def change_tab(e):
         # Cambiamos la ruta según la pestaña seleccionada
-        routes = ["/", "/proyectos", "/redes", "/how-to"]
-        page.go(routes[e.control.selected_index])
+        routes = ["/", "/proyectos", "/redes", "/how-to", "/membresias"]
+        await page.push_route(routes[e.control.selected_index])
 
     page.on_route_change = route_change
 
@@ -278,6 +347,7 @@ Lo aprendido adquiere mayor valor cuando se documenta, se comparte y permite que
             ft.NavigationBarDestination(icon=ft.Icons.CODE, label="Proyectos"),
             ft.NavigationBarDestination(icon=ft.Icons.PEOPLE, label="Redes"),
             ft.NavigationBarDestination(icon=ft.Icons.MENU_BOOK, label="How-to"),
+            ft.NavigationBarDestination(icon=ft.Icons.CARD_MEMBERSHIP, label="Miembros"),
         ],
         on_change=change_tab,
         bgcolor="#0a2a3a",
