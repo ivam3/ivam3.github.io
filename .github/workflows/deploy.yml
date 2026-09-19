@@ -41,13 +41,17 @@ jobs:
           pip install --upgrade pip
           pip install flet flet-cli
 
-      - name: Build Web App (CanvasKit default, hash routing)
+      - name: Build Web App (CanvasKit default, hash routing, no CDN)
         working-directory: docs/landpage
         env:
           FLET_WEB_RENDERER: canvaskit
           FLET_WEB_ROUTE_URL_STRATEGY: hash
+          # Sin CDN: empaqueta Pyodide + CanvasKit + fuentes en mismo origen.
+          # Sin esto, Firefox falla al traer los archivos grandes del runtime
+          # desde jsdelivr en contexto worker (la descarga directa sí va).
+          FLET_WEB_NO_CDN: "true"
         run: |
-          flet build web --base-url / --verbose
+          flet build web --base-url / --no-cdn --verbose
 
       - name: Locate build output (build/web or dist)
         run: |
@@ -76,8 +80,18 @@ jobs:
               }
               box.textContent = msg;
             }
-            window.addEventListener('error', function(e){ show('Error de arranque: ' + (e.message || e.error)); }, true);
-            window.addEventListener('unhandledrejection', function(e){ show('Error async de arranque: ' + ((e.reason && (e.reason.stack || e.reason)) || e.reason)); }, true);
+            window.addEventListener('error', function(e){
+              // Ignora "Script error." opaco (recurso cross-origin sin CORS):
+              // no aporta diagnostico y aparece con la app sana (visto en APK).
+              var m = e.message || e.error;
+              if(!m || m === 'Script error.') return;
+              show('Error de arranque: ' + m);
+            }, true);
+            window.addEventListener('unhandledrejection', function(e){
+              var r = ((e.reason && (e.reason.stack || e.reason)) || e.reason);
+              if(!r || r === 'Script error.') return;
+              show('Error async de arranque: ' + r);
+            }, true);
             setTimeout(function(){
               if(!document.querySelector('flt-glass-pane,flutter-view,canvas')){
                 show('La app no termino de arrancar en 120s. Abre la consola (F12) y busca "Python worker" o errores de WebAssembly/Pyodide.');
