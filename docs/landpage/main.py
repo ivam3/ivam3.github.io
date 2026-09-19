@@ -227,6 +227,7 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
             ("Writeup: HTB - DevArea", "Resolución detallada de la máquina DevArea de HackTheBox.", "CCAvsHTB_devArea.md"),
             ("Writeup: HTB - Dog", "Resolución detallada de la máquina Dog de HackTheBox.", "CCAvsHTB_dog.md"),
             ("Writeup: HTB - Planning", "Planificación y resolución de la máquina Planning de HackTheBox.", "CCAvsHTB_Planning.md"),
+            ("Writeup: HTB - Fireflow", "Planificación y resolución de la máquina fireflow de HackTheBox.", "CCAvsHTB_fireflow.md"),
         ]
 
         guide_buttons = []
