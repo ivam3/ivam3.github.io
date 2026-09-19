@@ -70,6 +70,7 @@ jobs:
           if "flet-boot-error" not in html:
               inject = """<script>
           (function(){
+            try{console.info('[flet-diag]', JSON.stringify({ua: navigator.userAgent, isolated: window.crossOriginIsolated, sab: typeof SharedArrayBuffer, wasm: typeof WebAssembly, idb: !!window.indexedDB, gl: (function(){try{var c=document.createElement('canvas');var g=c.getContext('webgl2')||c.getContext('webgl');return g?String(g.getParameter(g.VERSION)):null;}catch(e){return 'err';}})()}));}catch(e){}
             function show(msg){
               var box = document.getElementById('flet-boot-error');
               if(!box){
@@ -88,9 +89,10 @@ jobs:
               show('Error de arranque: ' + m);
             }, true);
             window.addEventListener('unhandledrejection', function(e){
-              var r = ((e.reason && (e.reason.stack || e.reason)) || e.reason);
-              if(!r || r === 'Script error.') return;
-              show('Error async de arranque: ' + r);
+              var r = e.reason, o = (r && (r.stack || r.message)) || r;
+              if(!o || o === 'Script error.') return;
+              var info = (r && (r.name || r.message)) ? ('[' + (r.name || '?') + '] ' + (r.message || '') + '\\n' + (r.stack || '')) : String(o);
+              show('Error async de arranque: ' + info);
             }, true);
             setTimeout(function(){
               if(!document.querySelector('flt-glass-pane,flutter-view,canvas')){
