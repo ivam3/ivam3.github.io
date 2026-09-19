@@ -22,6 +22,12 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          # PIN ACOPLADO a flet-cli: usa EXACTAMENTE la version que pida el
+          # CLI ("Flutter SDK X.Y.Z is required" en el log). Sin esto, flet
+          # intenta descargar el SDK con pregunta interactiva y muere en CI
+          # (EOFError, sin TTY). Si sube flet y el build vuelve a pedir otra
+          # version, actualizar este pin al X.Y.Z del log.
+          flutter-version: "3.44.8"
 
       - name: Install system dependencies
         run: |
