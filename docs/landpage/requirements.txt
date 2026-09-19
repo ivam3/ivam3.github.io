@@ -1,4 +1,7 @@
-flet==0.82.0
-httpx==0.28.1
-oauthlib
-requests-oauthlib
+# Web bundle deps: `flet build web` resolves and bundles these locally at
+# build time. Keep this file MINIMAL.
+# NOTE: do NOT re-add httpx / oauthlib / requests-oauthlib here — nothing
+# under docs/landpage imports them, and listing them makes the in-browser
+# worker reinstall the whole stack from PyPI on every cold load (minutes of
+# silent splash with zero progress feedback).
+flet

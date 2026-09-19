@@ -16,12 +16,11 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.14"
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.41.4"
           channel: stable
 
       - name: Install system dependencies
@@ -34,18 +33,69 @@ jobs:
       - name: Install Build Tools
         run: |
           pip install --upgrade pip
-          pip install flet==0.82.0 flet-cli==0.82.0 
+          pip install flet flet-cli
 
-      - name: Build Web App
+      - name: Build Web App (CanvasKit default, hash routing)
         working-directory: docs/landpage
+        env:
+          FLET_WEB_RENDERER: canvaskit
+          FLET_WEB_ROUTE_URL_STRATEGY: hash
         run: |
-          export FLET_TEMPLATE_REF=0.82.0
-          flet build web --base-url / --web-renderer auto --route-url-strategy hash --verbose
-      
+          flet build web --base-url / --verbose
+
+      - name: Locate build output (build/web or dist)
+        run: |
+          BUILD_DIR=docs/landpage/build/web
+          [ -f "$BUILD_DIR/index.html" ] || BUILD_DIR=docs/landpage/dist
+          [ -f "$BUILD_DIR/index.html" ] || { echo "ERROR: no web build output found"; ls -R docs/landpage | head -50; exit 1; }
+          echo "BUILD_DIR=$BUILD_DIR" >> "$GITHUB_ENV"
+          ls -la "$BUILD_DIR" | head -20
+
+      - name: Inject startup watchdog (visible errors instead of eternal splash)
+        run: |
+          python3 - <<'PYEOF'
+          import os
+          p = os.path.join(os.environ["BUILD_DIR"], "index.html")
+          html = open(p, encoding="utf-8").read()
+          if "flet-boot-error" not in html:
+              inject = """<script>
+          (function(){
+            function show(msg){
+              var box = document.getElementById('flet-boot-error');
+              if(!box){
+                box = document.createElement('div');
+                box.id = 'flet-boot-error';
+                box.style.cssText = 'position:fixed;inset:auto 12px 12px 12px;z-index:99999;background:#3a0d0d;color:#ffd7d7;font:14px/1.5 system-ui,sans-serif;padding:12px 14px;border-radius:10px;white-space:pre-wrap;';
+                document.body.appendChild(box);
+              }
+              box.textContent = msg;
+            }
+            window.addEventListener('error', function(e){ show('Error de arranque: ' + (e.message || e.error)); }, true);
+            window.addEventListener('unhandledrejection', function(e){ show('Error async de arranque: ' + ((e.reason && (e.reason.stack || e.reason)) || e.reason)); }, true);
+            setTimeout(function(){
+              if(!document.querySelector('flt-glass-pane,flutter-view,canvas')){
+                show('La app no termino de arrancar en 120s. Abre la consola (F12) y busca "Python worker" o errores de WebAssembly/Pyodide.');
+              }
+            }, 120000);
+          })();
+          </script>"""
+              html = html.replace("</body>", inject + "</body>")
+              open(p, "w", encoding="utf-8").write(html)
+              print("watchdog injected into", p)
+          else:
+              print("watchdog already present, skipping")
+          PYEOF
+
+      - name: Add Telegram light variant (/botapp, plain HTML + openLink)
+        run: |
+          mkdir -p "$BUILD_DIR/botapp"
+          cp docs/botapp/index.html "$BUILD_DIR/botapp/index.html"
+          ls -la "$BUILD_DIR/botapp"
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/landpage/build/web
+          publish_dir: ${{ env.BUILD_DIR }}
           publish_branch: gh-pages
           force_orphan: true # Crea una rama limpia sin historial innecesario
