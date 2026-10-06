@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base href="/">
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="">
+
+  <!-- Unconditional, and not part of the splash block below: this tag used to
+       arrive only because flutter_native_splash injected it. Without it a
+       mobile browser lays the page out at a 980px viewport and scales it
+       down, so the whole app renders tiny. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="landpage">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png" />
+
+  <title>landpage</title>
+  <link rel="manifest" href="manifest.json">
+
+  <script>
+    // Reload when WebKit restores the page from the back/forward cache instead
+    // of resuming it. WebKit restores a Flutter app with its frame scheduling
+    // broken: input and script keep running, but scheduled frames never
+    // render, so the app silently freezes at its last painted state.
+    //
+    // In a packaged (Pyodide) app, Python state lives in the page and is lost
+    // on reload - but WebKit's alternative is an app frozen at its last
+    // painted frame, so a fresh start is still strictly better. Gated to
+    // WebKit (every browser on iOS, Safari on macOS) because other engines
+    // restore correctly and get to keep their state.
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted &&
+        navigator.vendor && navigator.vendor.startsWith('Apple')) {
+        window.location.reload();
+      }
+    });
+  </script>
+
+  <script>
+    var flet = {
+      pyodide: true,
+      noCdn: true,
+      webSocketEndpoint: "/ws",
+      entrypointBaseUrl: "/",
+      assetBase: "/",
+      routeUrlStrategy: "hash",
+      // Only pinned when bundling. Left null, Flutter resolves CanvasKit from
+      // gstatic and the Noto fallback fonts from Google Fonts, and the build
+      // skips shipping local copies. A host serving its own runtime can assign
+      // these without also claiming a no-CDN build.
+      canvasKitBaseUrl: "/canvaskit/",
+      // .mjs is required: python-worker.js is a module worker and loads
+      // the runtime via dynamic `import()`. Pyodide >= 0.29 also refuses
+      // to run in classic workers. Use the local copy that `flet build`
+      // drops into web/pyodide/ when --no-cdn is set; otherwise pull
+      // from jsdelivr so the build artifact can stay slim.
+      pyodideUrl: "/pyodide/pyodide.mjs",
+      pythonModuleName: "main",
+      webRenderer: "canvaskit",
+      // "assets/fonts/" is the bundled Noto Emoji; null pulls it from Google Fonts.
+      fontFallbackBaseUrl: "assets/fonts/",
+      appPackageUrl: "assets/app/app.zip"
+    }
+
+    flet.flutterAppLoaded = new Promise((resolve) => {
+      flet.flutterAppResolve = resolve;
+    });
+
+    flet.flutterAppLoaded.then((flutterApp) => {
+      console.log("Flutter app loaded");
+    });
+  </script>
+
+  <!-- fletAppConfig -->
+
+  <script src="python.js"></script>
+
+  <style id="splash-screen-style">
+    html {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      background-color: #ffffff;
+      background-size: 100% 100%;
+    }
+
+    .center {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #222222;
+      }
+    }
+  </style>
+  <script id="splash-screen-script">
+    function removeSplashFromWeb() {
+      document.getElementById("splash")?.remove();
+      document.getElementById("splash-branding")?.remove();
+      document.body.style.background = "transparent";
+    }
+  </script>
+</head>
+
+<body>
+  <picture id="splash">
+    <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light)">
+    <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
+    <img class="center" aria-hidden="true" src="splash/img/light-1x.png" alt="">
+  </picture>
+  <script src="flutter_bootstrap.js" async></script>
+<script>
+(function(){
+  try{console.info('[flet-diag]', JSON.stringify({ua: navigator.userAgent, isolated: window.crossOriginIsolated, sab: typeof SharedArrayBuffer, wasm: typeof WebAssembly, idb: !!window.indexedDB, gl: (function(){try{var c=document.createElement('canvas');var g=c.getContext('webgl2')||c.getContext('webgl');return g?String(g.getParameter(g.VERSION)):null;}catch(e){return 'err';}})()}));}catch(e){}
+  function show(msg){
+    var box = document.getElementById('flet-boot-error');
+    if(!box){
+      box = document.createElement('div');
+      box.id = 'flet-boot-error';
+      box.style.cssText = 'position:fixed;inset:auto 12px 12px 12px;z-index:99999;background:#3a0d0d;color:#ffd7d7;font:14px/1.5 system-ui,sans-serif;padding:12px 14px;border-radius:10px;white-space:pre-wrap;';
+      document.body.appendChild(box);
+    }
+    box.textContent = msg;
+  }
+  window.addEventListener('error', function(e){
+    // Ignora "Script error." opaco (recurso cross-origin sin CORS):
+    // no aporta diagnostico y aparece con la app sana (visto en APK).
+    var m = e.message || e.error;
+    if(!m || m === 'Script error.') return;
+    show('Error de arranque: ' + m);
+  }, true);
+  window.addEventListener('unhandledrejection', function(e){
+    var r = e.reason, o = (r && (r.stack || r.message)) || r;
+    if(!o || o === 'Script error.') return;
+    var info = (r && (r.name || r.message)) ? ('[' + (r.name || '?') + '] ' + (r.message || '') + '\n' + (r.stack || '')) : String(o);
+    show('Error async de arranque: ' + info);
+  }, true);
+  setTimeout(function(){
+    if(!document.querySelector('flt-glass-pane,flutter-view,canvas')){
+      show('La app no termino de arrancar en 120s. Abre la consola (F12) y busca "Python worker" o errores de WebAssembly/Pyodide.');
+    }
+  }, 120000);
+})();
+</script></body>
+
+</html>
