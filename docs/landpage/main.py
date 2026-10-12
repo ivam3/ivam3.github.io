@@ -72,7 +72,15 @@ async def main(page: ft.Page):
                 ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=0),
                 padding=20
             ),
+            section_title("¿QUÉ ES TERMUX?", ft.Icons.TERMINAL),
+            detail_card("Poder de Linux en tu Bolsillo", "Termux es un emulador de terminal para Android que comparte el mismo entorno del sistema operativo iniciando la línea de comando del programa (shell) utilizando la llamada al sistema (execve) y redireccionando los flujos de entrada, salida y error estándar a la pantalla, proporcionando así un entorno Linux completo sin necesidad de root."),
+            
             section_title("¿QUIÉNES SOMOS?", ft.Icons.INFO),
+            detail_card("Ivam3byCinderella", """Es una comunidad enfocada en tecnología, programación, ciberseguridad y experimentación con sistemas Linux en Android con Termux.
+
+Compartimos conocimiento, desarrollamos herramientas y adaptamos tecnologías para explorar hasta dónde puede llegar un dispositivo Android como entorno de aprendizaje y desarrollo. Nuestra actividad abarca desde la administración y personalización de sistemas hasta programación, automatización, ciberseguridad e inteligencia artificial.
+
+Nuestro objetivo es aprender, experimentar y compartir conocimiento de forma práctica y responsable, creando recursos que permitan a cualquier persona acercarse a estas tecnologías y desarrollar sus propias capacidades."""),
             detail_card("Proposito", "Democratizar el acceso al conocimiento tecnológico mediante dispositivos móviles, demostrando que la falta de una computadora no tiene por qué ser una barrera para aprender, experimentar, crear y desarrollarse en tecnología."),
             detail_card("Misión", """Impulsar el aprendizaje práctico de Linux, programación, ciberseguridad, automatización e inteligencia artificial desde dispositivos móviles, utilizando Termux como entorno principal de aprendizaje y desarrollo.
 
@@ -94,9 +102,6 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
 5. Uso responsable: El conocimiento tecnológico y de seguridad debe ejercerse con responsabilidad, respeto y criterio.
 
 6. Comunidad y conocimiento compartido: Lo aprendido adquiere mayor valor cuando se documenta, se comparte y permite que otros continúen aprendiendo."""),
-
-            section_title("¿QUÉ ES TERMUX?", ft.Icons.TERMINAL),
-            detail_card("Poder de Linux en tu Bolsillo", "Termux es un emulador de terminal para Android que comparte el mismo entorno del sistema operativo iniciando la línea de comando del programa (shell) utilizando la llamada al sistema (execve) y redireccionando los flujos de entrada, salida y error estándar a la pantalla, proporcionando así un entorno Linux completo sin necesidad de root."),
 
             section_title("ESCALA TUS PRIVILEGIOS", ft.Icons.STAR),
             ft.Text("Adquiere tu membresia y obtén beneficios esclusivos que acelerarán tu aprendizaje",
