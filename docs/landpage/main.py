@@ -95,7 +95,7 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
             detail_card("Poder de Linux en tu Bolsillo", "Termux es un emulador de terminal para Android que comparte el mismo entorno del sistema operativo iniciando la línea de comando del programa (shell) utilizando la llamada al sistema (execve) y redireccionando los flujos de entrada, salida y error estándar a la pantalla, proporcionando así un entorno Linux completo sin necesidad de root."),
 
             section_title("ESCALA TUS PRIVILEGIOS", ft.Icons.STAR),
-            ft.Text("Mismo contenido en YouTube y Telegram, ambos con comentarios",
+            ft.Text("Adquiere tu membresia y obtén beneficios esclusivos que acelerarán tu aprendizaje",
                     size=14, color=teal, weight=ft.FontWeight.W_500, text_align=ft.TextAlign.CENTER),
             detail_card("Nivel SUDOERS", "Videos exclusivos + grupo solo miembros + inbox directo con Ivam3.", ft.Icons.SCHOOL, color="#1a3a4a"),
             detail_card("Nivel SPONSOR", "Acceso anticipado a los estrenos.", ft.Icons.STAR, color="#1a3a4a"),
@@ -122,7 +122,7 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
 
     def projects_view():
         return ft.Column([
-            section_title("NUESTROS PROYECTOS", ft.Icons.CODE),
+            section_title("SOFTWARE PARA TERMUX", ft.Icons.CODE),
             detail_card("i-Haklab", "Laboratorio Hacking completo para Termux para Pentesting, Vibe Code, Desarrollo y mucho mas.",
                 ft.Icons.WHATSHOT_OUTLINED, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/i-Haklab")), 
             detail_card("Termux-Packages", "Herramientas de sistemas GNU/Linux compilados con Android NDK y parchados para su compatibilidad, instalables bajo el administrador APT|PKG.", 
@@ -257,36 +257,20 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
     def memberships_view():
         return ft.Column([
             section_title("MEMBRESÍAS", ft.Icons.CARD_MEMBERSHIP),
-            ft.Text("Mismo contenido en YouTube y Telegram",
+            ft.Text("Asesoria, video cursos/tutoriales en YouTube y Telegram",
                     size=14, color=teal, weight=ft.FontWeight.W_500, text_align=ft.TextAlign.CENTER),
 
-            section_title("¿CÓMO UNIRTE?", ft.Icons.HELP),
-            detail_card("Desde YouTube (Recomendado)", "Acceso a YouTube + Telegram. Únete en YouTube y luego pide tu acceso en Telegram.",
-                ft.Icons.PLAY_CIRCLE_FILL, color="#1a3a4a",
-                on_click=lambda _: page.run_task(open_url, "https://www.youtube.com/ivam3bycinderella/join")),
-            detail_card("Desde Telegram", "Acceso solo a Telegram. Ideal si prefieres todo en un solo lugar.",
-                ft.Icons.SEND, color="#1a3a4a",
-                on_click=lambda _: page.run_task(open_url, "https://t.me/+WkDK2kKhqbNkMmYx")),
-
-            section_title("VERIFICACIÓN AUTOMÁTICA", ft.Icons.VERIFIED),
-            detail_card("Activa tu acceso con el bot", """1. Toma captura de la compra de tu membresía.
-2. Ten a la mano tu @ (ID) de YouTube.
-3. Envíalos al bot de Telegram.
-4. El bot verifica que coincidan los IDs de Telegram y YouTube y libera tu acceso.""",
-                ft.Icons.SMART_TOY,
-                on_click=lambda _: page.run_task(open_url, "https://t.me/Ivam3_Bot")),
-
-            section_title("COMPARA NIVELES", ft.Icons.STAR),
-            detail_card("Nivel SUDOERS", "Videos exclusivos + grupo solo miembros + inbox directo con Ivam3.",
-                ft.Icons.SCHOOL, color="#1a3a4a"),
-            detail_card("Nivel SPONSOR", "Acceso anticipado a los estrenos.",
+            section_title("Niveles", ft.Icons.STAR),
+            detail_card("SPONSOR", "Acceso anticipado a los estrenos en youtube.",
                 ft.Icons.STAR, color="#1a3a4a"),
+            detail_card("SUDOERS", "Videos exclusivos + grupo solo miembros + inbox directo con Ivam3.",
+                ft.Icons.SCHOOL, color="#1a3a4a"),
 
-            section_title("MATERIAL DE MIEMBROS", ft.Icons.VIDEO_LIBRARY),
+            section_title("BENEFICIOS SUDOERS", ft.Icons.VIDEO_LIBRARY),
             detail_card("Playlist en YouTube", "Todo el material exclusivo bajo membresía, con opción de dejar comentarios.",
                 ft.Icons.PLAY_CIRCLE_FILL,
                 on_click=lambda _: page.run_task(open_url, "https://www.youtube.com/playlist?list=PLLQIRET13t-I")),
-            detail_card("Canal privado en Telegram", "El mismo contenido de YouTube en Telegram, con opción de dejar comentarios.",
+            detail_card("Canal en Telegram", "Mismo contenido de youtube en Telegram pero sin necesitar internet manteniendo la opción de dejar comentarios.",
                 ft.Icons.SEND,
                 on_click=lambda _: page.run_task(open_url, "https://t.me/+WkDK2kKhqbNkMmYx")),
             detail_card("Grupo exclusivo", "Dialoga, convive y comparte experiencias con todos los miembros e Ivam3.",
@@ -296,14 +280,40 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
                 ft.Icons.SCHOOL,
                 on_click=lambda _: page.run_task(open_url, "https://t.me/Ivam3")),
 
+            section_title("¿CÓMO UNIRTE?", ft.Icons.HELP),
+            detail_card("Desde YouTube (Recomendado)", "Acceso a YouTube + Telegram. Únete en YouTube y luego pide tu acceso en Telegram.",
+                ft.Icons.PLAY_CIRCLE_FILL, color="#1a3a4a",
+                on_click=lambda _: page.run_task(open_url, "https://www.youtube.com/ivam3bycinderella/join")),
+                ft.FilledButton(
+                    "UNIRME POR YOUTUBE",
+                    icon=ft.Icons.SUBSCRIPTIONS,
+                    on_click=lambda _: page.run_task(open_url, "https://www.youtube.com/ivam3bycinderella/join"),
+                    style=ft.ButtonStyle(bgcolor=teal, color="white")
+                ),
+
+            detail_card("Desde Telegram", "Acceso solo a Telegram. Ideal si prefieres todo en un solo lugar.",
+                ft.Icons.SEND, color="#1a3a4a",
+                on_click=lambda _: page.run_task(open_url, "https://t.me/+WkDK2kKhqbNkMmYx")),
+                ft.FilledButton(
+                    "UNIRME POR TELEGRAM",
+                    icon=ft.Icons.SUBSCRIPTIONS,
+                    on_click=lambda _: page.run_task(open_url, "https://t.me/+WkDK2kKhqbNkMmYx"),
+                    style=ft.ButtonStyle(bgcolor=teal, color="white")
+                ),
+
+            section_title("ACTIVA TU MEMBRESIA", ft.Icons.VERIFIED),
+            detail_card("Adquiere tu acceso desde el bot", """Si adquieres tu membresia SUDOERS desde YouTube y deseas acceder al material también en Telegram sigue estos pasos:
+
+1. Toma captura de la compra de tu membresía.
+2. Ten a la mano tu @ (ID) de YouTube.
+3. Homologa tu @ (ID) de Telegram con el de YouTube.
+4. Envíalos al bot de Telegram.
+5. El bot verifica que coincidan los IDs de Telegram y YouTube y libera tu acceso.""",
+                ft.Icons.SMART_TOY,
+                on_click=lambda _: page.run_task(open_url, "https://t.me/Ivam3_Bot")),
+
             ft.Container(
                 content=ft.Row([
-                    ft.FilledButton(
-                        "UNIRME EN YOUTUBE",
-                        icon=ft.Icons.SUBSCRIPTIONS,
-                        on_click=lambda _: page.run_task(open_url, "https://www.youtube.com/ivam3bycinderella/join"),
-                        style=ft.ButtonStyle(bgcolor=teal, color="white")
-                    ),
                     ft.OutlinedButton(
                         "PEDIR ACCESO POR TELEGRAM",
                         icon=ft.Icons.SEND,
@@ -345,10 +355,10 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
     nav = ft.NavigationBar(
         destinations=[
             ft.NavigationBarDestination(icon=ft.Icons.HOME, label="Inicio"),
-            ft.NavigationBarDestination(icon=ft.Icons.CODE, label="Proyectos"),
+            ft.NavigationBarDestination(icon=ft.Icons.CODE, label="Software"),
             ft.NavigationBarDestination(icon=ft.Icons.PEOPLE, label="Redes"),
-            ft.NavigationBarDestination(icon=ft.Icons.MENU_BOOK, label="How-to"),
-            ft.NavigationBarDestination(icon=ft.Icons.CARD_MEMBERSHIP, label="Miembros"),
+            ft.NavigationBarDestination(icon=ft.Icons.MENU_BOOK, label="PoC"),
+            ft.NavigationBarDestination(icon=ft.Icons.CARD_MEMBERSHIP, label="Membresias"),
         ],
         on_change=change_tab,
         bgcolor="#0a2a3a",
