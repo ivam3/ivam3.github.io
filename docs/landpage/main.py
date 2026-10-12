@@ -15,12 +15,16 @@ async def main(page: ft.Page):
 
     # --- COMPONENTES REUTILIZABLES ---
     def section_title(title, icon_obj):
+        # Columna centrada: el texto envuelve (wrap) dentro del ancho
+        # disponible en vez de desbordar fuera de pantalla en móviles.
         return ft.Container(
-            content=ft.Row([
+            content=ft.Column([
                 ft.Icon(icon=icon_obj, color=teal, size=28),
-                ft.Text(title, size=24, weight=ft.FontWeight.BOLD, color=teal)
-            ], alignment=ft.MainAxisAlignment.CENTER),
-            margin=ft.Margin.only(top=30, bottom=15)
+                ft.Text(title, size=20, weight=ft.FontWeight.BOLD, color=teal,
+                        text_align=ft.TextAlign.CENTER),
+            ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=4),
+            margin=ft.Margin.only(top=30, bottom=15),
+            padding=ft.Padding.symmetric(horizontal=20)
         )
 
     def detail_card(title, description, icon_obj=None, color=card_bg, on_click=None):
@@ -324,14 +328,159 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
             )
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER)
 
+    def ia_view():
+        doc_base = "https://github.com/ivam3/termux-oracle/blob/master/docs/recursos/herramientas/"
+        return ft.Column([
+            section_title("INTELIGENCIA ARTIFICIAL EN TERMUX", ft.Icons.PSYCHOLOGY),
+            ft.Text("Agentes de código, modelos locales, MCPs y skills listos para usar desde tu Android con i-HakLab",
+                    size=14, color=teal, weight=ft.FontWeight.W_500, text_align=ft.TextAlign.CENTER),
+
+            section_title("RESUELVE TUS DUDAS SOBRE TERMUX", ft.Icons.HELP),
+            detail_card("DevinAI en DeepWiki", "Asistente IA entrenado sobre termux con termux-oracle. Pregunta cómo compilar glibc, diferencias pkg vs apt, wrappers apt/npm, errores como CANNOT LINK EXECUTABLE o consulta cualquier duda sobre termux desde tu navegador",
+                ft.Icons.PSYCHOLOGY,
+                on_click=lambda _: page.run_task(open_url, "https://deepwiki.com/ivam3/termux-oracle")),
+            ft.Container(
+                content=ft.FilledButton(
+                    "PREGUNTAR A DEVIN-AI",
+                    icon=ft.Icons.OPEN_IN_BROWSER,
+                    on_click=lambda _: page.run_task(open_url, "https://deepwiki.com/ivam3/termux-oracle"),
+                    style=ft.ButtonStyle(bgcolor=teal, color="white")
+                ),
+                margin=ft.Margin.only(top=10, bottom=10)
+            ),
+
+            section_title("INTEGRADOS EN i-HakLab", ft.Icons.SMART_TOY),
+            detail_card("ai", "Convierte lenguaje natural en comandos: `ai \"lista los archivos\" [--no-run/--cloud/--local/-v]`. Usa Ollama local (qwen2.5-coder) offline o Groq Cloud.",
+                ft.Icons.TERMINAL,
+                on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/i-Haklab")),
+            detail_card("chatAI", "Chat con GPT desde la terminal: `i-Haklab chatAI [--chat-context]`. Soporta historial, modelos y generación de imágenes con `image:`.",
+                ft.Icons.CHAT,
+                on_click=lambda _: page.run_task(open_url, doc_base + "chatai.md")),
+            detail_card("codecompanion", "IA dentro de Neovim (`olimorris/codecompanion.nvim`). Viene con `apt install neovim` (default: gemini). 13 adapters: anthropic, bigmodel, claude, copilot, deepseek, gemini, groq, kimi, mistral, openai, openrouter, togetherai y zcode. Claves con `i-Haklab setapikey`.",
+                ft.Icons.EDIT,
+                on_click=lambda _: page.run_task(open_url, doc_base + "code-companion.md")),
+
+            section_title("AGENTES DE CÓDIGO", ft.Icons.CODE),
+            detail_card("antigravity-cli", "Agente AGI binario glibc (CLI `agy`). `apt install antigravity-cli`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "antigravity-cli.md")),
+            detail_card("claude-code", "Agente de Anthropic para terminal. `apt install claude-code` o `npm install -g claude-code`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "claude-code.md")),
+            detail_card("codebuff / freebuff / mimocode", "Agentes glibc-nativos: `apt install codebuff|freebuff|mimocode`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "codebuff.md")),
+            detail_card("codex", "Codex CLI de OpenAI. `npm install -g codex`. Soporta `--skip-git-repo-check` en walkie.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "codex.md")),
+            detail_card("copilot-cli", "GitHub Copilot en la terminal. `npm install -g copilot-cli` (wrapper: `apt install copilot-cli`).",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "copilot-cli.md")),
+            detail_card("hermes-agent", "Agente personal de Nous Research: CLI, TUI y gateway Telegram/Discord/WhatsApp. `apt install hermes-agent`. Soporta termux-oracle-skill.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "hermes-agent.md")),
+            detail_card("kimi-code", "Agente de Moonshot AI. `npm install -g kimi-code`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "kimi-code.md")),
+            detail_card("minimax-cli", "Agente MiniMax (CLI `mmx`). `npm install -g minimax-cli`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "minimax-cli.md")),
+            detail_card("mistral-vibe", "Agente Mistral AI (CLI `vibe`). `apt install mistral-vibe`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "mistral-vibe.md")),
+            detail_card("muse-code", "Agente de Meta para terminal (`muse-code login/exec`). `apt install muse-code`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "muse-code.md")),
+            detail_card("open-lovable", "Agente dev Lovable. `npm install -g open-lovable`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "open-lovable.md")),
+            detail_card("openclaw", "Agente autónomo con suite platform/scripts/patches. `apt install openclaw`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "openclaw.md")),
+            detail_card("opencode", "Agente universal agnóstico de modelos con TUI Plan/Build. Instalación nativa glibc: `apt install opencode`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "opencode.md")),
+            detail_card("qwen-code", "Agente de Alibaba Qwen. `npm install -g qwen-code`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "qwen-code.md")),
+            detail_card("zcode / zcode-cli", "Harness GLM con app gráfica sobre termux-x11 (`pkg install zcode`) y CLI (`zcode-cli --prompt`). API key con `i-Haklab setapikey`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "zcode.md")),
+
+            section_title("MODELOS LOCALES, P2P Y AUTOMATIZACIÓN", ft.Icons.MEMORY),
+            detail_card("cactus", "Motor híbrido edge-cloud: LLMs/VLM/voz on-device + server OpenAI-compatible. `apt install cactus`.",
+                ft.Icons.MEMORY,
+                on_click=lambda _: page.run_task(open_url, doc_base + "cactus.md")),
+            detail_card("engram", "Memoria persistente para agentes (Go). `apt install engram`.",
+                ft.Icons.STORAGE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "engram.md")),
+            detail_card("herdr", "Fingerprinting web rápido (categoría AI & Automation). `apt install herdr`.",
+                ft.Icons.SEARCH,
+                on_click=lambda _: page.run_task(open_url, doc_base + "herdr.md")),
+            detail_card("huggingface", "CLI oficial del Hub (`huggingface-cli/hf`): descarga modelos, datasets y tokens gated. `apt install huggingface`.",
+                ft.Icons.CLOUD_DOWNLOAD,
+                on_click=lambda _: page.run_task(open_url, doc_base + "huggingface.md")),
+            detail_card("n8n", "Automatización de flujos con SQLite. `npm install -g n8n`.",
+                ft.Icons.AUTORENEW,
+                on_click=lambda _: page.run_task(open_url, doc_base + "n8n.md")),
+            detail_card("ollama", "LLMs 100% locales en tu Android: `ollama serve/pull/run` (ej. `qwen2.5-coder:1.5b`). Base offline del wrapper `ai` y de `walkie agent --cli ollama`. `pkg install ollama`.",
+                ft.Icons.MEMORY,
+                on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/i-Haklab")),
+            detail_card("omniroute", "Multi-proxy TOR/SOCKS5/HTTP para agentes. `apt install omniroute`.",
+                ft.Icons.SHUFFLE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "omniroute.md")),
+            detail_card("sleepwalker", "Visibilidad e inteligencia de contenidos. `npm install -g sleepwalker` (wrapper: `@sleepwalkerai/cli`).",
+                ft.Icons.VISIBILITY,
+                on_click=lambda _: page.run_task(open_url, doc_base + "sleepwalker.md")),
+            detail_card("walkie", "Comunicación P2P para agentes sin servidor: `walkie chat|agent|send|watch`. `apt install walkie`. Puente Telegram con `walkie-tg`.",
+                ft.Icons.FORUM,
+                on_click=lambda _: page.run_task(open_url, doc_base + "walkie.md")),
+
+            section_title("MCP, SPECS Y TESTING", ft.Icons.EXTENSION),
+            detail_card("openspec", "Desarrollo guiado por especificaciones versionadas (`openspec/specs/`). Compatible con Claude Code, Codex, OpenCode y Copilot sin API keys. `npm install -g openspec` (wrapper: `@fission-ai/openspec`).",
+                ft.Icons.DESCRIPTION,
+                on_click=lambda _: page.run_task(open_url, doc_base + "openspec.md")),
+            detail_card("smithery", "Marketplace y proxy unificado de servidores MCP (+100k herramientas) para OpenCode, Claude Code y más. `npm install -g smithery` (wrapper: `@smithery/cli`).",
+                ft.Icons.EXTENSION,
+                on_click=lambda _: page.run_task(open_url, doc_base + "smithery.md")),
+            detail_card("testsprite", "Generación y ejecución de tests (unitarios, integración, E2E) desde el agente + dashboard web. `npm install -g testsprite` (wrapper: `@testsprite/testsprite-mcp`).",
+                ft.Icons.BUG_REPORT,
+                on_click=lambda _: page.run_task(open_url, doc_base + "testsprite.md")),
+
+            section_title("DALE CONTEXTO A TU AGENTE", ft.Icons.SCHOOL),
+            detail_card("termux-oracle-skill", "Skill experta en Termux/Android: bionic vs glibc, wrappers apt/npm, i-HakLab y 190+ tools. `apt install termux-oracle-skill` → `~/.agents/skills/termux-oracle/`. Compatible con todos los agentes IA.",
+                ft.Icons.SCHOOL,
+                on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/termux-oracle/tree/master/.agents/skills/termux-oracle")),
+            detail_card("Ayuda de cada herramienta", "Detalle, instalación y ejemplos de cualquier agente: `i-Haklab about <tool>` (ej. `i-Haklab about opencode`, `i-Haklab about walkie`).",
+                ft.Icons.HELP),
+
+            ft.Container(
+                content=ft.Row([
+                    ft.FilledButton(
+                        "INSTALAR i-HakLab",
+                        icon=ft.Icons.DOWNLOAD,
+                        on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/i-Haklab"),
+                        style=ft.ButtonStyle(bgcolor=teal, color="white")
+                    ),
+                    ft.OutlinedButton(
+                        "VER TERMUX-ORACLE",
+                        icon=ft.Icons.MENU_BOOK,
+                        on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/termux-oracle"),
+                    ),
+                ], alignment=ft.MainAxisAlignment.CENTER, wrap=True),
+                margin=ft.Margin.only(top=20, bottom=40)
+            )
+        ], horizontal_alignment=ft.CrossAxisAlignment.CENTER)
+
     # --- ESTRUCTURA DE RUTAS ---
     # Diccionario para mapear rutas con sus vistas e índices
     route_map = {
         "/": (home_view, 0),
         "/proyectos": (projects_view, 1),
-        "/redes": (social_view, 2),
-        "/how-to": (how_to_view, 3),
-        "/membresias": (memberships_view, 4),
+        "/ia": (ia_view, 2),
+        "/redes": (social_view, 3),
+        "/how-to": (how_to_view, 4),
+        "/membresias": (memberships_view, 5),
     }
 
     content_area = ft.Column(scroll=ft.ScrollMode.AUTO, expand=True)
@@ -347,7 +496,7 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
 
     async def change_tab(e):
         # Cambiamos la ruta según la pestaña seleccionada
-        routes = ["/", "/proyectos", "/redes", "/how-to", "/membresias"]
+        routes = ["/", "/proyectos", "/ia", "/redes", "/how-to", "/membresias"]
         await page.push_route(routes[e.control.selected_index])
 
     page.on_route_change = route_change
@@ -356,9 +505,10 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
         destinations=[
             ft.NavigationBarDestination(icon=ft.Icons.HOME, label="Inicio"),
             ft.NavigationBarDestination(icon=ft.Icons.CODE, label="Software"),
+            ft.NavigationBarDestination(icon=ft.Icons.PSYCHOLOGY, label="IA"),
             ft.NavigationBarDestination(icon=ft.Icons.PEOPLE, label="Redes"),
             ft.NavigationBarDestination(icon=ft.Icons.MENU_BOOK, label="PoC"),
-            ft.NavigationBarDestination(icon=ft.Icons.CARD_MEMBERSHIP, label="Membresias"),
+            ft.NavigationBarDestination(icon=ft.Icons.CARD_MEMBERSHIP, label="VIP"),
         ],
         on_change=change_tab,
         bgcolor="#0a2a3a",
