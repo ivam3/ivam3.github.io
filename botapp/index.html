@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!--
+  Ivam3 BotApp — ruta ligera para clientes Telegram (menu-button y mini-app).
+  HTML plano + telegram-web-app.js: funciona en WebKitGTK/llvmpipe, Chromium,
+  Firefox y WebView Android sin WASM/WebGL. Las webs pesadas se abren con
+  openLink() en el navegador externo (evita bloqueos de iframe/CSP y la falta
+  de backend /ws de la app Flet estatica).
+  Despliegue: el workflow copia docs/botapp/ -> <build>/botapp/ en gh-pages.
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Ivam3 BotApp</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+    background: var(--tg-theme-bg-color, #fff);
+    color: var(--tg-theme-text-color, #111);
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px; padding: 24px;
+  }
+  h1 { font-size: 1.3rem; text-align: center; }
+  p.hint { opacity: .7; font-size: .9rem; text-align: center; max-width: 340px; }
+  button {
+    width: min(340px, 90vw); padding: 14px; font-size: 1rem; border: 0;
+    border-radius: 12px; cursor: pointer;
+    background: var(--tg-theme-button-color, #2481cc);
+    color: var(--tg-theme-button-text-color, #fff);
+  }
+  button.ghost {
+    background: transparent; color: var(--tg-theme-link-color, #2481cc);
+    border: 1px solid var(--tg-theme-link-color, #2481cc);
+  }
+  .user { font-size: .8rem; opacity: .6; }
+</style>
+</head>
+<body>
+  <h1>🛡️ i-HakLab / Termux-Oracle</h1>
+  <p class="hint">Abre los recursos en tu navegador externo (las webs pesadas no van dentro del iframe de Telegram).</p>
+  <button id="btn-docs">📖 Abrir DeepWiki</button>
+  <button id="btn-site" class="ghost">🌐 Abrir ivam3.github.io</button>
+  <div class="user" id="who"></div>
+  <script>
+    (function () {
+      // Fuera de Telegram (navegador directo): degradar a enlaces normales.
+      var tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+      var open = function (url) {
+        if (tg && tg.openLink) { tg.openLink(url); }
+        else { window.open(url, '_blank', 'noopener'); }
+      };
+      if (tg) {
+        tg.ready();
+        tg.expand();
+        var u = tg.initDataUnsafe && tg.initDataUnsafe.user;
+        if (u) document.getElementById('who').textContent = 'Hola, ' + (u.first_name || u.username || '');
+        tg.MainButton.setText('ABRIR DOCUMENTACIÓN');
+        tg.MainButton.show();
+        tg.MainButton.onClick(function () { open('https://deepwiki.com/ivam3/termux-oracle'); });
+      }
+      document.getElementById('btn-docs').onclick = function () { open('https://deepwiki.com/ivam3/termux-oracle'); };
+      document.getElementById('btn-site').onclick = function () { open('https://ivam3.github.io/'); };
+    })();
+  </script>
+</body>
+</html>
