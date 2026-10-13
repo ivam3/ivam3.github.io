@@ -61,6 +61,28 @@ jobs:
           echo "BUILD_DIR=$BUILD_DIR" >> "$GITHUB_ENV"
           ls -la "$BUILD_DIR" | head -20
 
+      - name: Ensure custom favicon (IbyC logo instead of Flet default)
+        run: |
+          python3 - <<'PYEOF'
+          import os
+          build = os.environ["BUILD_DIR"]
+          try:
+              from PIL import Image
+              img = Image.open("docs/landpage/assets/icon.png")
+              img.resize((64, 64), Image.LANCZOS).save(os.path.join(build, "favicon.png"))
+              print("favicon.png written from assets/icon.png")
+          except Exception as e:
+              print("favicon generation skipped:", e)
+          p = os.path.join(build, "index.html")
+          html = open(p, encoding="utf-8").read()
+          if 'rel="icon"' not in html and "rel='icon'" not in html:
+              html = html.replace("</head>", '<link rel="icon" type="image/png" href="favicon.png"></head>')
+              open(p, "w", encoding="utf-8").write(html)
+              print("favicon link injected into index.html")
+          else:
+              print("index.html already links an icon")
+          PYEOF
+
       - name: Inject startup watchdog (visible errors instead of eternal splash)
         run: |
           python3 - <<'PYEOF'
