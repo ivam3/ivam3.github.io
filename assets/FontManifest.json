@@ -1,0 +1,28 @@
+[
+    {
+        "family": "MaterialIcons",
+        "fonts": [
+            {
+                "asset": "fonts/MaterialIcons-Regular.otf"
+            }
+        ]
+    },
+    
+    {
+        "family": "Roboto",
+        "fonts": [
+            {
+                "asset": "fonts/roboto.woff2"
+            }
+        ]
+    },
+    
+    {
+        "family": "packages/cupertino_icons/CupertinoIcons",
+        "fonts": [
+            {
+                "asset": "packages/cupertino_icons/assets/CupertinoIcons.ttf"
+            }
+        ]
+    }
+]
