@@ -1,3 +1,4 @@
+```shell
 .OOOOOOOOOOOOOOO @@                                   @@ OOOOOOOOOOOOOOOO.
 OOOOOOOOOOOOOOOO @@                                    @@ OOOOOOOOOOOOOOOO
 OOOOOOOOOO'''''' @@                                    @@ ```````OOOOOOOOO
@@ -20,6 +21,7 @@ OOOOOO aaaa@"""""""" ""            @@@@@@@@@@@@""               @@@|`OOOO'
 OOOOOOOo`@@a                  aa@@  @@@@@@@""         a@        @@@@ OOOO9
 OOOOOOO'  `@@a               @@a@@   @@""           a@@   a     |@@@ OOOO3
 `OOOO'       `@    aa@@       aaa"""          @a        a@     a@@@',OOOO'
+```
 
 
 There's been a murder in Terminal City, and TCPD needs your help.
