@@ -233,6 +233,7 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
             ("PoC: LFI", "Explotación detallada de vulnerabilidades Local File Inclusion.", "PoC_vulnerabilidad_LFI.md"),
             ("PoC: RFI", "Explotación de Remote File Inclusion para ejecución de código remoto.", "PoC_vulnerabilidad_RFI.md"),
             ("Servidor FTP con Termux", "Monta tu propio servidor y accede a tu administrador de archivos desde cualquier otro dispositivo como PC,iOS o Android.", "servidor_ftp.md"),
+            ("Writeup: CLi murders - clmystery", "Resolución detallada del CTF: misterio del asesinato en Terminal City.", "CCAvsCLImurders_clmystery.md"),
             ("Writeup: HTB - DevArea", "Resolución detallada de la máquina DevArea de HackTheBox.", "CCAvsHTB_devArea.md"),
             ("Writeup: HTB - Dog", "Resolución detallada de la máquina Dog de HackTheBox.", "CCAvsHTB_dog.md"),
             ("Writeup: HTB - Planning", "Planificación y resolución de la máquina Planning de HackTheBox.", "CCAvsHTB_Planning.md"),
