@@ -35,6 +35,11 @@ To get started on how to use the command line, open cheatsheet.md or cheatsheet.
 
 Don't use a text editor to view any files except these instructions, the cheatsheet, and hints.
 
+###### Download the .zip file 
+```
+git clone https://github.com/veltman/clmystery
+```
+
 #### Solving the riddle
 
 A solution to [clmystery: Command line murder mystery](https://github.com/veltman/clmystery).
@@ -310,6 +315,14 @@ Para verificar tu respuesta o encontrar la solución, abre el archivo 'solution'
 Para empezar a usar la línea de comandos, abre cheatsheet.md o cheatsheet.pdf (desde la línea de comandos, puedes escribir 'nano cheatsheet.md').
 
 No uses un editor de texto para ver ningún archivo excepto estas instrucciones, la hoja de trucos y las pistas.
+
+
+###### Descarga del reto CTF (traducido al español)
+```shell
+yes|apt install megatools unzip && \
+megadl "https://mega.nz/file/aDJ0DJzS#j_7MUsVpjRmbsVjtKObTFeHjxKmV_2knXhfcvHG_4sA" && \
+unzip CTF_CLImurder.zip
+```
 
 #### Resolviendo el enigma
 
