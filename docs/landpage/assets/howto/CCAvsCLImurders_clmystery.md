@@ -35,7 +35,7 @@ To get started on how to use the command line, open cheatsheet.md or cheatsheet.
 
 Don't use a text editor to view any files except these instructions, the cheatsheet, and hints.
 
-###### Download the .zip file 
+###### Clone the CTF from github
 ```
 git clone https://github.com/veltman/clmystery
 ```
@@ -274,13 +274,13 @@ cat AAA Delta_SkyMiles Terminal_City_Library Museum_of_Bash_History | grep -c "J
 #### Checking if solution is correct
 
 ```sh
-echo "Jeremy Bowers" | $(command -v md5 || command -v md5sum) | grep -qif /dev/stdin encoded && echo CORRECT\! GREAT WORK, GUMSHOE. || echo SORRY, TRY AGAIN.
+echo "Jeremy Bowers" | md5sum | grep -qif encoded && echo "CORRECT! GREAT WORK, GUMSHOE." || echo "SORRY, TRY AGAIN."
 ```
 
 Alternative using [`nms` (no-more-secrets)](https://github.com/bartobri/no-more-secrets) and [`lolcat`](https://github.com/busyloop/lolcat) ;-)
 
 ```sh
-(myvar=$(echo "Jeremy Bowers" | $(command -v md5 || command -v md5sum) | cut -d " " -f1) && grep -qi ${myvar} encoded && echo CORRECT\! GREAT WORK, GUMSHOE. || echo SORRY, TRY AGAIN.) | nms | lolcat
+(myvar=$(echo "Jeremy Bowers" | md5sum | grep -qif encoded && echo "CORRECT! GREAT WORK, GUMSHOE." || echo "SORRY, TRY AGAIN." | nms | lolcat
 ```
 
 #### TLDR
@@ -558,13 +558,13 @@ cat AAA Delta_SkyMiles Terminal_City_Library Museum_of_Bash_History | grep -c "J
 #### Comprobar si la solución es correcta
 
 ```sh
-echo "Jeremy Bowers" | $(command -v md5 || command -v md5sum) | grep -qif /dev/stdin encoded && echo CORRECT\! GREAT WORK, GUMSHOE. || echo SORRY, TRY AGAIN.
+echo "Jeremy Bowers" | md5sum | grep -qif encoded && echo "CORRECT! GREAT WORK, GUMSHOE." || echo "SORRY, TRY AGAIN."
 ```
 
 Alternativa usando [`nms` (no-more-secrets)](https://github.com/bartobri/no-more-secrets) y [`lolcat`](https://github.com/busyloop/lolcat) ;-)
 
 ```sh
-(myvar=$(echo "Jeremy Bowers" | $(command -v md5 || command -v md5sum) | cut -d " " -f1) && grep -qi ${myvar} encoded && echo CORRECT\! GREAT WORK, GUMSHOE. || echo SORRY, TRY AGAIN.) | nms | lolcat
+(myvar=$(echo "Jeremy Bowers" | md5sum | grep -qif encoded && echo "CORRECT! GREAT WORK, GUMSHOE." || echo "SORRY, TRY AGAIN." | nms | lolcat
 ```
 
 #### TLDR
