@@ -4,4 +4,4 @@
 # under docs/landpage imports them, and listing them makes the in-browser
 # worker reinstall the whole stack from PyPI on every cold load (minutes of
 # silent splash with zero progress feedback).
-flet
+flet==0.86.5

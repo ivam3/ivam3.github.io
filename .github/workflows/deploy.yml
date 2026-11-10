@@ -22,11 +22,11 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          # PIN ACOPLADO a flet-cli: usa EXACTAMENTE la version que pida el
-          # CLI ("Flutter SDK X.Y.Z is required" en el log). Sin esto, flet
-          # intenta descargar el SDK con pregunta interactiva y muere en CI
-          # (EOFError, sin TTY). Si sube flet y el build vuelve a pedir otra
-          # version, actualizar este pin al X.Y.Z del log.
+          # Known-good set: flet/flet-cli/flet-web 0.86.5 + Flutter 3.44.8.
+          # flet 1.1.x requires Flutter 3.47.9; do not update one without the other.
+          # If flet is changed, update this pin to the X.Y.Z required by the CLI
+          # ("Flutter SDK X.Y.Z is required" in the log). Without the pin, flet
+          # tries to install the SDK interactively and dies in CI (EOFError, no TTY).
           flutter-version: "3.44.8"
 
       - name: Install system dependencies
@@ -39,7 +39,7 @@ jobs:
       - name: Install Build Tools
         run: |
           pip install --upgrade pip
-          pip install flet flet-cli
+          pip install "flet==0.86.5" "flet-cli==0.86.5" "flet-web==0.86.5"
 
       - name: Build Web App (CanvasKit default, hash routing, no CDN)
         working-directory: docs/landpage
