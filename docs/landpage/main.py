@@ -2,7 +2,7 @@ import flet as ft
 import os
 
 async def main(page: ft.Page):
-    # --- CONFIGURACIÓN ESTÉTICA ---
+    # --- VISUAL CONFIGURATION ---
     page.title = "IVAM3byCINDERELLA Community"
     page.theme_mode = ft.ThemeMode.DARK
     page.bgcolor = "#021321"
@@ -13,10 +13,10 @@ async def main(page: ft.Page):
     card_bg = "#0a2a3a"
     text_color = "#E0E0E0"
 
-    # --- COMPONENTES REUTILIZABLES ---
+    # --- REUSABLE COMPONENTS ---
     def section_title(title, icon_obj):
-        # Columna centrada: el texto envuelve (wrap) dentro del ancho
-        # disponible en vez de desbordar fuera de pantalla en móviles.
+        # Centered column: text wraps within the available width instead of
+        # overflowing off-screen on mobile devices.
         return ft.Container(
             content=ft.Column([
                 ft.Icon(icon=icon_obj, color=teal, size=28),
@@ -50,7 +50,7 @@ async def main(page: ft.Page):
     async def open_url(url):
         await ft.UrlLauncher().launch_url(url, web_only_window_name="_blank")
 
-    # --- VISTAS ---
+    # --- VIEWS ---
 
     def home_view():
         return ft.Column([
@@ -137,7 +137,7 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
             detail_card("Termux-Packages", "Herramientas de sistemas GNU/Linux compilados con Android NDK y parchados para su compatibilidad, instalables bajo el administrador APT|PKG.", 
                 ft.Icons.BLUR_ON, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/termux-packages")),
             detail_card("termux-oracle", "Centro de documentación técnica oficial de i-HakLab e Ivam3bycinderella! Esta diseñada y estructurada específicamente para servir como el núcleo de información técnica sobre Termux, Linux en Android, i-Haklab, termux-packages, automatización, Desarrollo y Seguridad Informática, sirviendo de soporte directo a la comunidad Ivam3byCinderella a través de asistentes de Inteligencia Artificial como DevinAI de DeepWiki o con el agente AI de tu preferencia como opencode, claude-code, codex, etc mediante su version de SKILLL (termux-oracle-skill)",
-                ft.Icons.SETTINGS, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/xapt-management")),
+                ft.Icons.SETTINGS, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/termux-oracle")),
             detail_card("xapt-management", "Gestor gráfico para APT en Termux. Simplifica la administración de paquetes, permitiendo buscar, instalar y eliminar software sin necesidad de recordar comandos complejos.",
                 ft.Icons.SETTINGS, on_click=lambda _: page.run_task(open_url, "https://github.com/ivam3/xapt-management")),
             detail_card("Embed", "Herramienta avanzada para la inyección de payloads en archivos APK legítimos. Ideal para estudiar técnicas de persistencia y análisis de malware en Android.",
@@ -243,7 +243,7 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
 
         guide_buttons = []
         for name, desc, filename in guides:
-            # Usar la URL absoluta evita que el router interno de Flet intercepte el enlace
+            # Absolute URLs prevent the internal Flet router from intercepting the link.
             url = f"https://github.com/ivam3/ivam3.github.io/blob/master/docs/landpage/assets/howto/{filename}"
             guide_buttons.append(
                 ft.Container(
@@ -337,6 +337,7 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
 
     def ia_view():
         doc_base = "https://github.com/ivam3/termux-oracle/blob/master/docs/recursos/herramientas/"
+        pkg_base = "https://github.com/ivam3/termux-packages/blob/gh-pages/packages/"
         return ft.Column([
             section_title("INTELIGENCIA ARTIFICIAL EN TERMUX", ft.Icons.PSYCHOLOGY),
             ft.Text("Agentes de código, modelos locales, MCPs y skills listos para usar desde tu Android con i-HakLab",
@@ -370,13 +371,19 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
             section_title("AGENTES DE CÓDIGO", ft.Icons.CODE),
             detail_card("antigravity-cli", "Agente AGI binario glibc (CLI `agy`). `apt install antigravity-cli`.",
                 ft.Icons.CODE,
-                on_click=lambda _: page.run_task(open_url, doc_base + "antigravity-cli.md")),
+                on_click=lambda _: page.run_task(open_url, pkg_base + "antigravity-cli/README.md")),
             detail_card("claude-code", "Agente de Anthropic para terminal. `apt install claude-code` o `npm install -g claude-code`.",
                 ft.Icons.CODE,
-                on_click=lambda _: page.run_task(open_url, doc_base + "claude-code.md")),
-            detail_card("codebuff / freebuff / mimocode", "Agentes glibc-nativos: `apt install codebuff|freebuff|mimocode`.",
+                on_click=lambda _: page.run_task(open_url, pkg_base + "claude-code/README.md")),
+            detail_card("codebuff", "Agente glibc-nativo: `apt install codebuff`.",
                 ft.Icons.CODE,
-                on_click=lambda _: page.run_task(open_url, doc_base + "codebuff.md")),
+                on_click=lambda _: page.run_task(open_url, pkg_base + "codebuff/README.md")),
+            detail_card("freebuff", "Edición gratuita con soporte de anuncios: `apt install freebuff`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, pkg_base + "freebuff/README.md")),
+            detail_card("mimocode", "Agente ligero para Termux/Android: `apt install mimocode`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, pkg_base + "mimocode/README.md")),
             detail_card("codex", "Codex CLI de OpenAI. `npm install -g codex`. Soporta `--skip-git-repo-check` en walkie.",
                 ft.Icons.CODE,
                 on_click=lambda _: page.run_task(open_url, doc_base + "codex.md")),
@@ -385,7 +392,7 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
                 on_click=lambda _: page.run_task(open_url, doc_base + "copilot-cli.md")),
             detail_card("hermes-agent", "Agente personal de Nous Research: CLI, TUI y gateway Telegram/Discord/WhatsApp. `apt install hermes-agent`. Soporta termux-oracle-skill.",
                 ft.Icons.CODE,
-                on_click=lambda _: page.run_task(open_url, doc_base + "hermes-agent.md")),
+                on_click=lambda _: page.run_task(open_url, pkg_base + "hermes-agent/README.md")),
             detail_card("kimi-code", "Agente de Moonshot AI. `npm install -g kimi-code`.",
                 ft.Icons.CODE,
                 on_click=lambda _: page.run_task(open_url, doc_base + "kimi-code.md")),
@@ -394,25 +401,28 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
                 on_click=lambda _: page.run_task(open_url, doc_base + "minimax-cli.md")),
             detail_card("mistral-vibe", "Agente Mistral AI (CLI `vibe`). `apt install mistral-vibe`.",
                 ft.Icons.CODE,
-                on_click=lambda _: page.run_task(open_url, doc_base + "mistral-vibe.md")),
+                on_click=lambda _: page.run_task(open_url, pkg_base + "mistral-vibe/README.md")),
             detail_card("muse-code", "Agente de Meta para terminal (`muse-code login/exec`). `apt install muse-code`.",
                 ft.Icons.CODE,
-                on_click=lambda _: page.run_task(open_url, doc_base + "muse-code.md")),
+                on_click=lambda _: page.run_task(open_url, pkg_base + "muse-code/README.md")),
             detail_card("open-lovable", "Agente dev Lovable. `npm install -g open-lovable`.",
                 ft.Icons.CODE,
                 on_click=lambda _: page.run_task(open_url, doc_base + "open-lovable.md")),
             detail_card("openclaw", "Agente autónomo con suite platform/scripts/patches. `apt install openclaw`.",
                 ft.Icons.CODE,
-                on_click=lambda _: page.run_task(open_url, doc_base + "openclaw.md")),
+                on_click=lambda _: page.run_task(open_url, pkg_base + "openclaw/README.md")),
             detail_card("opencode", "Agente universal agnóstico de modelos con TUI Plan/Build. Instalación nativa glibc: `apt install opencode`.",
                 ft.Icons.CODE,
-                on_click=lambda _: page.run_task(open_url, doc_base + "opencode.md")),
+                on_click=lambda _: page.run_task(open_url, pkg_base + "opencode/README.md")),
             detail_card("qwen-code", "Agente de Alibaba Qwen. `npm install -g qwen-code`.",
                 ft.Icons.CODE,
                 on_click=lambda _: page.run_task(open_url, doc_base + "qwen-code.md")),
-            detail_card("zcode / zcode-cli", "Harness GLM con app gráfica sobre termux-x11 (`pkg install zcode`) y CLI (`zcode-cli --prompt`). API key con `i-Haklab setapikey`.",
+            detail_card("zcode", "Harness GLM con app gráfica sobre termux-x11 (`pkg install zcode`). API key con `i-Haklab setapikey`.",
                 ft.Icons.CODE,
-                on_click=lambda _: page.run_task(open_url, doc_base + "zcode.md")),
+                on_click=lambda _: page.run_task(open_url, pkg_base + "zcode/README.md")),
+            detail_card("zcode-cli", "Cliente de terminal del agente ZCode (`zcode-cli --prompt`). API key con `i-Haklab setapikey`.",
+                ft.Icons.CODE,
+                on_click=lambda _: page.run_task(open_url, doc_base + "zcode-cli.md")),
 
             section_title("MODELOS LOCALES, P2P Y AUTOMATIZACIÓN", ft.Icons.MEMORY),
             detail_card("cactus", "Motor híbrido edge-cloud: LLMs/VLM/voz on-device + server OpenAI-compatible. `apt install cactus`.",
@@ -479,8 +489,8 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
             )
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER)
 
-    # --- ESTRUCTURA DE RUTAS ---
-    # Diccionario para mapear rutas con sus vistas e índices
+    # --- ROUTE STRUCTURE ---
+    # Map routes to their views and navigation indexes.
     route_map = {
         "/": (home_view, 0),
         "/proyectos": (projects_view, 1),
@@ -493,7 +503,7 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
     content_area = ft.Column(scroll=ft.ScrollMode.AUTO, expand=True)
 
     def route_change(e):
-        # Obtenemos la vista y el índice según la ruta actual
+        # Resolve the view and index for the current route.
         view_func, index = route_map.get(page.route, (home_view, 0))
         
         content_area.controls.clear()
@@ -502,7 +512,7 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
         page.update()
 
     async def change_tab(e):
-        # Cambiamos la ruta según la pestaña seleccionada
+        # Change the route when a navigation tab is selected.
         routes = ["/", "/proyectos", "/ia", "/redes", "/how-to", "/membresias"]
         await page.push_route(routes[e.control.selected_index])
 
@@ -529,8 +539,8 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
         )
     )
 
-    # Iniciamos la navegación según la URL de entrada después de construir el layout
-    # Llamamos directamente a route_change para poblar el contenido inicial
+    # Initialize navigation from the entry URL after building the layout.
+    # Call route_change directly to populate the initial content.
     route_change(None)
 
 if __name__ == "__main__":

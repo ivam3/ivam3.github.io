@@ -46,9 +46,9 @@ jobs:
         env:
           FLET_WEB_RENDERER: canvaskit
           FLET_WEB_ROUTE_URL_STRATEGY: hash
-          # Sin CDN: empaqueta Pyodide + CanvasKit + fuentes en mismo origen.
-          # Sin esto, Firefox falla al traer los archivos grandes del runtime
-          # desde jsdelivr en contexto worker (la descarga directa sí va).
+          # No CDN: bundle Pyodide, CanvasKit and fonts from the same origin.
+          # Without this, Firefox fails to fetch large runtime assets from
+          # jsdelivr inside a worker context.
           FLET_WEB_NO_CDN: "true"
         run: |
           flet build web --base-url / --no-cdn --verbose
@@ -104,8 +104,9 @@ jobs:
               box.textContent = msg;
             }
             window.addEventListener('error', function(e){
-              // Ignora "Script error." opaco (recurso cross-origin sin CORS):
-              // no aporta diagnostico y aparece con la app sana (visto en APK).
+              // Ignore opaque "Script error." messages (cross-origin resource
+              // without CORS): they add no diagnostic value and appear even
+              // when the app is healthy.
               var m = e.message || e.error;
               if(!m || m === 'Script error.') return;
               show('Error de arranque: ' + m);
@@ -142,4 +143,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ${{ env.BUILD_DIR }}
           publish_branch: gh-pages
-          force_orphan: true # Crea una rama limpia sin historial innecesario
+          force_orphan: true # Create a clean branch without unnecessary history
