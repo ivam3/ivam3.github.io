@@ -1,0 +1,169 @@
+<!DOCTYPE html><html><head>
+  <base href="/">
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="landpage">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <title>landpage</title>
+  <link rel="manifest" href="manifest.json">
+
+  <script>
+    var flet = {
+      pyodide: true,
+      multiView: false,
+      noCdn: "True".toLowerCase() == "true",
+      webSocketEndpoint: "/ws",
+      entrypointBaseUrl: "/",
+      assetBase: "/",
+      routeUrlStrategy: "path",
+      canvasKitBaseUrl: "/canvaskit/",
+      // .mjs is required: python-worker.js is a module worker and loads
+      // the runtime via dynamic `import()`. Pyodide >= 0.29 also refuses
+      // to run in classic workers. Use the local copy that `flet build`
+      // drops into web/pyodide/ when --no-cdn is set; otherwise pull
+      // from jsdelivr so the build artifact can stay slim.
+      
+      pyodideUrl: "https://cdn.jsdelivr.net/pyodide/v314.0.3/full/pyodide.mjs",
+      
+      pythonModuleName: "main",
+      webRenderer: "canvaskit",
+      fontFallbackBaseUrl: "assets/fonts/", // for Noto Emoji, use Google CDN
+      appPackageUrl: "assets/app/app.zip"
+    }
+
+    flet.flutterAppLoaded = new Promise((resolve) => {
+      flet.flutterAppResolve = resolve;
+    });
+
+    flet.flutterAppLoaded.then((flutterApp) => {
+      console.log("Flutter app loaded");
+    });
+  </script>
+  <script src="python.js"></script>
+  <style id="splash-screen-style">
+    html {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      background-color: #ffffff;
+          background-size: 100% 100%;
+    }
+
+    .center {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+
+    .contain {
+      display:block;
+      width:100%; height:100%;
+      object-fit: contain;
+    }
+
+    .stretch {
+      display:block;
+      width:100%; height:100%;
+    }
+
+    .cover {
+      display:block;
+      width:100%; height:100%;
+      object-fit: cover;
+    }
+
+    .bottom {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      -ms-transform: translate(-50%, 0);
+      transform: translate(-50%, 0);
+    }
+
+    .bottomLeft {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    .bottomRight {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #222222;
+          }
+    }
+  </style>
+  <script id="splash-screen-script">
+    function removeSplashFromWeb() {
+      document.getElementById("splash")?.remove();
+      document.getElementById("splash-branding")?.remove();
+      document.body.style.background = "transparent";
+    }
+  </script>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+</head>
+
+<body>
+  <picture id="splash">
+      <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light)">
+      <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
+      <img class="center" aria-hidden="true" src="splash/img/light-1x.png" alt="">
+  </picture>
+  <script src="flutter_bootstrap.js" async=""></script>
+
+
+
+<script>
+(function(){
+  try{console.info('[flet-diag]', JSON.stringify({ua: navigator.userAgent, isolated: window.crossOriginIsolated, sab: typeof SharedArrayBuffer, wasm: typeof WebAssembly, idb: !!window.indexedDB, gl: (function(){try{var c=document.createElement('canvas');var g=c.getContext('webgl2')||c.getContext('webgl');return g?String(g.getParameter(g.VERSION)):null;}catch(e){return 'err';}})()}));}catch(e){}
+  function show(msg){
+    var box = document.getElementById('flet-boot-error');
+    if(!box){
+      box = document.createElement('div');
+      box.id = 'flet-boot-error';
+      box.style.cssText = 'position:fixed;inset:auto 12px 12px 12px;z-index:99999;background:#3a0d0d;color:#ffd7d7;font:14px/1.5 system-ui,sans-serif;padding:12px 14px;border-radius:10px;white-space:pre-wrap;';
+      document.body.appendChild(box);
+    }
+    box.textContent = msg;
+  }
+  window.addEventListener('error', function(e){
+    // Ignore opaque "Script error." messages (cross-origin resource
+    // without CORS): they add no diagnostic value and appear even
+    // when the app is healthy.
+    var m = e.message || e.error;
+    if(!m || m === 'Script error.') return;
+    show('Error de arranque: ' + m);
+  }, true);
+  window.addEventListener('unhandledrejection', function(e){
+    var r = e.reason, o = (r && (r.stack || r.message)) || r;
+    if(!o || o === 'Script error.') return;
+    var info = (r && (r.name || r.message)) ? ('[' + (r.name || '?') + '] ' + (r.message || '') + '\n' + (r.stack || '')) : String(o);
+    show('Error async de arranque: ' + info);
+  }, true);
+  setTimeout(function(){
+    if(!document.querySelector('flt-glass-pane,flutter-view,canvas')){
+      show('La app no termino de arrancar en 120s. Abre la consola (F12) y busca "Python worker" o errores de WebAssembly/Pyodide.');
+    }
+  }, 120000);
+})();
+</script></body></html>
