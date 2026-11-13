@@ -238,6 +238,7 @@ Ser hacker no está determinado por el dispositivo que utilizas ni por una inten
             ("Writeup: HTB - Dog", "Resolución detallada de la máquina Dog de HackTheBox.", "CCAvsHTB_dog.md"),
             ("Writeup: HTB - Planning", "Planificación y resolución de la máquina Planning de HackTheBox.", "CCAvsHTB_Planning.md"),
             ("Writeup: HTB - Fireflow", "Planificación y resolución de la máquina fireflow de HackTheBox.", "CCAvsHTB_fireflow.md"),
+            ("Writeup: OverTheWire - Krypton", "Resolución de los 7 niveles del wargame de criptografía desde Termux.", "OTW_krypton.md"),
             ("Writeup: Terminus-game", "Guía completa del juego de aventuras para aprender Linux en Termux.", "terminus-game_walkthrough.md"),
         ]
 
